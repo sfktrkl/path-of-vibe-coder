@@ -1,15 +1,20 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png" />
-  <HelloWorld msg="Welcome to Your Vue.js App" />
+  <GameHeader />
+  <div class="main-content">
+    <img alt="Vue logo" src="./assets/logo.png" />
+    <HelloWorld msg="Welcome to Your Vue.js App" />
+  </div>
 </template>
 
 <script>
 import HelloWorld from "./components/HelloWorld.vue";
+import GameHeader from "./components/GameHeader.vue";
 
 export default {
   name: "App",
   components: {
     HelloWorld,
+    GameHeader,
   },
 };
 </script>
@@ -21,6 +26,10 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
+}
+
+.main-content {
+  margin-top: 80px;
+  padding: 20px;
 }
 </style>
