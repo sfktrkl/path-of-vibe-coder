@@ -1,13 +1,33 @@
 <template>
   <div class="game-content">
-    <h2>Character Information</h2>
-    <!-- Character information will be displayed here -->
+    <h2>{{ viewTitle }}</h2>
+    <div class="view-content">
+      <!-- Content will be added based on the current view -->
+      <p>Content for {{ currentView }} view will be displayed here</p>
+    </div>
   </div>
 </template>
 
 <script>
 export default {
   name: "GameContent",
+  props: {
+    currentView: {
+      type: String,
+      required: true,
+    },
+  },
+  computed: {
+    viewTitle() {
+      const titles = {
+        job: "Job Information",
+        skills: "Skills & Experience",
+        learn: "Learning Center",
+        shop: "Shop",
+      };
+      return titles[this.currentView] || "Game Content";
+    },
+  },
 };
 </script>
 
@@ -25,5 +45,9 @@ h2 {
   color: #2c3e50;
   border-bottom: 2px solid #eee;
   padding-bottom: 16px;
+}
+
+.view-content {
+  margin-top: 20px;
 }
 </style>

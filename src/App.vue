@@ -1,8 +1,8 @@
 <template>
   <div class="app-container">
-    <GameHeader />
+    <GameHeader @view-change="handleViewChange" />
     <main class="main-content">
-      <GameContent />
+      <GameContent :current-view="currentView" />
     </main>
   </div>
 </template>
@@ -16,6 +16,16 @@ export default {
   components: {
     GameHeader,
     GameContent,
+  },
+  data() {
+    return {
+      currentView: "job",
+    };
+  },
+  methods: {
+    handleViewChange(view) {
+      this.currentView = view;
+    },
   },
 };
 </script>
@@ -38,7 +48,7 @@ export default {
 .main-content {
   flex: 1;
   padding: 20px;
-  padding-top: 80px;
+  padding-top: 120px;
   max-width: 1200px;
   margin: 0 auto;
   width: 100%;
