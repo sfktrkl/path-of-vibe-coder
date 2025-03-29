@@ -31,26 +31,36 @@ export default {
 </script>
 
 <style>
+/* Add some global styles for better layout */
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #1a252f;
+}
+
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
+  color: #ffffff;
+  min-height: 100vh;
 }
 
 .app-container {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  background-color: #1a252f;
 }
 
 .main-content {
   flex: 1;
   padding: 20px;
-  padding-top: 120px;
   max-width: 1200px;
   margin: 0 auto;
   width: 100%;
+  box-sizing: border-box;
+  margin-top: 140px; /* Move padding to margin-top */
 }
 </style>
