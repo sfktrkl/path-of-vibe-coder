@@ -1,0 +1,106 @@
+/* Item styles for skills and jobs */
+.item-base {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.item-base:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  transform: translateY(-2px);
+}
+
+.item-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+  text-align: center;
+}
+
+.item-name {
+  font-weight: 500;
+  color: #ffffff;
+}
+
+.item-description {
+  color: #bdc3c7;
+  font-size: 0.9em;
+}
+
+.item-status {
+  display: flex;
+  align-items: center;
+  margin-left: 16px;
+  min-width: 120px;
+  justify-content: flex-end;
+}
+
+/* Status badges for skills and jobs */
+.status-badge {
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.9em;
+  font-weight: 500;
+  min-width: 100px;
+  text-align: center;
+}
+
+.learned-badge {
+  background-color: rgba(46, 204, 113, 0.2);
+  color: #2ecc71;
+}
+
+.available-badge {
+  background-color: rgba(52, 152, 219, 0.2);
+  color: #3498db;
+}
+
+.locked-badge {
+  background-color: rgba(149, 165, 166, 0.2);
+  color: #95a5a6;
+}
+
+/* Progress bar for skill learning */
+.progress-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 120px;
+}
+
+.progress-bar {
+  width: 100px;
+  height: 8px;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progress {
+  height: 100%;
+  background-color: #3498db;
+  transition: width 0.3s ease;
+}
+
+/* Status colors for skills and jobs */
+.learned {
+  background-color: rgba(46, 204, 113, 0.1);
+  border-color: rgba(46, 204, 113, 0.3);
+}
+
+.available {
+  background-color: rgba(52, 152, 219, 0.1);
+  border-color: rgba(52, 152, 219, 0.3);
+}
+
+.learning {
+  background-color: rgba(52, 152, 219, 0.15);
+  border-color: rgba(52, 152, 219, 0.4);
+} 

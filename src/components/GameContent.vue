@@ -4,47 +4,13 @@
     <!-- Skills View -->
     <div v-if="currentView === 'skills'" class="skills-view">
       <div class="skills-list">
-        <div
+        <SkillItem
           v-for="skill in sortedSkills"
           :key="skill.id"
-          :class="[
-            'skill-item',
-            {
-              learned: gameState.hasSkill(skill.id),
-              available: isSkillAvailable(skill),
-              learning: gameState.currentLearning === skill.id,
-            },
-          ]"
-          @click="gameState.hasSkill(skill.id) ? null : startLearning(skill.id)"
-        >
-          <div class="skill-info">
-            <span class="skill-name">{{ skill.name }}</span>
-            <span class="skill-description">{{ skill.description }}</span>
-          </div>
-          <div class="skill-status">
-            <div
-              v-if="gameState.currentLearning === skill.id"
-              class="learning-progress"
-            >
-              <div class="progress-bar">
-                <div
-                  class="progress"
-                  :style="{
-                    width: `${gameState.getSkillProgress(skill.id)}%`,
-                  }"
-                ></div>
-              </div>
-              <span>{{ gameState.getSkillProgress(skill.id) }}%</span>
-            </div>
-            <span v-else-if="gameState.hasSkill(skill.id)" class="learned-badge"
-              >Learned</span
-            >
-            <span v-else-if="isSkillAvailable(skill)" class="available-badge"
-              >Available</span
-            >
-            <span v-else class="locked-badge">Locked</span>
-          </div>
-        </div>
+          :skill="skill"
+          :game-state="gameState"
+          :is-available="isSkillAvailable(skill)"
+        />
       </div>
     </div>
 
@@ -53,28 +19,12 @@
       <div v-for="(jobs, category) in jobsByCategory" :key="category">
         <h4>{{ category.charAt(0).toUpperCase() + category.slice(1) }}</h4>
         <div class="jobs-list">
-          <div
+          <JobItem
             v-for="job in jobs"
             :key="job.id"
-            :class="[
-              'job-item',
-              {
-                unlocked: gameState.isJobUnlocked(job.id),
-                current: gameState.currentJob === job.id,
-              },
-            ]"
-            @click="
-              gameState.isJobUnlocked(job.id) ? gameState.setJob(job.id) : null
-            "
-          >
-            <div class="job-info">
-              <span class="job-name">{{ job.name }}</span>
-              <span class="job-description">{{ job.description }}</span>
-            </div>
-            <div class="job-status">
-              <span class="job-salary">${{ job.salary }}</span>
-            </div>
-          </div>
+            :job="job"
+            :game-state="gameState"
+          />
         </div>
       </div>
     </div>
@@ -90,9 +40,16 @@
 <script>
 import { skills } from "../data/skills";
 import { jobs } from "../data/jobs";
+import "../assets/styles/item-styles.css";
+import SkillItem from "./SkillItem.vue";
+import JobItem from "./JobItem.vue";
 
 export default {
   name: "GameContent",
+  components: {
+    SkillItem,
+    JobItem,
+  },
   props: {
     currentView: {
       type: String,
@@ -147,9 +104,6 @@ export default {
     },
   },
   methods: {
-    startLearning(skillId) {
-      this.gameState.startLearning(skillId);
-    },
     isSkillAvailable(skill) {
       // Check if all prerequisites are learned
       return skill.prerequisites.every((prereq) =>
@@ -203,257 +157,10 @@ h4 {
   margin-bottom: 24px;
 }
 
-.skills-grid,
-.jobs-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 16px;
-  margin-bottom: 24px;
-}
-
-.skill-card,
-.job-card {
-  background-color: rgba(255, 255, 255, 0.05);
-  padding: 16px;
-  border-radius: 4px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.skill-category {
-  background-color: rgba(255, 255, 255, 0.05);
-  padding: 16px;
-  border-radius: 4px;
-  margin-bottom: 16px;
-}
-
-.job-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 16px;
-  background-color: rgba(255, 255, 255, 0.05);
-  border-radius: 6px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.job-item:hover {
-  background-color: rgba(255, 255, 255, 0.1);
-  transform: translateY(-2px);
-}
-
-.job-info {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.job-name {
-  font-weight: 500;
-  color: #ffffff;
-}
-
-.job-description {
-  color: #bdc3c7;
-  font-size: 0.9em;
-}
-
-.job-status {
-  display: flex;
-  align-items: center;
-}
-
-.job-salary {
-  color: #2ecc71;
-  font-weight: 500;
-}
-
-.current-badge,
-.unlocked-badge,
-.locked-badge {
-  padding: 4px 8px;
-  border-radius: 4px;
-  font-size: 0.9em;
-  font-weight: 500;
-}
-
-.current-badge {
-  background-color: rgba(52, 152, 219, 0.2);
-  color: #3498db;
-}
-
-.unlocked-badge {
-  background-color: rgba(46, 204, 113, 0.2);
-  color: #2ecc71;
-}
-
-.locked-badge {
-  background-color: rgba(149, 165, 166, 0.2);
-  color: #95a5a6;
-}
-
-.job-item.current {
-  background-color: rgba(46, 204, 113, 0.2);
-  border-color: rgba(46, 204, 113, 0.4);
-}
-
-.job-item.unlocked {
-  background-color: rgba(52, 152, 219, 0.1);
-  border-color: rgba(52, 152, 219, 0.3);
-}
-
-.progress-bar {
-  width: 100%;
-  height: 20px;
-  background-color: rgba(255, 255, 255, 0.1);
-  border-radius: 10px;
-  overflow: hidden;
-  margin: 8px 0;
-}
-
-.progress {
-  height: 100%;
-  background-color: #3498db;
-  transition: width 0.3s ease;
-}
-
-button {
-  background-color: #3498db;
-  color: white;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-button:hover {
-  background-color: #2980b9;
-}
-
-button:disabled {
-  background-color: #95a5a6;
-  cursor: not-allowed;
-}
-
-ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-li {
-  padding: 4px 0;
-  color: #ecf0f1;
-}
-
 .skills-list {
   display: flex;
   flex-direction: column;
   gap: 12px;
-}
-
-.skill-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 16px;
-  background-color: rgba(255, 255, 255, 0.05);
-  border-radius: 6px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.skill-item:hover {
-  background-color: rgba(255, 255, 255, 0.1);
-  transform: translateY(-2px);
-}
-
-.skill-info {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  flex: 1;
-}
-
-.skill-name {
-  font-weight: 500;
-  color: #ffffff;
-}
-
-.skill-description {
-  color: #bdc3c7;
-  font-size: 0.9em;
-}
-
-.skill-status {
-  display: flex;
-  align-items: center;
-  margin-left: 16px;
-}
-
-.learning-progress {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.learning-progress .progress-bar {
-  width: 100px;
-  height: 8px;
-  background-color: rgba(255, 255, 255, 0.1);
-  border-radius: 4px;
-  overflow: hidden;
-}
-
-.learning-progress .progress {
-  height: 100%;
-  background-color: #3498db;
-  transition: width 0.3s ease;
-}
-
-.learned-badge {
-  background-color: rgba(46, 204, 113, 0.2);
-  color: #2ecc71;
-  padding: 4px 8px;
-  border-radius: 4px;
-  font-size: 0.9em;
-  font-weight: 500;
-}
-
-.available-badge {
-  background-color: rgba(52, 152, 219, 0.2);
-  color: #3498db;
-  padding: 4px 8px;
-  border-radius: 4px;
-  font-size: 0.9em;
-  font-weight: 500;
-}
-
-.locked-badge {
-  background-color: rgba(149, 165, 166, 0.2);
-  color: #95a5a6;
-  padding: 4px 8px;
-  border-radius: 4px;
-  font-size: 0.9em;
-  font-weight: 500;
-}
-
-.skill-item.learned {
-  background-color: rgba(46, 204, 113, 0.1);
-  border-color: rgba(46, 204, 113, 0.3);
-}
-
-.skill-item.available {
-  background-color: rgba(52, 152, 219, 0.1);
-  border-color: rgba(52, 152, 219, 0.3);
-}
-
-.skill-item.learning {
-  background-color: rgba(52, 152, 219, 0.15);
-  border-color: rgba(52, 152, 219, 0.4);
 }
 
 .skills-view,
