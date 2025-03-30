@@ -100,25 +100,6 @@
         </div>
       </div>
 
-      <!-- Learning Center View -->
-      <div v-if="currentView === 'learn'" class="learning-view">
-        <h3>Learning Center</h3>
-        <div v-if="gameState.currentLearning" class="current-learning">
-          <h4>Currently Learning</h4>
-          <p>{{ currentLearning.name }}</p>
-          <div class="progress-bar">
-            <div
-              class="progress"
-              :style="{ width: `${gameState.getLearningProgress()}%` }"
-            ></div>
-          </div>
-          <p>{{ gameState.getLearningProgress() }}% Complete</p>
-        </div>
-        <div v-else>
-          <p>Select a skill to learn from the Skills tab</p>
-        </div>
-      </div>
-
       <!-- Shop View -->
       <div v-if="currentView === 'shop'" class="shop-view">
         <h3>Shop</h3>
@@ -148,7 +129,6 @@ export default {
       const titles = {
         job: "Job Information",
         skills: "Skills & Experience",
-        learn: "Learning Center",
         shop: "Shop",
       };
       return titles[this.currentView] || "Game Content";
@@ -169,18 +149,6 @@ export default {
       // Sort skills by number of prerequisites (fewer prerequisites first)
       return filteredSkills.sort(
         (a, b) => a.prerequisites.length - b.prerequisites.length
-      );
-    },
-    skillsByCategory() {
-      const categories = this.gameState.getSkillsByCategory();
-      // Filter out categories that have no available skills
-      return Object.fromEntries(
-        Object.entries(categories).filter(([, skills]) =>
-          skills.some(
-            (skill) =>
-              this.isSkillAvailable(skill) || this.gameState.hasSkill(skill.id)
-          )
-        )
       );
     },
     jobsByCategory() {

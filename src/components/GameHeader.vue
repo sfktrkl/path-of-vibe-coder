@@ -53,7 +53,6 @@ export default {
       views: [
         { id: "job", name: "Jobs" },
         { id: "skills", name: "Skills" },
-        { id: "learn", name: "Learn" },
         { id: "shop", name: "Shop" },
       ],
     };
