@@ -80,20 +80,10 @@
             >
               <div class="job-info">
                 <span class="job-name">{{ job.name }}</span>
-                <span class="job-salary">${{ job.salary }}</span>
+                <span class="job-description">{{ job.description }}</span>
               </div>
               <div class="job-status">
-                <span
-                  v-if="gameState.currentJob === job.id"
-                  class="current-badge"
-                  >Current</span
-                >
-                <span
-                  v-else-if="gameState.isJobUnlocked(job.id)"
-                  class="unlocked-badge"
-                  >Available</span
-                >
-                <span v-else class="locked-badge">Locked</span>
+                <span class="job-salary">${{ job.salary }}</span>
               </div>
             </div>
           </div>
@@ -284,14 +274,19 @@ h4 {
   color: #ffffff;
 }
 
-.job-salary {
-  color: #3498db;
+.job-description {
+  color: #bdc3c7;
   font-size: 0.9em;
 }
 
 .job-status {
   display: flex;
   align-items: center;
+}
+
+.job-salary {
+  color: #2ecc71;
+  font-weight: 500;
 }
 
 .current-badge,
@@ -319,13 +314,13 @@ h4 {
 }
 
 .job-item.current {
-  background-color: rgba(52, 152, 219, 0.1);
-  border-color: rgba(52, 152, 219, 0.3);
+  background-color: rgba(46, 204, 113, 0.2);
+  border-color: rgba(46, 204, 113, 0.4);
 }
 
 .job-item.unlocked {
-  background-color: rgba(46, 204, 113, 0.1);
-  border-color: rgba(46, 204, 113, 0.3);
+  background-color: rgba(52, 152, 219, 0.1);
+  border-color: rgba(52, 152, 219, 0.3);
 }
 
 .progress-bar {
