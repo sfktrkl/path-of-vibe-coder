@@ -74,21 +74,26 @@ body {
 }
 
 .app-container {
-  display: flex;
-  flex-direction: column;
   min-height: 100vh;
   background-color: #1a252f;
-  padding-top: 200px; /* Increased padding to ensure content is below header */
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  box-sizing: border-box;
+  overflow-x: hidden;
 }
 
 .main-content {
   flex: 1;
-  padding: 20px;
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 0;
   max-width: 1200px;
   margin: 0 auto;
   width: 100%;
   box-sizing: border-box;
-  position: relative; /* Add relative positioning */
-  z-index: 1; /* Ensure content stays below header */
+  overflow-x: hidden;
 }
 </style>

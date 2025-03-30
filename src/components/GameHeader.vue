@@ -69,13 +69,16 @@ export default {
 <style scoped>
 .game-header {
   background-color: #2c3e50;
-  padding: 1rem;
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
+  padding: 0;
+  position: relative;
   z-index: 1000;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  height: 220px;
+  display: flex;
+  align-items: flex-start;
+  margin-top: 0;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .header-content {
@@ -84,6 +87,11 @@ export default {
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  width: 100%;
+  height: 100%;
+  justify-content: flex-start;
+  box-sizing: border-box;
+  padding: 24px;
 }
 
 .character-info {
@@ -141,12 +149,14 @@ h1 {
   gap: 0.5rem;
   justify-content: space-between;
   width: 100%;
+  margin-top: auto;
+  padding-bottom: 0;
 }
 
 .nav-button {
   background-color: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
   border: none;
-  color: white;
   padding: 0.8rem 1.5rem;
   border-radius: 4px;
   cursor: pointer;

@@ -1,5 +1,5 @@
-import { skills } from "../data/skills";
 import { jobs } from "../data/jobs";
+import { skills } from "../data/skills";
 
 export default class GameState {
   constructor() {
@@ -56,9 +56,70 @@ export default class GameState {
     return hasRequiredSkills && hasRequiredJobs;
   }
 
+  // Get available jobs that can be unlocked
+  getAvailableJobs() {
+    return Object.values(jobs).filter((job) => {
+      // Check if job is already unlocked
+      if (this.isJobUnlocked(job.id)) return false;
+
+      // Check if required skills are met
+      const hasRequiredSkills = job.requiredSkills.every((skill) =>
+        this.hasSkill(skill)
+      );
+
+      // Check if required jobs are met
+      const hasRequiredJobs = job.requiredJobs.every((jobId) =>
+        this.isJobUnlocked(jobId)
+      );
+
+      return hasRequiredSkills && hasRequiredJobs;
+    });
+  }
+
+  // Get current job info
+  getCurrentJobInfo() {
+    if (!this.currentJob) return null;
+    return jobs[this.currentJob];
+  }
+
+  // Get all jobs grouped by category
+  getJobsByCategory() {
+    const categories = {};
+    Object.values(jobs).forEach((job) => {
+      if (!categories[job.category]) {
+        categories[job.category] = [];
+      }
+      categories[job.category].push(job);
+    });
+    return categories;
+  }
+
   // Skills management
   hasSkill(skillId) {
     return this.skillProgress[skillId] >= 100;
+  }
+
+  // Get available skills that can be learned
+  getAvailableSkills() {
+    return Object.values(skills).filter((skill) => {
+      // Check if skill is already learned
+      if (this.hasSkill(skill.id)) return false;
+
+      // Check if prerequisites are met
+      return skill.prerequisites.every((prereq) => this.hasSkill(prereq));
+    });
+  }
+
+  // Get all skills grouped by category
+  getSkillsByCategory() {
+    const categories = {};
+    Object.values(skills).forEach((skill) => {
+      if (!categories[skill.category]) {
+        categories[skill.category] = [];
+      }
+      categories[skill.category].push(skill);
+    });
+    return categories;
   }
 
   // Learning management
@@ -81,67 +142,6 @@ export default class GameState {
   getLearningProgress() {
     if (!this.currentLearning) return 0;
     return this.skillProgress[this.currentLearning] || 0;
-  }
-
-  // Get available skills that can be learned
-  getAvailableSkills() {
-    return Object.values(skills).filter((skill) => {
-      // Check if skill is already learned
-      if (this.hasSkill(skill.id)) return false;
-
-      // Check if prerequisites are met
-      return skill.prerequisites.every((prereq) => this.hasSkill(prereq));
-    });
-  }
-
-  // Get current job info
-  getCurrentJobInfo() {
-    if (!this.currentJob) return null;
-    return jobs[this.currentJob];
-  }
-
-  // Get available jobs that can be unlocked
-  getAvailableJobs() {
-    return Object.values(jobs).filter((job) => {
-      // Check if job is already unlocked
-      if (this.isJobUnlocked(job.id)) return false;
-
-      // Check if required skills are met
-      const hasRequiredSkills = job.requiredSkills.every((skill) =>
-        this.hasSkill(skill)
-      );
-
-      // Check if required jobs are met
-      const hasRequiredJobs = job.requiredJobs.every((jobId) =>
-        this.isJobUnlocked(jobId)
-      );
-
-      return hasRequiredSkills && hasRequiredJobs;
-    });
-  }
-
-  // Get all jobs grouped by category
-  getJobsByCategory() {
-    const categories = {};
-    Object.values(jobs).forEach((job) => {
-      if (!categories[job.category]) {
-        categories[job.category] = [];
-      }
-      categories[job.category].push(job);
-    });
-    return categories;
-  }
-
-  // Get all skills grouped by category
-  getSkillsByCategory() {
-    const categories = {};
-    Object.values(skills).forEach((skill) => {
-      if (!categories[skill.category]) {
-        categories[skill.category] = [];
-      }
-      categories[skill.category].push(skill);
-    });
-    return categories;
   }
 
   // Get skill progress

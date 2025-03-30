@@ -1,100 +1,88 @@
 <template>
   <div class="game-content">
     <h2>{{ viewTitle }}</h2>
-    <div class="view-content">
-      <!-- Skills View -->
-      <div v-if="currentView === 'skills'" class="skills-view">
-        <div class="skills-list">
+    <!-- Skills View -->
+    <div v-if="currentView === 'skills'" class="skills-view">
+      <div class="skills-list">
+        <div
+          v-for="skill in sortedSkills"
+          :key="skill.id"
+          :class="[
+            'skill-item',
+            {
+              learned: gameState.hasSkill(skill.id),
+              available: isSkillAvailable(skill),
+              learning: gameState.currentLearning === skill.id,
+            },
+          ]"
+          @click="gameState.hasSkill(skill.id) ? null : startLearning(skill.id)"
+        >
+          <div class="skill-info">
+            <span class="skill-name">{{ skill.name }}</span>
+            <span class="skill-description">{{ skill.description }}</span>
+          </div>
+          <div class="skill-status">
+            <div
+              v-if="gameState.currentLearning === skill.id"
+              class="learning-progress"
+            >
+              <div class="progress-bar">
+                <div
+                  class="progress"
+                  :style="{
+                    width: `${gameState.getSkillProgress(skill.id)}%`,
+                  }"
+                ></div>
+              </div>
+              <span>{{ gameState.getSkillProgress(skill.id) }}%</span>
+            </div>
+            <span v-else-if="gameState.hasSkill(skill.id)" class="learned-badge"
+              >Learned</span
+            >
+            <span v-else-if="isSkillAvailable(skill)" class="available-badge"
+              >Available</span
+            >
+            <span v-else class="locked-badge">Locked</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Job View -->
+    <div v-if="currentView === 'job'" class="job-view">
+      <div v-for="(jobs, category) in jobsByCategory" :key="category">
+        <h4>{{ category.charAt(0).toUpperCase() + category.slice(1) }}</h4>
+        <div class="jobs-list">
           <div
-            v-for="skill in sortedSkills"
-            :key="skill.id"
+            v-for="job in jobs"
+            :key="job.id"
             :class="[
-              'skill-item',
+              'job-item',
               {
-                learned: gameState.hasSkill(skill.id),
-                available: isSkillAvailable(skill),
-                learning: gameState.currentLearning === skill.id,
+                unlocked: gameState.isJobUnlocked(job.id),
+                current: gameState.currentJob === job.id,
               },
             ]"
             @click="
-              gameState.hasSkill(skill.id) ? null : startLearning(skill.id)
+              gameState.isJobUnlocked(job.id) ? gameState.setJob(job.id) : null
             "
           >
-            <div class="skill-info">
-              <span class="skill-name">{{ skill.name }}</span>
-              <span class="skill-description">{{ skill.description }}</span>
+            <div class="job-info">
+              <span class="job-name">{{ job.name }}</span>
+              <span class="job-description">{{ job.description }}</span>
             </div>
-            <div class="skill-status">
-              <div
-                v-if="gameState.currentLearning === skill.id"
-                class="learning-progress"
-              >
-                <div class="progress-bar">
-                  <div
-                    class="progress"
-                    :style="{
-                      width: `${gameState.getSkillProgress(skill.id)}%`,
-                    }"
-                  ></div>
-                </div>
-                <span>{{ gameState.getSkillProgress(skill.id) }}%</span>
-              </div>
-              <span
-                v-else-if="gameState.hasSkill(skill.id)"
-                class="learned-badge"
-                >Learned</span
-              >
-              <span v-else-if="isSkillAvailable(skill)" class="available-badge"
-                >Available</span
-              >
-              <span v-else class="locked-badge">Locked</span>
+            <div class="job-status">
+              <span class="job-salary">${{ job.salary }}</span>
             </div>
           </div>
         </div>
       </div>
+    </div>
 
-      <!-- Job View -->
-      <div v-if="currentView === 'job'" class="job-view">
-        <div
-          v-for="(jobs, category) in jobsByCategory"
-          :key="category"
-          class="career-path"
-        >
-          <h4>{{ category.charAt(0).toUpperCase() + category.slice(1) }}</h4>
-          <div class="jobs-list">
-            <div
-              v-for="job in jobs"
-              :key="job.id"
-              :class="[
-                'job-item',
-                {
-                  unlocked: gameState.isJobUnlocked(job.id),
-                  current: gameState.currentJob === job.id,
-                },
-              ]"
-              @click="
-                gameState.isJobUnlocked(job.id)
-                  ? gameState.setJob(job.id)
-                  : null
-              "
-            >
-              <div class="job-info">
-                <span class="job-name">{{ job.name }}</span>
-                <span class="job-description">{{ job.description }}</span>
-              </div>
-              <div class="job-status">
-                <span class="job-salary">${{ job.salary }}</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Shop View -->
-      <div v-if="currentView === 'shop'" class="shop-view">
-        <h3>Shop</h3>
-        <p>Coming soon...</p>
-      </div>
+    <!-- Shop View -->
+    <div v-if="currentView === 'shop'" class="shop-view">
+      <h3>Shop</h3>
+      <p>Coming soon...</p>
     </div>
   </div>
 </template>
@@ -122,10 +110,6 @@ export default {
         skills: "Skills",
         shop: "Shop",
       }[this.currentView];
-    },
-    currentLearning() {
-      if (!this.gameState.currentLearning) return null;
-      return skills[this.gameState.currentLearning];
     },
     sortedSkills() {
       const allSkills = Object.values(skills);
@@ -178,12 +162,19 @@ export default {
 
 <style scoped>
 .game-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px;
+  width: 100%;
+  box-sizing: border-box;
+  position: relative;
+  z-index: 1;
   background-color: #2c3e50;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  padding: 24px;
-  margin: 0 auto;
   border: 1px solid rgba(255, 255, 255, 0.1);
+  margin-top: 24px;
+  overflow-x: hidden;
 }
 
 h2 {
@@ -205,8 +196,11 @@ h4 {
   margin-bottom: 8px;
 }
 
-.view-content {
-  margin-top: 20px;
+.jobs-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 24px;
 }
 
 .skills-grid,
@@ -230,20 +224,6 @@ h4 {
   padding: 16px;
   border-radius: 4px;
   margin-bottom: 16px;
-}
-
-.career-path {
-  background-color: rgba(255, 255, 255, 0.05);
-  padding: 20px;
-  border-radius: 8px;
-  margin-bottom: 24px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.jobs-list {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
 }
 
 .job-item {
@@ -474,5 +454,11 @@ li {
 .skill-item.learning {
   background-color: rgba(52, 152, 219, 0.15);
   border-color: rgba(52, 152, 219, 0.4);
+}
+
+.skills-view,
+.job-view,
+.shop-view {
+  overflow-x: hidden;
 }
 </style>
