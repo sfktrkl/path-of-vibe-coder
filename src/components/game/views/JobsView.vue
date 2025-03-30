@@ -15,9 +15,8 @@
 </template>
 
 <script>
-import { jobs } from "../data/jobs";
-import "../assets/styles/item-styles.css";
-import JobItem from "../components/JobItem.vue";
+import { jobs } from "@data/jobs";
+import JobItem from "@items/JobItem.vue";
 
 export default {
   name: "JobsView",

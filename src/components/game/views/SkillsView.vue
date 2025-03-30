@@ -13,9 +13,8 @@
 </template>
 
 <script>
-import { skills } from "../data/skills";
-import "../assets/styles/item-styles.css";
-import SkillItem from "../components/SkillItem.vue";
+import { skills } from "@data/skills";
+import SkillItem from "@items/SkillItem.vue";
 
 export default {
   name: "SkillsView",

@@ -1,5 +1,5 @@
-import { jobs } from "../data/jobs";
-import { skills } from "../data/skills";
+import { jobs } from "@data/jobs";
+import { skills } from "@data/skills";
 
 export default class GameState {
   constructor() {

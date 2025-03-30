@@ -12,9 +12,9 @@
 </template>
 
 <script>
-import GameHeader from "./components/GameHeader.vue";
-import GameContent from "./components/GameContent.vue";
-import GameState from "./models/GameState";
+import GameHeader from "@layout/GameHeader.vue";
+import GameContent from "@layout/GameContent.vue";
+import GameState from "@models/GameState.js";
 
 export default {
   name: "App",

@@ -8,10 +8,10 @@
 </template>
 
 <script>
-import SkillsView from "../views/SkillsView.vue";
-import JobsView from "../views/JobsView.vue";
-import ShopView from "../views/ShopView.vue";
-import viewMixin from "../mixins/viewMixin";
+import SkillsView from "@views/SkillsView.vue";
+import JobsView from "@views/JobsView.vue";
+import ShopView from "@views/ShopView.vue";
+import viewMixin from "@mixins/viewMixin";
 
 export default {
   name: "GameContent",
@@ -56,36 +56,5 @@ h2 {
   color: #ffffff;
   border-bottom: 2px solid rgba(255, 255, 255, 0.1);
   padding-bottom: 16px;
-}
-
-h3 {
-  color: #ffffff;
-  margin-top: 24px;
-  margin-bottom: 16px;
-}
-
-h4 {
-  color: #ffffff;
-  margin-top: 16px;
-  margin-bottom: 8px;
-}
-
-.jobs-list {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  margin-bottom: 24px;
-}
-
-.skills-list {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.skills-view,
-.job-view,
-.shop-view {
-  overflow-x: hidden;
 }
 </style>

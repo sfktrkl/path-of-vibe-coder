@@ -20,7 +20,7 @@
 </template>
 
 <script>
-import "../assets/styles/item-styles.css";
+import "@styles/item-styles.css";
 
 export default {
   name: "JobItem",
