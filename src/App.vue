@@ -1,8 +1,12 @@
 <template>
   <div class="app-container">
-    <GameHeader @view-change="handleViewChange" />
+    <GameHeader
+      :currentView="currentView"
+      :gameState="gameState"
+      @view-change="handleViewChange"
+    />
     <main class="main-content">
-      <GameContent :current-view="currentView" />
+      <GameContent :currentView="currentView" :gameState="gameState" />
     </main>
   </div>
 </template>
@@ -10,6 +14,7 @@
 <script>
 import GameHeader from "./components/GameHeader.vue";
 import GameContent from "./components/GameContent.vue";
+import GameState from "./models/GameState";
 
 export default {
   name: "App",
@@ -20,11 +25,32 @@ export default {
   data() {
     return {
       currentView: "job",
+      gameState: new GameState(),
     };
   },
   methods: {
     handleViewChange(view) {
       this.currentView = view;
+    },
+  },
+  created() {
+    // Load saved game state if exists
+    const savedState = localStorage.getItem("gameState");
+    if (savedState) {
+      try {
+        this.gameState = GameState.decode(savedState);
+      } catch (error) {
+        console.error("Failed to load saved game state:", error);
+      }
+    }
+  },
+  watch: {
+    gameState: {
+      handler(newState) {
+        // Save game state whenever it changes
+        localStorage.setItem("gameState", newState.encode());
+      },
+      deep: true,
     },
   },
 };
@@ -52,6 +78,7 @@ body {
   flex-direction: column;
   min-height: 100vh;
   background-color: #1a252f;
+  padding-top: 200px; /* Increased padding to ensure content is below header */
 }
 
 .main-content {
@@ -61,6 +88,7 @@ body {
   margin: 0 auto;
   width: 100%;
   box-sizing: border-box;
-  margin-top: 140px; /* Move padding to margin-top */
+  position: relative; /* Add relative positioning */
+  z-index: 1; /* Ensure content stays below header */
 }
 </style>

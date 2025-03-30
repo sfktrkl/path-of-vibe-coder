@@ -2,17 +2,31 @@
   <header class="game-header">
     <div class="header-content">
       <div class="character-info">
-        <div class="title">Title: {{ characterTitle }}</div>
-        <div class="money">Money: ${{ money }}</div>
+        <h1>{{ gameState.title }}</h1>
+        <div class="money">${{ gameState.money }}</div>
       </div>
+
+      <div class="learning-progress" v-if="currentLearning">
+        <div class="progress-info">
+          <span>Learning: {{ currentLearning.name }}</span>
+          <span>{{ gameState.getLearningProgress() }}%</span>
+        </div>
+        <div class="progress-bar">
+          <div
+            class="progress"
+            :style="{ width: `${gameState.getLearningProgress()}%` }"
+          ></div>
+        </div>
+      </div>
+
       <nav class="navigation">
         <button
-          v-for="button in navigationButtons"
-          :key="button.id"
-          :class="['nav-button', { active: currentView === button.id }]"
-          @click="changeView(button.id)"
+          v-for="view in views"
+          :key="view.id"
+          :class="['nav-button', { active: currentView === view.id }]"
+          @click="$emit('view-change', view.id)"
         >
-          {{ button.label }}
+          {{ view.name }}
         </button>
       </nav>
     </div>
@@ -20,25 +34,34 @@
 </template>
 
 <script>
+import { skills } from "../data/skills";
+
 export default {
   name: "GameHeader",
+  props: {
+    currentView: {
+      type: String,
+      required: true,
+    },
+    gameState: {
+      type: Object,
+      required: true,
+    },
+  },
   data() {
     return {
-      characterTitle: "Junior Developer",
-      money: 1000,
-      currentView: "job",
-      navigationButtons: [
-        { id: "job", label: "Job" },
-        { id: "skills", label: "Skills" },
-        { id: "learn", label: "Learn" },
-        { id: "shop", label: "Shop" },
+      views: [
+        { id: "job", name: "Jobs" },
+        { id: "skills", name: "Skills" },
+        { id: "learn", name: "Learn" },
+        { id: "shop", name: "Shop" },
       ],
     };
   },
-  methods: {
-    changeView(view) {
-      this.currentView = view;
-      this.$emit("view-change", view);
+  computed: {
+    currentLearning() {
+      if (!this.gameState.currentLearning) return null;
+      return skills[this.gameState.currentLearning];
     },
   },
 };
@@ -46,14 +69,14 @@ export default {
 
 <style scoped>
 .game-header {
-  background-color: #1a252f;
-  color: #ffffff;
+  background-color: #2c3e50;
   padding: 1rem;
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
-  z-index: 100;
+  z-index: 1000;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .header-content {
@@ -61,23 +84,57 @@ export default {
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  gap: 1.2rem;
-  padding: 0 1rem;
+  gap: 1rem;
 }
 
 .character-info {
   display: flex;
   justify-content: space-between;
-  font-size: 1.3rem;
-  margin-bottom: 0.5rem;
+  align-items: center;
+  padding: 0.5rem;
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 4px;
 }
 
-.title,
+h1 {
+  margin: 0;
+  font-size: 1.5rem;
+  color: #ffffff;
+}
+
 .money {
-  padding: 0.8rem 1.5rem;
+  font-size: 1.25rem;
+  color: #2ecc71;
+  font-weight: bold;
+}
+
+.learning-progress {
+  background-color: rgba(255, 255, 255, 0.05);
+  padding: 0.5rem;
+  border-radius: 4px;
+  margin-top: 0.5rem;
+}
+
+.progress-info {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+  color: #ffffff;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 8px;
   background-color: rgba(255, 255, 255, 0.1);
   border-radius: 4px;
-  font-weight: 500;
+  overflow: hidden;
+  margin-top: 0.5rem;
+}
+
+.progress {
+  height: 100%;
+  background-color: #3498db;
+  transition: width 0.3s ease;
 }
 
 .navigation {

@@ -1,18 +1,19 @@
-export class GameState {
+import { skills } from "../data/skills";
+import { jobs } from "../data/jobs";
+
+export default class GameState {
   constructor() {
     // Character basic info
     this.money = 0;
-    this.title = "Novice";
+    this.title = "Everyday Normal Guy";
 
     // Job related
     this.currentJob = null;
-    this.unlockedJobs = new Set();
-    this.jobProgress = 0; // Progress in current job
+    this.jobProgress = 0;
 
     // Skills and Learning progress
-    this.skills = new Set();
     this.currentLearning = null;
-    this.learningProgress = 0;
+    this.skillProgress = {};
   }
 
   // Money management
@@ -30,7 +31,7 @@ export class GameState {
 
   // Job management
   setJob(jobId) {
-    if (this.unlockedJobs.has(jobId)) {
+    if (this.isJobUnlocked(jobId)) {
       this.currentJob = jobId;
       this.jobProgress = 0; // Reset progress when changing jobs
       return true;
@@ -38,46 +39,115 @@ export class GameState {
     return false;
   }
 
-  unlockJob(jobId) {
-    this.unlockedJobs.add(jobId);
-  }
-
   isJobUnlocked(jobId) {
-    return this.unlockedJobs.has(jobId);
-  }
+    const job = jobs[jobId];
+    if (!job) return false;
 
-  updateJobProgress(amount) {
-    if (this.currentJob) {
-      this.jobProgress += amount;
-      // TODO: Implement job completion logic
-    }
+    // Check if required skills are met
+    const hasRequiredSkills = job.requiredSkills.every(
+      (skill) => this.skillProgress[skill] >= 100
+    );
+
+    // Check if required jobs are met
+    const hasRequiredJobs = job.requiredJobs.every((reqJobId) =>
+      this.isJobUnlocked(reqJobId)
+    );
+
+    return hasRequiredSkills && hasRequiredJobs;
   }
 
   // Skills management
-  addSkill(skillId) {
-    this.skills.add(skillId);
-  }
-
   hasSkill(skillId) {
-    return this.skills.has(skillId);
+    return this.skillProgress[skillId] >= 100;
   }
 
   // Learning management
   startLearning(learningId) {
     this.currentLearning = learningId;
-    this.learningProgress = 0;
+    this.skillProgress[learningId] = 0;
   }
 
   updateLearningProgress(amount) {
     if (this.currentLearning) {
-      this.learningProgress += amount;
-      // When learning is complete, grant the skill
-      if (this.learningProgress >= 100) {
-        this.addSkill(this.currentLearning);
+      this.skillProgress[this.currentLearning] += amount;
+      // When learning is complete, mark as learned
+      if (this.skillProgress[this.currentLearning] >= 100) {
         this.currentLearning = null;
-        this.learningProgress = 0;
       }
     }
+  }
+
+  // Get current learning progress
+  getLearningProgress() {
+    if (!this.currentLearning) return 0;
+    return this.skillProgress[this.currentLearning] || 0;
+  }
+
+  // Get available skills that can be learned
+  getAvailableSkills() {
+    return Object.values(skills).filter((skill) => {
+      // Check if skill is already learned
+      if (this.hasSkill(skill.id)) return false;
+
+      // Check if prerequisites are met
+      return skill.prerequisites.every((prereq) => this.hasSkill(prereq));
+    });
+  }
+
+  // Get current job info
+  getCurrentJobInfo() {
+    if (!this.currentJob) return null;
+    return jobs[this.currentJob];
+  }
+
+  // Get available jobs that can be unlocked
+  getAvailableJobs() {
+    return Object.values(jobs).filter((job) => {
+      // Check if job is already unlocked
+      if (this.isJobUnlocked(job.id)) return false;
+
+      // Check if required skills are met
+      const hasRequiredSkills = job.requiredSkills.every((skill) =>
+        this.hasSkill(skill)
+      );
+
+      // Check if required jobs are met
+      const hasRequiredJobs = job.requiredJobs.every((jobId) =>
+        this.isJobUnlocked(jobId)
+      );
+
+      return hasRequiredSkills && hasRequiredJobs;
+    });
+  }
+
+  // Get all jobs grouped by category
+  getJobsByCategory() {
+    const categories = {};
+    Object.values(jobs).forEach((job) => {
+      if (!categories[job.category]) {
+        categories[job.category] = [];
+      }
+      categories[job.category].push(job);
+    });
+    return categories;
+  }
+
+  // Get all skills grouped by category
+  getSkillsByCategory() {
+    const categories = {};
+    Object.values(skills).forEach((skill) => {
+      if (!categories[skill.category]) {
+        categories[skill.category] = [];
+      }
+      categories[skill.category].push(skill);
+    });
+    return categories;
+  }
+
+  // Get skill progress
+  getSkillProgress(skillId) {
+    if (!this.skillProgress[skillId]) return 0;
+    return this.skillProgress[skillId];
   }
 
   // State serialization
@@ -86,11 +156,9 @@ export class GameState {
       money: this.money,
       title: this.title,
       currentJob: this.currentJob,
-      unlockedJobs: Array.from(this.unlockedJobs),
       jobProgress: this.jobProgress,
-      skills: Array.from(this.skills),
       currentLearning: this.currentLearning,
-      learningProgress: this.learningProgress,
+      skillProgress: this.skillProgress,
     };
   }
 
@@ -100,11 +168,9 @@ export class GameState {
     state.money = json.money;
     state.title = json.title;
     state.currentJob = json.currentJob;
-    state.unlockedJobs = new Set(json.unlockedJobs);
     state.jobProgress = json.jobProgress;
-    state.skills = new Set(json.skills);
     state.currentLearning = json.currentLearning;
-    state.learningProgress = json.learningProgress;
+    state.skillProgress = json.skillProgress || {}; // Ensure it's initialized even if not in JSON
     return state;
   }
 
