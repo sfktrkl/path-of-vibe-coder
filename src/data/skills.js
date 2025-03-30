@@ -1,4 +1,48 @@
 export const skills = {
+  // Basic Computer Skills
+  computer_basics: {
+    id: "computer_basics",
+    name: "Computer Basics",
+    description: "Understanding how to use a computer",
+    category: "basic",
+    prerequisites: [],
+  },
+  typing: {
+    id: "typing",
+    name: "Touch Typing",
+    description: "Fast and accurate typing skills",
+    category: "basic",
+    prerequisites: ["computer_basics"],
+  },
+  internet_basics: {
+    id: "internet_basics",
+    name: "Internet Basics",
+    description: "Understanding how to use the internet",
+    category: "basic",
+    prerequisites: ["computer_basics"],
+  },
+  problem_solving: {
+    id: "problem_solving",
+    name: "Problem Solving",
+    description: "Basic problem-solving skills",
+    category: "basic",
+    prerequisites: ["computer_basics"],
+  },
+  math_basics: {
+    id: "math_basics",
+    name: "Basic Math",
+    description: "Basic mathematical skills",
+    category: "basic",
+    prerequisites: [],
+  },
+  logic: {
+    id: "logic",
+    name: "Logical Thinking",
+    description: "Basic logical reasoning skills",
+    category: "basic",
+    prerequisites: ["math_basics"],
+  },
+
   // Programming Languages
   javascript: {
     id: "javascript",

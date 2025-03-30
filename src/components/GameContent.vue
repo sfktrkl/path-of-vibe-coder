@@ -111,6 +111,7 @@
 
 <script>
 import { skills } from "../data/skills";
+import { jobs } from "../data/jobs";
 
 export default {
   name: "GameContent",
@@ -126,12 +127,11 @@ export default {
   },
   computed: {
     viewTitle() {
-      const titles = {
-        job: "Job Information",
-        skills: "Skills & Experience",
+      return {
+        job: "Career Path",
+        skills: "Skills",
         shop: "Shop",
-      };
-      return titles[this.currentView] || "Game Content";
+      }[this.currentView];
     },
     currentLearning() {
       if (!this.gameState.currentLearning) return null;
@@ -139,32 +139,37 @@ export default {
     },
     sortedSkills() {
       const allSkills = Object.values(skills);
-      // Filter skills to only show learned, available, or currently learning
       const filteredSkills = allSkills.filter(
         (skill) =>
           this.gameState.hasSkill(skill.id) ||
           this.isSkillAvailable(skill) ||
           this.gameState.currentLearning === skill.id
       );
-      // Sort skills by number of prerequisites (fewer prerequisites first)
       return filteredSkills.sort(
         (a, b) => a.prerequisites.length - b.prerequisites.length
       );
     },
     jobsByCategory() {
-      const categories = this.gameState.getJobsByCategory();
-      // Filter out jobs that require skills we don't have
-      Object.keys(categories).forEach((category) => {
-        categories[category] = categories[category].filter((job) => {
-          return job.requiredSkills.every((skill) =>
-            this.gameState.hasSkill(skill)
-          );
-        });
+      const categories = {};
+      Object.values(jobs).forEach((job) => {
+        // Always show the starting job
+        if (job.id === "everyday_normal_guy") {
+          if (!categories[job.category]) {
+            categories[job.category] = [];
+          }
+          categories[job.category].push(job);
+          return;
+        }
+
+        // For other jobs, check if they're available
+        if (this.gameState.isJobUnlocked(job.id)) {
+          if (!categories[job.category]) {
+            categories[job.category] = [];
+          }
+          categories[job.category].push(job);
+        }
       });
-      // Filter out categories that have no available jobs
-      return Object.fromEntries(
-        Object.entries(categories).filter(([, jobs]) => jobs.length > 0)
-      );
+      return categories;
     },
   },
   methods: {

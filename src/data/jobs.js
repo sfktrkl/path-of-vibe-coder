@@ -1,4 +1,76 @@
 export const jobs = {
+  // Starting Job
+  everyday_normal_guy: {
+    id: "everyday_normal_guy",
+    name: "Everyday Normal Guy",
+    description: "Just a regular person trying to make it in the tech world",
+    category: "basic",
+    salary: 500,
+    requiredSkills: [],
+    requiredJobs: [],
+  },
+
+  // Basic Career Path (Everyday Normal Guy)
+  computer_trainee: {
+    id: "computer_trainee",
+    name: "Computer Trainee",
+    description: "Learning the basics of computer usage",
+    category: "basic",
+    salary: 1000,
+    requiredSkills: ["computer_basics"],
+    requiredJobs: ["everyday_normal_guy"],
+  },
+  data_entry: {
+    id: "data_entry",
+    name: "Data Entry Specialist",
+    description: "Basic data entry work",
+    category: "basic",
+    salary: 1500,
+    requiredSkills: ["computer_basics", "typing"],
+    requiredJobs: ["computer_trainee"],
+  },
+  office_assistant: {
+    id: "office_assistant",
+    name: "Office Assistant",
+    description: "Basic office work with computers",
+    category: "basic",
+    salary: 2000,
+    requiredSkills: ["computer_basics", "typing", "internet_basics"],
+    requiredJobs: ["data_entry"],
+  },
+  it_support: {
+    id: "it_support",
+    name: "IT Support Assistant",
+    description: "Basic IT support work",
+    category: "basic",
+    salary: 2500,
+    requiredSkills: [
+      "computer_basics",
+      "typing",
+      "internet_basics",
+      "problem_solving",
+      "linux",
+    ],
+    requiredJobs: ["office_assistant"],
+  },
+  junior_tech: {
+    id: "junior_tech",
+    name: "Junior Technical Assistant",
+    description: "Entry-level technical work",
+    category: "basic",
+    salary: 3000,
+    requiredSkills: [
+      "computer_basics",
+      "typing",
+      "internet_basics",
+      "problem_solving",
+      "logic",
+      "git",
+      "html",
+    ],
+    requiredJobs: ["it_support"],
+  },
+
   // Web Development Career Path
   web_intern: {
     id: "web_intern",
@@ -6,8 +78,8 @@ export const jobs = {
     description: "Entry-level web development position",
     category: "web",
     salary: 2000,
-    requiredSkills: ["html", "css", "javascript"],
-    requiredJobs: [],
+    requiredSkills: ["html", "css", "javascript", "computer_basics", "typing"],
+    requiredJobs: ["junior_tech"],
   },
   junior_web_dev: {
     id: "junior_web_dev",
@@ -70,8 +142,8 @@ export const jobs = {
     description: "Entry-level DevOps position",
     category: "devops",
     salary: 2500,
-    requiredSkills: ["git", "linux"],
-    requiredJobs: [],
+    requiredSkills: ["git", "linux", "computer_basics", "typing"],
+    requiredJobs: ["junior_tech"],
   },
   junior_devops: {
     id: "junior_devops",
@@ -125,8 +197,8 @@ export const jobs = {
     description: "Entry-level game development position",
     category: "game",
     salary: 2000,
-    requiredSkills: ["cpp", "algorithms"],
-    requiredJobs: [],
+    requiredSkills: ["cpp", "algorithms", "computer_basics", "typing"],
+    requiredJobs: ["junior_tech"],
   },
   junior_game_dev: {
     id: "junior_game_dev",
@@ -179,8 +251,8 @@ export const jobs = {
     description: "Entry-level mobile development position",
     category: "mobile",
     salary: 2000,
-    requiredSkills: ["java", "html"],
-    requiredJobs: [],
+    requiredSkills: ["java", "html", "computer_basics", "typing"],
+    requiredJobs: ["junior_tech"],
   },
   junior_mobile_dev: {
     id: "junior_mobile_dev",
@@ -233,8 +305,8 @@ export const jobs = {
     description: "Entry-level AI/ML position",
     category: "ai",
     salary: 2500,
-    requiredSkills: ["python", "algorithms"],
-    requiredJobs: [],
+    requiredSkills: ["python", "algorithms", "computer_basics", "typing"],
+    requiredJobs: ["junior_tech"],
   },
   junior_ai_engineer: {
     id: "junior_ai_engineer",
@@ -293,8 +365,8 @@ export const jobs = {
     description: "Entry-level security position",
     category: "security",
     salary: 2500,
-    requiredSkills: ["security", "networking"],
-    requiredJobs: [],
+    requiredSkills: ["security", "networking", "computer_basics", "typing"],
+    requiredJobs: ["junior_tech"],
   },
   junior_security: {
     id: "junior_security",
