@@ -4,16 +4,41 @@
   justify-content: space-between;
   align-items: center;
   padding: 16px;
-  background-color: rgba(255, 255, 255, 0.05);
+  background-color: rgba(52, 152, 219, 0.1);
   border-radius: 6px;
   cursor: pointer;
   transition: all 0.2s ease;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(52, 152, 219, 0.3);
 }
 
 .item-base:hover {
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: rgba(52, 152, 219, 0.15);
   transform: translateY(-2px);
+}
+
+/* Current job or learning styling */
+.item-base.current,
+.item-base.learning {
+  background-color: rgba(46, 204, 113, 0.15);
+  border-color: rgba(46, 204, 113, 0.4);
+}
+
+.item-base.current:hover,
+.item-base.learning:hover {
+  background-color: rgba(46, 204, 113, 0.2);
+}
+
+/* Learned skill styling */
+.item-base.learned {
+  background-color: rgba(149, 165, 166, 0.1);
+  border-color: rgba(149, 165, 166, 0.3);
+  opacity: 0.8;
+  cursor: not-allowed;
+}
+
+.item-base.learned:hover {
+  background-color: rgba(149, 165, 166, 0.1);
+  transform: none;
 }
 
 .item-info {

@@ -68,3 +68,47 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.status-badge {
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.9em;
+  font-weight: 500;
+}
+
+.learned-badge {
+  background-color: #4a4a4a;
+  color: #888;
+}
+
+.available-badge {
+  background-color: #2ecc71;
+  color: white;
+}
+
+.locked-badge {
+  background-color: #e74c3c;
+  color: white;
+}
+
+.progress-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.progress-bar {
+  width: 100px;
+  height: 6px;
+  background-color: #1a1a1a;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.progress {
+  height: 100%;
+  background-color: #2ecc71;
+  transition: width 0.3s ease;
+}
+</style>
