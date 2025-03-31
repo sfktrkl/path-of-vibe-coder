@@ -6,28 +6,20 @@
         <div class="money">${{ gameState.money }}</div>
       </div>
 
-      <div class="learning-progress" v-if="currentLearning">
-        <div class="progress-info">
-          <span>Learning: {{ currentLearning.name }}</span>
-        </div>
-        <div class="progress-bar">
-          <div
-            class="progress"
-            :style="{ width: `${gameState.getLearningProgress()}%` }"
-          ></div>
-        </div>
-      </div>
+      <div class="progress-bars" v-if="currentLearning || currentJob">
+        <ProgressBar
+          v-if="currentLearning"
+          :label="`Learning: ${currentLearning.name}`"
+          :progress="gameState.getLearningProgress()"
+          type="learning"
+        />
 
-      <div class="job-progress" v-if="currentJob">
-        <div class="progress-info">
-          <span>Working: {{ currentJob.name }}</span>
-        </div>
-        <div class="progress-bar">
-          <div
-            class="progress"
-            :style="{ width: `${gameState.jobProgress}%` }"
-          ></div>
-        </div>
+        <ProgressBar
+          v-if="currentJob"
+          :label="`Working: ${currentJob.name}`"
+          :progress="gameState.jobProgress"
+          type="job"
+        />
       </div>
 
       <nav class="navigation">
@@ -47,9 +39,13 @@
 <script>
 import { skills } from "@data/skills";
 import { jobs } from "@data/jobs";
+import ProgressBar from "@items/ProgressBar.vue";
 
 export default {
   name: "GameHeader",
+  components: {
+    ProgressBar,
+  },
   props: {
     currentView: {
       type: String,
@@ -102,12 +98,12 @@ export default {
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 0.5rem;
   width: 100%;
   height: 100%;
   justify-content: flex-start;
   box-sizing: border-box;
-  padding: 24px;
+  padding: 16px;
   min-height: 140px;
 }
 
@@ -118,58 +114,25 @@ export default {
   padding: 0.5rem;
   background-color: rgba(255, 255, 255, 0.05);
   border-radius: 4px;
+  height: 48px;
 }
 
 h1 {
   margin: 0;
-  font-size: 1.5rem;
+  font-size: 1.1rem;
   color: #ffffff;
 }
 
 .money {
-  font-size: 1.25rem;
+  font-size: 1.1rem;
   color: #2ecc71;
   font-weight: bold;
 }
 
-.learning-progress {
-  background-color: rgba(255, 255, 255, 0.05);
-  padding: 0.5rem;
-  border-radius: 4px;
-  margin-top: 0.5rem;
-}
-
-.progress-info {
+.progress-bars {
   display: flex;
-  justify-content: space-between;
-  margin-bottom: 0.5rem;
-  color: #ffffff;
-}
-
-.progress-bar {
-  width: 100%;
-  height: 8px;
-  background-color: rgba(255, 255, 255, 0.1);
-  border-radius: 4px;
-  overflow: hidden;
-  margin-top: 0.5rem;
-}
-
-.progress {
-  height: 100%;
-  background-color: #3498db;
-  transition: width 0.3s ease;
-}
-
-.job-progress {
-  background-color: rgba(255, 255, 255, 0.05);
-  padding: 0.5rem;
-  border-radius: 4px;
-  margin-top: 0.5rem;
-}
-
-.job-progress .progress {
-  background-color: #e74c3c;
+  gap: 0.5rem;
+  height: 48px;
 }
 
 .navigation {
@@ -178,14 +141,14 @@ h1 {
   justify-content: space-between;
   width: 100%;
   margin-top: auto;
-  padding-bottom: 0;
+  height: 48px;
 }
 
 .nav-button {
   background-color: rgba(255, 255, 255, 0.1);
   color: #ffffff;
   border: none;
-  padding: 0.8rem 1.5rem;
+  padding: 0;
   border-radius: 4px;
   cursor: pointer;
   transition: all 0.2s;
@@ -193,6 +156,10 @@ h1 {
   font-size: 1.1rem;
   font-weight: 500;
   min-width: 120px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .nav-button:hover {
@@ -205,12 +172,12 @@ h1 {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
-/* Add dynamic height when job is selected */
-.game-header:has(.job-progress) {
-  min-height: 220px;
+/* Update dynamic height for the new layout */
+.game-header:has(.progress-bars) {
+  min-height: 180px;
 }
 
-.game-header:has(.job-progress) .header-content {
-  min-height: 220px;
+.game-header:has(.progress-bars) .header-content {
+  min-height: 180px;
 }
 </style>
