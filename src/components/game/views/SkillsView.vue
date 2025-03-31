@@ -36,9 +36,18 @@ export default {
           this.isSkillAvailable(skill) ||
           this.gameState.currentLearning === skill.id
       );
-      return filteredSkills.sort(
-        (a, b) => a.prerequisites.length - b.prerequisites.length
-      );
+
+      // Sort skills: learned at the bottom, maintain original order for others
+      return filteredSkills.sort((a, b) => {
+        // If one is learned and the other isn't, put learned at the bottom
+        if (this.gameState.hasSkill(a.id) && !this.gameState.hasSkill(b.id))
+          return 1;
+        if (!this.gameState.hasSkill(a.id) && this.gameState.hasSkill(b.id))
+          return -1;
+
+        // For remaining skills, sort by prerequisites length
+        return a.prerequisites.length - b.prerequisites.length;
+      });
     },
   },
   methods: {
