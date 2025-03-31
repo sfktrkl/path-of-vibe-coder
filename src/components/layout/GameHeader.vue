@@ -91,12 +91,12 @@ export default {
   position: relative;
   z-index: 1000;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  height: 220px;
   display: flex;
   align-items: flex-start;
   margin-top: 0;
   width: 100%;
   box-sizing: border-box;
+  min-height: 140px;
 }
 
 .header-content {
@@ -110,6 +110,7 @@ export default {
   justify-content: flex-start;
   box-sizing: border-box;
   padding: 24px;
+  min-height: 140px;
 }
 
 .character-info {
@@ -204,5 +205,14 @@ h1 {
 .nav-button.active {
   background-color: rgba(255, 255, 255, 0.3);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Add dynamic height when job is selected */
+.game-header:has(.job-progress) {
+  min-height: 220px;
+}
+
+.game-header:has(.job-progress) .header-content {
+  min-height: 220px;
 }
 </style>
