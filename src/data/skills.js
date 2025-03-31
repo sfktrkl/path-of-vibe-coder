@@ -6,6 +6,7 @@ export const skills = {
     description: "Understanding how to use a computer",
     category: "basic",
     prerequisites: [],
+    timeRequired: 10, // 10 seconds
   },
   typing: {
     id: "typing",
@@ -13,6 +14,7 @@ export const skills = {
     description: "Fast and accurate typing skills",
     category: "basic",
     prerequisites: ["computer_basics"],
+    timeRequired: 30, // 30 seconds
   },
   internet_basics: {
     id: "internet_basics",
@@ -20,6 +22,7 @@ export const skills = {
     description: "Understanding how to use the internet",
     category: "basic",
     prerequisites: ["computer_basics"],
+    timeRequired: 30, // 30 seconds
   },
   problem_solving: {
     id: "problem_solving",
@@ -27,6 +30,7 @@ export const skills = {
     description: "Basic problem-solving skills",
     category: "basic",
     prerequisites: ["computer_basics"],
+    timeRequired: 60, // 1 minute
   },
   math_basics: {
     id: "math_basics",
@@ -34,6 +38,7 @@ export const skills = {
     description: "Basic mathematical skills",
     category: "basic",
     prerequisites: [],
+    timeRequired: 30, // 30 seconds
   },
   logic: {
     id: "logic",
@@ -41,6 +46,7 @@ export const skills = {
     description: "Basic logical reasoning skills",
     category: "basic",
     prerequisites: ["math_basics"],
+    timeRequired: 60, // 1 minute
   },
 
   // Programming Languages
@@ -50,6 +56,7 @@ export const skills = {
     description: "The language of the web",
     category: "programming",
     prerequisites: [],
+    timeRequired: 120, // 2 minutes
   },
   typescript: {
     id: "typescript",
@@ -57,6 +64,7 @@ export const skills = {
     description: "Typed JavaScript",
     category: "programming",
     prerequisites: ["javascript"],
+    timeRequired: 180, // 3 minutes
   },
   python: {
     id: "python",
@@ -64,6 +72,7 @@ export const skills = {
     description: "Versatile programming language",
     category: "programming",
     prerequisites: [],
+    timeRequired: 120, // 2 minutes
   },
   java: {
     id: "java",
@@ -71,6 +80,7 @@ export const skills = {
     description: "Enterprise-grade programming language",
     category: "programming",
     prerequisites: [],
+    timeRequired: 180, // 3 minutes
   },
   cpp: {
     id: "cpp",
@@ -78,6 +88,7 @@ export const skills = {
     description: "Systems programming language",
     category: "programming",
     prerequisites: [],
+    timeRequired: 240, // 4 minutes
   },
   rust: {
     id: "rust",
@@ -85,6 +96,7 @@ export const skills = {
     description: "Modern systems programming language",
     category: "programming",
     prerequisites: ["cpp"],
+    timeRequired: 300, // 5 minutes
   },
 
   // Web Development
@@ -94,6 +106,7 @@ export const skills = {
     description: "Web page structure",
     category: "web",
     prerequisites: [],
+    timeRequired: 60, // 1 minute
   },
   css: {
     id: "css",
@@ -101,6 +114,7 @@ export const skills = {
     description: "Web styling",
     category: "web",
     prerequisites: ["html"],
+    timeRequired: 120, // 2 minutes
   },
   react: {
     id: "react",
@@ -108,6 +122,7 @@ export const skills = {
     description: "Frontend framework",
     category: "web",
     prerequisites: ["javascript", "html", "css"],
+    timeRequired: 240, // 4 minutes
   },
   vue: {
     id: "vue",
@@ -115,6 +130,7 @@ export const skills = {
     description: "Frontend framework",
     category: "web",
     prerequisites: ["javascript", "html", "css"],
+    timeRequired: 240, // 4 minutes
   },
   nodejs: {
     id: "nodejs",
@@ -122,6 +138,7 @@ export const skills = {
     description: "Backend JavaScript runtime",
     category: "web",
     prerequisites: ["javascript"],
+    timeRequired: 180, // 3 minutes
   },
   express: {
     id: "express",
@@ -129,6 +146,7 @@ export const skills = {
     description: "Backend web framework",
     category: "web",
     prerequisites: ["nodejs"],
+    timeRequired: 180, // 3 minutes
   },
 
   // Database
@@ -138,6 +156,7 @@ export const skills = {
     description: "Database querying",
     category: "database",
     prerequisites: [],
+    timeRequired: 120, // 2 minutes
   },
   mongodb: {
     id: "mongodb",
@@ -145,6 +164,7 @@ export const skills = {
     description: "NoSQL database",
     category: "database",
     prerequisites: ["javascript"],
+    timeRequired: 180, // 3 minutes
   },
   postgresql: {
     id: "postgresql",
@@ -152,6 +172,7 @@ export const skills = {
     description: "Relational database",
     category: "database",
     prerequisites: ["sql"],
+    timeRequired: 180, // 3 minutes
   },
   redis: {
     id: "redis",
@@ -159,6 +180,7 @@ export const skills = {
     description: "In-memory database",
     category: "database",
     prerequisites: ["sql"],
+    timeRequired: 180, // 3 minutes
   },
 
   // DevOps & Cloud
@@ -168,6 +190,7 @@ export const skills = {
     description: "Version control",
     category: "devops",
     prerequisites: [],
+    timeRequired: 60, // 1 minute
   },
   docker: {
     id: "docker",
@@ -175,6 +198,7 @@ export const skills = {
     description: "Containerization",
     category: "devops",
     prerequisites: ["git"],
+    timeRequired: 180, // 3 minutes
   },
   kubernetes: {
     id: "kubernetes",
@@ -182,6 +206,7 @@ export const skills = {
     description: "Container orchestration",
     category: "devops",
     prerequisites: ["docker"],
+    timeRequired: 300, // 5 minutes
   },
   aws: {
     id: "aws",
@@ -189,6 +214,7 @@ export const skills = {
     description: "Cloud platform",
     category: "devops",
     prerequisites: ["docker"],
+    timeRequired: 300, // 5 minutes
   },
   ci_cd: {
     id: "ci_cd",
@@ -196,6 +222,7 @@ export const skills = {
     description: "Continuous Integration/Deployment",
     category: "devops",
     prerequisites: ["git", "docker"],
+    timeRequired: 240, // 4 minutes
   },
 
   // Game Development
@@ -205,6 +232,7 @@ export const skills = {
     description: "Game engine",
     category: "game",
     prerequisites: ["csharp"],
+    timeRequired: 300, // 5 minutes
   },
   unreal: {
     id: "unreal",
@@ -212,6 +240,7 @@ export const skills = {
     description: "Game engine",
     category: "game",
     prerequisites: ["cpp"],
+    timeRequired: 300, // 5 minutes
   },
   opengl: {
     id: "opengl",
@@ -219,6 +248,7 @@ export const skills = {
     description: "Graphics library",
     category: "game",
     prerequisites: ["cpp"],
+    timeRequired: 240, // 4 minutes
   },
   vulkan: {
     id: "vulkan",
@@ -226,6 +256,7 @@ export const skills = {
     description: "Graphics API",
     category: "game",
     prerequisites: ["opengl"],
+    timeRequired: 360, // 6 minutes
   },
 
   // Mobile Development
@@ -235,6 +266,7 @@ export const skills = {
     description: "Mobile app development",
     category: "mobile",
     prerequisites: ["java"],
+    timeRequired: 240, // 4 minutes
   },
   ios: {
     id: "ios",
@@ -242,6 +274,7 @@ export const skills = {
     description: "Mobile app development",
     category: "mobile",
     prerequisites: ["swift"],
+    timeRequired: 240, // 4 minutes
   },
   react_native: {
     id: "react_native",
@@ -249,6 +282,7 @@ export const skills = {
     description: "Cross-platform mobile development",
     category: "mobile",
     prerequisites: ["react", "javascript"],
+    timeRequired: 300, // 5 minutes
   },
 
   // AI & Machine Learning
@@ -258,6 +292,7 @@ export const skills = {
     description: "AI algorithms and models",
     category: "ai",
     prerequisites: ["python", "math"],
+    timeRequired: 360, // 6 minutes
   },
   deep_learning: {
     id: "deep_learning",
@@ -265,6 +300,7 @@ export const skills = {
     description: "Neural networks",
     category: "ai",
     prerequisites: ["machine_learning"],
+    timeRequired: 420, // 7 minutes
   },
   tensorflow: {
     id: "tensorflow",
@@ -272,6 +308,7 @@ export const skills = {
     description: "Machine learning framework",
     category: "ai",
     prerequisites: ["python", "machine_learning"],
+    timeRequired: 300, // 5 minutes
   },
 
   // Security
@@ -281,6 +318,7 @@ export const skills = {
     description: "Software security principles",
     category: "security",
     prerequisites: [],
+    timeRequired: 180, // 3 minutes
   },
   cryptography: {
     id: "cryptography",
@@ -288,6 +326,7 @@ export const skills = {
     description: "Encryption and security",
     category: "security",
     prerequisites: ["security"],
+    timeRequired: 240, // 4 minutes
   },
   penetration_testing: {
     id: "penetration_testing",
@@ -295,6 +334,7 @@ export const skills = {
     description: "Security testing",
     category: "security",
     prerequisites: ["security", "networking"],
+    timeRequired: 300, // 5 minutes
   },
 
   // Other
@@ -304,6 +344,7 @@ export const skills = {
     description: "Problem-solving algorithms",
     category: "fundamentals",
     prerequisites: [],
+    timeRequired: 180, // 3 minutes
   },
   data_structures: {
     id: "data_structures",
@@ -311,6 +352,7 @@ export const skills = {
     description: "Data organization",
     category: "fundamentals",
     prerequisites: ["algorithms"],
+    timeRequired: 240, // 4 minutes
   },
   networking: {
     id: "networking",
@@ -318,6 +360,7 @@ export const skills = {
     description: "Computer networks",
     category: "fundamentals",
     prerequisites: [],
+    timeRequired: 180, // 3 minutes
   },
   linux: {
     id: "linux",
@@ -325,5 +368,6 @@ export const skills = {
     description: "Operating system",
     category: "fundamentals",
     prerequisites: [],
+    timeRequired: 180, // 3 minutes
   },
 };

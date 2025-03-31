@@ -8,6 +8,7 @@ export const jobs = {
     salary: 500,
     requiredSkills: [],
     requiredJobs: [],
+    timeRequired: 30, // 30 seconds
   },
 
   // Basic Career Path (Everyday Normal Guy)
@@ -19,6 +20,7 @@ export const jobs = {
     salary: 1000,
     requiredSkills: ["computer_basics"],
     requiredJobs: ["everyday_normal_guy"],
+    timeRequired: 60, // 1 minute
   },
   data_entry: {
     id: "data_entry",
@@ -28,6 +30,7 @@ export const jobs = {
     salary: 1500,
     requiredSkills: ["computer_basics", "typing"],
     requiredJobs: ["computer_trainee"],
+    timeRequired: 90, // 1.5 minutes
   },
   office_assistant: {
     id: "office_assistant",
@@ -37,6 +40,7 @@ export const jobs = {
     salary: 2000,
     requiredSkills: ["computer_basics", "typing", "internet_basics"],
     requiredJobs: ["data_entry"],
+    timeRequired: 120, // 2 minutes
   },
   it_support: {
     id: "it_support",
@@ -52,6 +56,7 @@ export const jobs = {
       "linux",
     ],
     requiredJobs: ["office_assistant"],
+    timeRequired: 180, // 3 minutes
   },
   junior_tech: {
     id: "junior_tech",
@@ -69,6 +74,7 @@ export const jobs = {
       "html",
     ],
     requiredJobs: ["it_support"],
+    timeRequired: 240, // 4 minutes
   },
 
   // Web Development Career Path
@@ -80,6 +86,7 @@ export const jobs = {
     salary: 2000,
     requiredSkills: ["html", "css", "javascript", "computer_basics", "typing"],
     requiredJobs: ["junior_tech"],
+    timeRequired: 180, // 3 minutes
   },
   junior_web_dev: {
     id: "junior_web_dev",
@@ -89,6 +96,7 @@ export const jobs = {
     salary: 3500,
     requiredSkills: ["html", "css", "javascript", "react"],
     requiredJobs: ["web_intern"],
+    timeRequired: 240, // 4 minutes
   },
   web_dev: {
     id: "web_dev",
@@ -98,6 +106,7 @@ export const jobs = {
     salary: 5000,
     requiredSkills: ["html", "css", "javascript", "react", "nodejs", "express"],
     requiredJobs: ["junior_web_dev"],
+    timeRequired: 300, // 5 minutes
   },
   senior_web_dev: {
     id: "senior_web_dev",
@@ -115,6 +124,7 @@ export const jobs = {
       "typescript",
     ],
     requiredJobs: ["web_dev"],
+    timeRequired: 360, // 6 minutes
   },
   web_architect: {
     id: "web_architect",
@@ -133,6 +143,7 @@ export const jobs = {
       "ci_cd",
     ],
     requiredJobs: ["senior_web_dev"],
+    timeRequired: 420, // 7 minutes
   },
 
   // DevOps Career Path
@@ -144,6 +155,7 @@ export const jobs = {
     salary: 2500,
     requiredSkills: ["git", "linux", "computer_basics", "typing"],
     requiredJobs: ["junior_tech"],
+    timeRequired: 180, // 3 minutes
   },
   junior_devops: {
     id: "junior_devops",
@@ -153,6 +165,7 @@ export const jobs = {
     salary: 4000,
     requiredSkills: ["git", "linux", "docker"],
     requiredJobs: ["devops_intern"],
+    timeRequired: 240, // 4 minutes
   },
   devops_engineer: {
     id: "devops_engineer",
@@ -162,6 +175,7 @@ export const jobs = {
     salary: 6000,
     requiredSkills: ["git", "linux", "docker", "kubernetes", "aws"],
     requiredJobs: ["junior_devops"],
+    timeRequired: 300, // 5 minutes
   },
   senior_devops: {
     id: "senior_devops",
@@ -171,6 +185,7 @@ export const jobs = {
     salary: 9000,
     requiredSkills: ["git", "linux", "docker", "kubernetes", "aws", "ci_cd"],
     requiredJobs: ["devops_engineer"],
+    timeRequired: 360, // 6 minutes
   },
   devops_architect: {
     id: "devops_architect",
@@ -188,6 +203,7 @@ export const jobs = {
       "security",
     ],
     requiredJobs: ["senior_devops"],
+    timeRequired: 420, // 7 minutes
   },
 
   // Game Development Career Path
@@ -199,6 +215,7 @@ export const jobs = {
     salary: 2000,
     requiredSkills: ["cpp", "algorithms", "computer_basics", "typing"],
     requiredJobs: ["junior_tech"],
+    timeRequired: 180, // 3 minutes
   },
   junior_game_dev: {
     id: "junior_game_dev",
@@ -208,6 +225,7 @@ export const jobs = {
     salary: 3500,
     requiredSkills: ["cpp", "algorithms", "unity"],
     requiredJobs: ["game_intern"],
+    timeRequired: 240, // 4 minutes
   },
   game_dev: {
     id: "game_dev",
@@ -217,6 +235,7 @@ export const jobs = {
     salary: 5000,
     requiredSkills: ["cpp", "algorithms", "unity", "opengl"],
     requiredJobs: ["junior_game_dev"],
+    timeRequired: 300, // 5 minutes
   },
   senior_game_dev: {
     id: "senior_game_dev",
@@ -226,6 +245,7 @@ export const jobs = {
     salary: 8000,
     requiredSkills: ["cpp", "algorithms", "unity", "opengl", "vulkan"],
     requiredJobs: ["game_dev"],
+    timeRequired: 360, // 6 minutes
   },
   game_architect: {
     id: "game_architect",
@@ -242,6 +262,7 @@ export const jobs = {
       "networking",
     ],
     requiredJobs: ["senior_game_dev"],
+    timeRequired: 420, // 7 minutes
   },
 
   // Mobile Development Career Path
@@ -253,6 +274,7 @@ export const jobs = {
     salary: 2000,
     requiredSkills: ["java", "html", "computer_basics", "typing"],
     requiredJobs: ["junior_tech"],
+    timeRequired: 180, // 3 minutes
   },
   junior_mobile_dev: {
     id: "junior_mobile_dev",
@@ -262,6 +284,7 @@ export const jobs = {
     salary: 3500,
     requiredSkills: ["java", "html", "android"],
     requiredJobs: ["mobile_intern"],
+    timeRequired: 240, // 4 minutes
   },
   mobile_dev: {
     id: "mobile_dev",
@@ -271,6 +294,7 @@ export const jobs = {
     salary: 5000,
     requiredSkills: ["java", "html", "android", "react_native"],
     requiredJobs: ["junior_mobile_dev"],
+    timeRequired: 300, // 5 minutes
   },
   senior_mobile_dev: {
     id: "senior_mobile_dev",
@@ -280,6 +304,7 @@ export const jobs = {
     salary: 8000,
     requiredSkills: ["java", "html", "android", "react_native", "ios"],
     requiredJobs: ["mobile_dev"],
+    timeRequired: 360, // 6 minutes
   },
   mobile_architect: {
     id: "mobile_architect",
@@ -296,6 +321,7 @@ export const jobs = {
       "security",
     ],
     requiredJobs: ["senior_mobile_dev"],
+    timeRequired: 420, // 7 minutes
   },
 
   // AI/ML Career Path
@@ -307,6 +333,7 @@ export const jobs = {
     salary: 2500,
     requiredSkills: ["python", "algorithms", "computer_basics", "typing"],
     requiredJobs: ["junior_tech"],
+    timeRequired: 180, // 3 minutes
   },
   junior_ai_engineer: {
     id: "junior_ai_engineer",
@@ -316,6 +343,7 @@ export const jobs = {
     salary: 4000,
     requiredSkills: ["python", "algorithms", "machine_learning"],
     requiredJobs: ["ai_intern"],
+    timeRequired: 240, // 4 minutes
   },
   ai_engineer: {
     id: "ai_engineer",
@@ -325,6 +353,7 @@ export const jobs = {
     salary: 6000,
     requiredSkills: ["python", "algorithms", "machine_learning", "tensorflow"],
     requiredJobs: ["junior_ai_engineer"],
+    timeRequired: 300, // 5 minutes
   },
   senior_ai_engineer: {
     id: "senior_ai_engineer",
@@ -340,6 +369,7 @@ export const jobs = {
       "deep_learning",
     ],
     requiredJobs: ["ai_engineer"],
+    timeRequired: 360, // 6 minutes
   },
   ai_architect: {
     id: "ai_architect",
@@ -356,6 +386,7 @@ export const jobs = {
       "security",
     ],
     requiredJobs: ["senior_ai_engineer"],
+    timeRequired: 420, // 7 minutes
   },
 
   // Security Career Path
@@ -367,6 +398,7 @@ export const jobs = {
     salary: 2500,
     requiredSkills: ["security", "networking", "computer_basics", "typing"],
     requiredJobs: ["junior_tech"],
+    timeRequired: 180, // 3 minutes
   },
   junior_security: {
     id: "junior_security",
@@ -376,6 +408,7 @@ export const jobs = {
     salary: 4000,
     requiredSkills: ["security", "networking", "cryptography"],
     requiredJobs: ["security_intern"],
+    timeRequired: 240, // 4 minutes
   },
   security_engineer: {
     id: "security_engineer",
@@ -390,6 +423,7 @@ export const jobs = {
       "penetration_testing",
     ],
     requiredJobs: ["junior_security"],
+    timeRequired: 300, // 5 minutes
   },
   senior_security: {
     id: "senior_security",
@@ -405,6 +439,7 @@ export const jobs = {
       "linux",
     ],
     requiredJobs: ["security_engineer"],
+    timeRequired: 360, // 6 minutes
   },
   security_architect: {
     id: "security_architect",
@@ -421,5 +456,6 @@ export const jobs = {
       "ci_cd",
     ],
     requiredJobs: ["senior_security"],
+    timeRequired: 420, // 7 minutes
   },
 };
