@@ -15,6 +15,7 @@
 import GameHeader from "@layout/GameHeader.vue";
 import GameContent from "@layout/GameContent.vue";
 import GameState from "@models/GameState.js";
+import GameTimer from "@models/GameTimer.js";
 
 export default {
   name: "App",
@@ -26,6 +27,7 @@ export default {
     return {
       currentView: "job",
       gameState: new GameState(),
+      gameTimer: null,
     };
   },
   methods: {
@@ -42,6 +44,16 @@ export default {
       } catch (error) {
         console.error("Failed to load saved game state:", error);
       }
+    }
+
+    // Initialize and start the game timer
+    this.gameTimer = new GameTimer(this.gameState);
+    this.gameTimer.start();
+  },
+  beforeUnmount() {
+    // Stop the timer when the component is destroyed
+    if (this.gameTimer) {
+      this.gameTimer.stop();
     }
   },
   watch: {

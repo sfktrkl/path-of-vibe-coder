@@ -19,6 +19,19 @@
         </div>
       </div>
 
+      <div class="job-progress" v-if="currentJob">
+        <div class="progress-info">
+          <span>Working: {{ currentJob.name }}</span>
+          <span>{{ gameState.jobProgress.toFixed(1) }}%</span>
+        </div>
+        <div class="progress-bar">
+          <div
+            class="progress"
+            :style="{ width: `${gameState.jobProgress}%` }"
+          ></div>
+        </div>
+      </div>
+
       <nav class="navigation">
         <button
           v-for="view in views"
@@ -35,6 +48,7 @@
 
 <script>
 import { skills } from "@data/skills";
+import { jobs } from "@data/jobs";
 
 export default {
   name: "GameHeader",
@@ -61,6 +75,10 @@ export default {
     currentLearning() {
       if (!this.gameState.currentLearning) return null;
       return skills[this.gameState.currentLearning];
+    },
+    currentJob() {
+      if (!this.gameState.currentJob) return null;
+      return jobs[this.gameState.currentJob];
     },
   },
 };
@@ -142,6 +160,17 @@ h1 {
   height: 100%;
   background-color: #3498db;
   transition: width 0.3s ease;
+}
+
+.job-progress {
+  background-color: rgba(255, 255, 255, 0.05);
+  padding: 0.5rem;
+  border-radius: 4px;
+  margin-top: 0.5rem;
+}
+
+.job-progress .progress {
+  background-color: #e74c3c;
 }
 
 .navigation {
