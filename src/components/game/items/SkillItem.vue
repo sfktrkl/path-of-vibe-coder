@@ -27,7 +27,6 @@
             }"
           ></div>
         </div>
-        <span>{{ gameState.getSkillProgress(skill.id) }}%</span>
       </div>
       <span
         v-else-if="gameState.hasSkill(skill.id)"
@@ -75,6 +74,9 @@ export default {
   border-radius: 4px;
   font-size: 0.9em;
   font-weight: 500;
+  width: 100px;
+  text-align: center;
+  display: inline-block;
 }
 
 .learned-badge {
@@ -93,13 +95,11 @@ export default {
 }
 
 .progress-container {
-  display: flex;
-  align-items: center;
-  gap: 8px;
+  width: 100px;
 }
 
 .progress-bar {
-  width: 100px;
+  width: 100%;
   height: 6px;
   background-color: #1a1a1a;
   border-radius: 3px;

@@ -9,7 +9,6 @@
       <div class="learning-progress" v-if="currentLearning">
         <div class="progress-info">
           <span>Learning: {{ currentLearning.name }}</span>
-          <span>{{ gameState.getLearningProgress() }}%</span>
         </div>
         <div class="progress-bar">
           <div
@@ -22,7 +21,6 @@
       <div class="job-progress" v-if="currentJob">
         <div class="progress-info">
           <span>Working: {{ currentJob.name }}</span>
-          <span>{{ gameState.jobProgress.toFixed(1) }}%</span>
         </div>
         <div class="progress-bar">
           <div
