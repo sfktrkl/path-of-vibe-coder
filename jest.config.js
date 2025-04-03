@@ -10,6 +10,7 @@ module.exports = {
     "^@styles/(.*)$": "<rootDir>/src/styles/$1",
     "^@items/(.*)$": "<rootDir>/src/components/game/items/$1",
     "^@views/(.*)$": "<rootDir>/src/components/game/views/$1",
+    "^@mixins/(.*)$": "<rootDir>/src/mixins/$1",
     "\\.(css|less|scss|sass)$": "identity-obj-proxy",
   },
   testEnvironment: "jsdom",
