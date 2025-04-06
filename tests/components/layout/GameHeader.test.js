@@ -1,5 +1,5 @@
 import { mount } from "@vue/test-utils";
-import GameHeader from "@/components/layout/GameHeader.vue";
+import GameHeader from "@layout/GameHeader.vue";
 
 // Mock the skills and jobs data
 jest.mock("@data/skills", () => ({

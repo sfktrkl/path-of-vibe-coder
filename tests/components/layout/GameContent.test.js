@@ -1,5 +1,5 @@
 import { mount } from "@vue/test-utils";
-import GameContent from "@/components/layout/GameContent.vue";
+import GameContent from "@layout/GameContent.vue";
 
 // Mock the view components
 jest.mock("@views/SkillsView.vue", () => ({

@@ -1,4 +1,4 @@
-import GameTimer from "@/models/GameTimer";
+import GameTimer from "@models/GameTimer";
 
 // Mock the data modules
 jest.mock("@data/skills", () => ({
