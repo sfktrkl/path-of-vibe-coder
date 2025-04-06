@@ -1,0 +1,80 @@
+import { mount } from "@vue/test-utils";
+import SkillItem from "@items/SkillItem.vue";
+import { skills } from "@data/skills";
+
+// Mock the style import
+jest.mock("@styles/item-styles.css", () => ({}));
+
+describe("SkillItem", () => {
+  const mockGameState = {
+    hasSkill: jest.fn(),
+    startLearning: jest.fn(),
+    currentLearning: null,
+    getSkillProgress: jest.fn().mockReturnValue(50),
+  };
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  const createWrapper = (
+    skillId,
+    hasSkill = false,
+    isAvailable = true,
+    isLearning = false
+  ) => {
+    mockGameState.hasSkill.mockReturnValue(hasSkill);
+    mockGameState.currentLearning = isLearning ? skillId : null;
+
+    return mount(SkillItem, {
+      props: {
+        skill: skills[skillId],
+        gameState: mockGameState,
+        isAvailable,
+      },
+    });
+  };
+
+  it("renders skill information correctly", () => {
+    const wrapper = createWrapper("computer_basics");
+    expect(wrapper.find(".item-name").text()).toBe("Computer Basics");
+    expect(wrapper.find(".item-description").text()).toBe(
+      "Understanding how to use a computer"
+    );
+  });
+
+  it("shows learned badge when skill is learned", () => {
+    const wrapper = createWrapper("computer_basics", true);
+    expect(wrapper.find(".learned-badge").text()).toBe("Learned");
+  });
+
+  it("shows available badge when skill is available", () => {
+    const wrapper = createWrapper("computer_basics", false, true);
+    expect(wrapper.find(".available-badge").text()).toBe("Available");
+  });
+
+  it("shows locked badge when skill is not available", () => {
+    const wrapper = createWrapper("computer_basics", false, false);
+    expect(wrapper.find(".locked-badge").text()).toBe("Locked");
+  });
+
+  it("shows progress bar when skill is being learned", () => {
+    const wrapper = createWrapper("computer_basics", false, true, true);
+    expect(wrapper.find(".progress-bar").exists()).toBe(true);
+    expect(wrapper.find(".progress").attributes("style")).toContain(
+      "width: 50%"
+    );
+  });
+
+  it("calls startLearning when clicked and skill is available", () => {
+    const wrapper = createWrapper("computer_basics", false, true);
+    wrapper.trigger("click");
+    expect(mockGameState.startLearning).toHaveBeenCalledWith("computer_basics");
+  });
+
+  it("does not call startLearning when clicked and skill is already learned", () => {
+    const wrapper = createWrapper("computer_basics", true, true);
+    wrapper.trigger("click");
+    expect(mockGameState.startLearning).not.toHaveBeenCalled();
+  });
+});
