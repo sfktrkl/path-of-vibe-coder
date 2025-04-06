@@ -7,7 +7,7 @@ module.exports = {
   moduleNameMapper: {
     "^@/(.*)$": "<rootDir>/src/$1",
     "^@data/(.*)$": "<rootDir>/src/data/$1",
-    "^@styles/(.*)$": "<rootDir>/src/styles/$1",
+    "^@styles/(.*)$": "<rootDir>/src/assets/styles/$1",
     "^@items/(.*)$": "<rootDir>/src/components/game/items/$1",
     "^@views/(.*)$": "<rootDir>/src/components/game/views/$1",
     "^@mixins/(.*)$": "<rootDir>/src/mixins/$1",
