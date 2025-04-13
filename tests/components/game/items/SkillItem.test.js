@@ -77,4 +77,28 @@ describe("SkillItem", () => {
     wrapper.trigger("click");
     expect(mockGameState.startLearning).not.toHaveBeenCalled();
   });
+
+  it("applies correct classes based on skill state", () => {
+    const wrapper = createWrapper("computer_basics", true, true);
+    expect(wrapper.classes()).toContain("learned");
+    expect(wrapper.classes()).toContain("item-base");
+
+    const availableWrapper = createWrapper("computer_basics", false, true);
+    expect(availableWrapper.classes()).toContain("available");
+
+    const learningWrapper = createWrapper("computer_basics", false, true, true);
+    expect(learningWrapper.classes()).toContain("learning");
+  });
+
+  it("handles empty skill data", () => {
+    const wrapper = mount(SkillItem, {
+      props: {
+        skill: { id: "test", name: "", description: "" },
+        gameState: mockGameState,
+        isAvailable: true,
+      },
+    });
+    expect(wrapper.find(".item-name").text()).toBe("");
+    expect(wrapper.find(".item-description").text()).toBe("");
+  });
 });
