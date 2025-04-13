@@ -6,6 +6,9 @@ jest.mock("@data/skills", () => ({
     test_skill: {
       timeRequired: 10,
     },
+    test_skill_2: {
+      timeRequired: 20,
+    },
   },
 }));
 
@@ -14,6 +17,10 @@ jest.mock("@data/jobs", () => ({
     test_job: {
       timeRequired: 10,
       salary: 100,
+    },
+    test_job_2: {
+      timeRequired: 20,
+      salary: 200,
     },
   },
 }));
@@ -92,5 +99,75 @@ describe("GameTimer", () => {
       learningProgress: 0,
       jobProgress: 0,
     });
+  });
+
+  test("should handle learning and working simultaneously", () => {
+    mockGameState.currentLearning = "test_skill";
+    mockGameState.currentJob = "test_job";
+    mockGameState.jobProgress = 50;
+
+    timer.start();
+    jest.advanceTimersByTime(1000);
+
+    expect(mockGameState.updateLearningProgress).toHaveBeenCalled();
+    expect(mockGameState.jobProgress).toBeGreaterThan(50);
+  });
+
+  test("should handle different progress rates", () => {
+    mockGameState.currentLearning = "test_skill_2"; // 20s required
+    mockGameState.currentJob = "test_job_2"; // 20s required
+
+    timer.start();
+    jest.advanceTimersByTime(1000);
+
+    expect(mockGameState.updateLearningProgress).toHaveBeenCalled();
+    expect(mockGameState.jobProgress).toBeGreaterThan(0);
+  });
+
+  test("should handle invalid skill IDs", () => {
+    mockGameState.currentLearning = "nonexistent_skill";
+    timer.start();
+    jest.advanceTimersByTime(1000);
+    expect(mockGameState.updateLearningProgress).not.toHaveBeenCalled();
+  });
+
+  test("should handle invalid job IDs", () => {
+    mockGameState.currentJob = "nonexistent_job";
+    timer.start();
+    jest.advanceTimersByTime(1000);
+    expect(mockGameState.addMoney).not.toHaveBeenCalled();
+  });
+
+  test("should handle rapid start/stop cycles", () => {
+    for (let i = 0; i < 10; i++) {
+      timer.start();
+      timer.stop();
+    }
+    expect(timer.isRunning).toBe(false);
+    expect(timer.timer).toBeNull();
+  });
+
+  test("should calculate progress over time", () => {
+    mockGameState.currentLearning = "test_skill";
+    timer.start();
+
+    // Advance by 1 second (10% progress)
+    jest.advanceTimersByTime(1000);
+    expect(mockGameState.updateLearningProgress).toHaveBeenCalled();
+
+    // Advance by another second (another 10% progress)
+    jest.advanceTimersByTime(1000);
+    expect(mockGameState.updateLearningProgress).toHaveBeenCalled();
+  });
+
+  test("should handle time gaps between updates", () => {
+    mockGameState.currentJob = "test_job";
+    timer.start();
+
+    const now = Date.now();
+    jest.setSystemTime(now + 1000); // Jump 1 second ahead
+
+    timer.update();
+    expect(mockGameState.jobProgress).toBeGreaterThan(0);
   });
 });
