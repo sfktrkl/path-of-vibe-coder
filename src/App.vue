@@ -16,6 +16,7 @@ import GameHeader from "@layout/GameHeader.vue";
 import GameContent from "@layout/GameContent.vue";
 import GameState from "@models/GameState.js";
 import GameTimer from "@models/GameTimer.js";
+import GameCheat from "@models/GameCheat.js";
 
 export default {
   name: "App",
@@ -28,6 +29,7 @@ export default {
       currentView: "job",
       gameState: new GameState(),
       gameTimer: null,
+      gameCheat: null,
     };
   },
   methods: {
@@ -49,6 +51,9 @@ export default {
     // Initialize and start the game timer
     this.gameTimer = new GameTimer(this.gameState);
     this.gameTimer.start();
+
+    // Initialize game cheats
+    this.gameCheat = new GameCheat(this.gameState);
   },
   beforeUnmount() {
     // Stop the timer when the component is destroyed
