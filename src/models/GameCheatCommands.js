@@ -11,7 +11,7 @@ export default class GameCheatCommands {
       description: "addMoney(amount: number) - Add money to your balance",
       execute: (amount) => {
         this.gameState.addMoney(amount);
-        return `Added ${amount} money!`;
+        console.log(`Added ${amount} money!`);
       },
     };
   }
@@ -20,10 +20,49 @@ export default class GameCheatCommands {
     return {
       description: "setJob(jobId: string) - Set your current job",
       execute: (jobId) => {
+        const job = jobs[jobId];
+        if (!job) {
+          console.log(`Job ${jobId} not found!`);
+          return;
+        }
+
+        // Check if job is already unlocked
+        if (this.gameState.isJobUnlocked(jobId)) {
+          return;
+        }
+
+        // Recursively collect all required skills
+        const collectRequiredSkills = (jobId, collectedSkills = new Set()) => {
+          const job = jobs[jobId];
+          if (!job) {
+            console.log(`Job ${jobId} not found!`);
+            return collectedSkills;
+          }
+
+          job.requiredSkills.forEach((skill) => {
+            if (!this.gameState.hasSkill(skill)) {
+              collectedSkills.add(skill);
+            }
+          });
+          for (const requiredJobId of job.requiredJobs) {
+            collectRequiredSkills(requiredJobId, collectedSkills);
+          }
+
+          return collectedSkills;
+        };
+
+        // Enable all required skills
+        const allRequiredSkills = collectRequiredSkills(jobId);
+        for (const requiredSkillId of allRequiredSkills) {
+          this.completeSkill().execute(requiredSkillId);
+        }
+
         const success = this.gameState.setJob(jobId);
-        return success
-          ? `Set job to ${jobId}!`
-          : `Failed to set job to ${jobId}!`;
+        if (success) {
+          console.log(`Set job to ${jobId}!`);
+        } else {
+          console.log(`Failed to set job to ${jobId}!`);
+        }
       },
     };
   }
@@ -48,7 +87,6 @@ export default class GameCheatCommands {
         });
 
         console.log(output);
-        return "Job IDs listed";
       },
     };
   }
@@ -57,9 +95,25 @@ export default class GameCheatCommands {
     return {
       description: "completeSkill(skillId: string) - Complete a skill",
       execute: (skillId) => {
+        const skill = skills[skillId];
+        if (!skill) {
+          console.log(`Skill ${skillId} not found!`);
+          return;
+        }
+
+        // Check if skill is already acquired
+        if (this.gameState.hasSkill(skillId)) {
+          return;
+        }
+
+        // Enable prerequisite skills first
+        for (const prerequisiteId of skill.prerequisites) {
+          this.completeSkill().execute(prerequisiteId);
+        }
+
         this.gameState.startLearning(skillId);
         this.gameState.updateLearningProgress(100);
-        return `Completed skill ${skillId}!`;
+        console.log(`Completed skill ${skillId}!`);
       },
     };
   }
@@ -84,7 +138,6 @@ export default class GameCheatCommands {
         });
 
         console.log(output);
-        return "Skill IDs listed";
       },
     };
   }
@@ -100,7 +153,6 @@ export default class GameCheatCommands {
           .map((method) => this[method]().description)
           .join("\n");
         console.log(`Available cheat commands:\n${commands}`);
-        return "Help message";
       },
     };
   }
