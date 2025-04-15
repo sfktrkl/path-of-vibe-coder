@@ -1,3 +1,6 @@
+import { jobs } from "../data/jobs.js";
+import { skills } from "../data/skills.js";
+
 export default class GameCheatCommands {
   constructor(gameState) {
     this.gameState = gameState;
@@ -25,6 +28,31 @@ export default class GameCheatCommands {
     };
   }
 
+  listJobIds() {
+    return {
+      description: "listJobIds() - List all job IDs with their categories",
+      execute: () => {
+        // Group jobs by category
+        const jobsByCategory = {};
+        Object.values(jobs).forEach((job) => {
+          if (!jobsByCategory[job.category]) {
+            jobsByCategory[job.category] = [];
+          }
+          jobsByCategory[job.category].push(job.id);
+        });
+
+        // Format the output
+        let output = "Available Job IDs:\n\n";
+        Object.entries(jobsByCategory).forEach(([category, ids]) => {
+          output += `[${category}]\n${ids.join("\n")}\n\n`;
+        });
+
+        console.log(output);
+        return "Job IDs listed";
+      },
+    };
+  }
+
   completeSkill() {
     return {
       description: "completeSkill(skillId: string) - Complete a skill",
@@ -32,6 +60,31 @@ export default class GameCheatCommands {
         this.gameState.startLearning(skillId);
         this.gameState.updateLearningProgress(100);
         return `Completed skill ${skillId}!`;
+      },
+    };
+  }
+
+  listSkillIds() {
+    return {
+      description: "listSkillIds() - List all skill IDs with their categories",
+      execute: () => {
+        // Group skills by category
+        const skillsByCategory = {};
+        Object.values(skills).forEach((skill) => {
+          if (!skillsByCategory[skill.category]) {
+            skillsByCategory[skill.category] = [];
+          }
+          skillsByCategory[skill.category].push(skill.id);
+        });
+
+        // Format the output
+        let output = "Available Skill IDs:\n\n";
+        Object.entries(skillsByCategory).forEach(([category, ids]) => {
+          output += `[${category}]\n${ids.join("\n")}\n\n`;
+        });
+
+        console.log(output);
+        return "Skill IDs listed";
       },
     };
   }
