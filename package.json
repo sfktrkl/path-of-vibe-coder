@@ -6,6 +6,7 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
+    "format": "prettier --write \"src/**/*.{js,vue}\"",
     "test:unit": "vue-cli-service test:unit",
     "test:unit:watch": "vue-cli-service test:unit --watch",
     "test:unit:coverage": "vue-cli-service test:unit --coverage"
@@ -48,7 +49,18 @@
     "parserOptions": {
       "parser": "@babel/eslint-parser"
     },
-    "rules": {}
+    "rules": {
+      "linebreak-style": [
+        "error",
+        "unix"
+      ],
+      "prettier/prettier": [
+        "error",
+        {
+          "endOfLine": "lf"
+        }
+      ]
+    }
   },
   "browserslist": [
     "> 1%",
