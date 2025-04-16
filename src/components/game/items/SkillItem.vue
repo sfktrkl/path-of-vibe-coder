@@ -8,7 +8,11 @@
         learning: gameState.currentLearning === skill.id,
       },
     ]"
-    @click="gameState.hasSkill(skill.id) ? null : startLearning(skill.id)"
+    @click="
+      gameState.hasSkill(skill.id) || gameState.currentLearning === skill.id
+        ? null
+        : startLearning(skill.id)
+    "
   >
     <div class="item-info">
       <span class="item-name">{{ skill.name }}</span>

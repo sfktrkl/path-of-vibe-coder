@@ -7,7 +7,11 @@
         current: gameState.currentJob === job.id,
       },
     ]"
-    @click="gameState.isJobUnlocked(job.id) ? gameState.setJob(job.id) : null"
+    @click="
+      gameState.isJobUnlocked(job.id) && gameState.currentJob !== job.id
+        ? gameState.setJob(job.id)
+        : null
+    "
   >
     <div class="item-info">
       <span class="item-name">{{ job.name }}</span>
