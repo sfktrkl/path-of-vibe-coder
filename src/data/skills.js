@@ -82,6 +82,14 @@ export const skills = {
     prerequisites: [],
     timeRequired: 180, // 3 minutes
   },
+  csharp: {
+    id: "csharp",
+    name: "C#",
+    description: "Game development language",
+    category: "programming",
+    prerequisites: [],
+    timeRequired: 180, // 3 minutes
+  },
   cpp: {
     id: "cpp",
     name: "C++",
@@ -97,6 +105,14 @@ export const skills = {
     category: "programming",
     prerequisites: ["cpp"],
     timeRequired: 300, // 5 minutes
+  },
+  swift: {
+    id: "swift",
+    name: "Swift",
+    description: "iOS and macOS development language",
+    category: "programming",
+    prerequisites: [],
+    timeRequired: 180, // 3 minutes
   },
 
   // Web Development
@@ -309,6 +325,14 @@ export const skills = {
     category: "ai",
     prerequisites: ["python", "machine_learning"],
     timeRequired: 300, // 5 minutes
+  },
+  math: {
+    id: "math",
+    name: "Advanced Mathematics",
+    description: "Advanced mathematical concepts for AI/ML",
+    category: "fundamentals",
+    prerequisites: ["math_basics"],
+    timeRequired: 240, // 4 minutes
   },
 
   // Security
