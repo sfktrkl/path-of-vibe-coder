@@ -133,6 +133,14 @@ h1 {
   display: flex;
   gap: 0.5rem;
   height: 48px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.progress-bars > * {
+  flex: 1;
+  min-width: 150px;
+  box-sizing: border-box;
 }
 
 .navigation {
@@ -142,6 +150,8 @@ h1 {
   width: 100%;
   margin-top: auto;
   height: 48px;
+  overflow-x: auto;
+  padding-bottom: 4px;
 }
 
 .nav-button {
@@ -153,13 +163,15 @@ h1 {
   cursor: pointer;
   transition: all 0.2s;
   flex: 1;
-  font-size: 1.1rem;
+  font-size: 1rem;
   font-weight: 500;
-  min-width: 120px;
+  min-width: 80px;
   height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
+  white-space: nowrap;
+  padding: 0 8px;
 }
 
 .nav-button:hover {
@@ -179,5 +191,36 @@ h1 {
 
 .game-header:has(.progress-bars) .header-content {
   min-height: 180px;
+}
+
+@media (min-width: 768px) {
+  .nav-button {
+    font-size: 1.1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .nav-button {
+    font-size: 0.9rem;
+    min-width: 70px;
+  }
+
+  .progress-bars {
+    flex-direction: column;
+    height: auto;
+  }
+
+  .progress-bars > * {
+    min-width: 100%;
+  }
+
+  .header-content {
+    padding: 12px;
+  }
+
+  h1,
+  .money {
+    font-size: 1rem;
+  }
 }
 </style>
