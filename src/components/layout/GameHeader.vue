@@ -1,7 +1,10 @@
 <template>
   <header class="game-header">
     <div class="header-content">
-      <div class="character-info">
+      <div
+        class="character-info"
+        :class="{ 'default-title': gameState.title === 'Path of Vibe Coder' }"
+      >
         <h1>{{ gameState.title }}</h1>
         <div class="money">${{ gameState.money }}</div>
       </div>
@@ -115,6 +118,14 @@ export default {
   background-color: rgba(255, 255, 255, 0.05);
   border-radius: 4px;
   height: 48px;
+}
+
+.character-info.default-title {
+  justify-content: center;
+}
+
+.character-info.default-title .money {
+  display: none;
 }
 
 h1 {
