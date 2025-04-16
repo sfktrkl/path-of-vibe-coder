@@ -125,7 +125,10 @@ export default class GameState {
   // Learning management
   startLearning(learningId) {
     this.currentLearning = learningId;
-    this.skillProgress[learningId] = 0;
+    // Only initialize progress if it doesn't exist
+    if (this.skillProgress[learningId] === undefined) {
+      this.skillProgress[learningId] = 0;
+    }
   }
 
   updateLearningProgress(amount) {
