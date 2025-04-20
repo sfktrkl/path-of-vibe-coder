@@ -132,7 +132,10 @@ export default class GameState {
 
   updateLearningProgress(amount) {
     if (this.currentLearning) {
-      this.skillProgress[this.currentLearning] += amount;
+      this.skillProgress[this.currentLearning] = Math.min(
+        (this.skillProgress[this.currentLearning] || 0) + amount,
+        100
+      );
       // When learning is complete, mark as learned
       if (this.skillProgress[this.currentLearning] >= 100) {
         this.currentLearning = null;

@@ -130,10 +130,10 @@ describe("GameState", () => {
     gameState.updateLearningProgress(100);
     expect(gameState.hasSkill("test_skill")).toBe(true);
 
-    // Can start learning again even if already mastered
+    // Starting to learn again keeps the existing progress
     gameState.startLearning("test_skill");
     expect(gameState.currentLearning).toBe("test_skill");
-    expect(gameState.getLearningProgress()).toBe(0);
+    expect(gameState.getLearningProgress()).toBe(100);
   });
 
   test("should handle skill prerequisites", () => {
