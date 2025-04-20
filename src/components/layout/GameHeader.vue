@@ -5,7 +5,7 @@
         class="character-info"
         :class="{ 'default-title': !gameState.currentJob }"
       >
-        <h1>{{ gameState.currentJob || "Path of Vibe Coder" }}</h1>
+        <h1>{{ currentJob ? currentJob.name : "Path of Vibe Coder" }}</h1>
         <div class="money">${{ gameState.money }}</div>
       </div>
 
