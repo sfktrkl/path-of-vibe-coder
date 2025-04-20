@@ -8,7 +8,11 @@
         available: isAvailable,
       },
     ]"
-    @click="canAfford && isAvailable ? purchaseItem(item.id) : null"
+    @click="
+      !gameState.hasItem(item.id) && canAfford && isAvailable
+        ? purchaseItem(item.id)
+        : null
+    "
   >
     <div class="item-info">
       <span class="item-name">{{ item.name }}</span>
