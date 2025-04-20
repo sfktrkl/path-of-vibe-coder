@@ -9,11 +9,12 @@ describe("JobItem", () => {
   const mockGameState = {
     isJobUnlocked: jest.fn(),
     setJob: jest.fn(),
-    currentJob: "everyday_normal_guy",
+    currentJob: null,
   };
 
   beforeEach(() => {
     jest.clearAllMocks();
+    mockGameState.currentJob = null;
   });
 
   const createWrapper = (jobId, isUnlocked = true) => {
@@ -37,12 +38,14 @@ describe("JobItem", () => {
   });
 
   it("applies correct classes based on job state", () => {
+    mockGameState.currentJob = "everyday_normal_guy";
     const wrapper = createWrapper("everyday_normal_guy");
     expect(wrapper.classes()).toContain("unlocked");
     expect(wrapper.classes()).toContain("current");
   });
 
-  it("calls setJob when clicked and job is unlocked", () => {
+  it("calls setJob when clicked and job is unlocked and not current", () => {
+    mockGameState.currentJob = "different_job";
     const wrapper = createWrapper("everyday_normal_guy");
     wrapper.trigger("click");
     expect(mockGameState.setJob).toHaveBeenCalledWith("everyday_normal_guy");
@@ -50,6 +53,13 @@ describe("JobItem", () => {
 
   it("does not call setJob when clicked and job is locked", () => {
     const wrapper = createWrapper("everyday_normal_guy", false);
+    wrapper.trigger("click");
+    expect(mockGameState.setJob).not.toHaveBeenCalled();
+  });
+
+  it("does not call setJob when clicked and job is current", () => {
+    mockGameState.currentJob = "everyday_normal_guy";
+    const wrapper = createWrapper("everyday_normal_guy");
     wrapper.trigger("click");
     expect(mockGameState.setJob).not.toHaveBeenCalled();
   });
