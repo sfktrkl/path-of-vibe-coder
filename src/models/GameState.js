@@ -1,5 +1,6 @@
 import { jobs } from "@data/jobs";
 import { skills } from "@data/skills";
+import { items } from "@data/items";
 
 export default class GameState {
   constructor() {
@@ -13,6 +14,9 @@ export default class GameState {
     // Skills and Learning progress
     this.currentLearning = null;
     this.skillProgress = {};
+
+    // Shop items
+    this.ownedItems = new Set();
   }
 
   // Money management
@@ -155,6 +159,74 @@ export default class GameState {
     return this.skillProgress[skillId];
   }
 
+  // Shop management
+  hasItem(itemId) {
+    return this.ownedItems.has(itemId);
+  }
+
+  purchaseItem(itemId) {
+    const item = items[itemId];
+    if (!item) return false;
+
+    // Check if already owned
+    if (this.hasItem(itemId)) return false;
+
+    // Check if requirements are met
+    if (
+      item.requiredItems &&
+      !item.requiredItems.every((id) => this.hasItem(id))
+    ) {
+      return false;
+    }
+
+    // Check if can afford
+    if (!this.spendMoney(item.price)) {
+      return false;
+    }
+
+    // Purchase successful
+    this.ownedItems.add(itemId);
+    return true;
+  }
+
+  // Get item effects
+  getItemEffects() {
+    const effects = {
+      salaryMultiplier: 1,
+      learningSpeedMultiplier: 1,
+      workProgressMultiplier: 1,
+      skillTimeReducer: 0,
+      jobInitialProgress: 0,
+    };
+
+    this.ownedItems.forEach((itemId) => {
+      const item = items[itemId];
+      if (!item) return;
+
+      Object.entries(item.stats).forEach(([stat, value]) => {
+        switch (stat) {
+          case "salaryBoost":
+            effects.salaryMultiplier += value;
+            break;
+          case "learningSpeed":
+            effects.learningSpeedMultiplier += value;
+            break;
+          case "workProgress":
+            effects.workProgressMultiplier += value;
+            break;
+          case "skillTimeReduction":
+            effects.skillTimeReducer += value;
+            break;
+          case "jobInitialProgress":
+            effects.jobInitialProgress += value;
+            break;
+        }
+      });
+    });
+
+    return effects;
+  }
+
   // State serialization
   toJSON() {
     return {
@@ -163,6 +235,7 @@ export default class GameState {
       jobProgress: this.jobProgress,
       currentLearning: this.currentLearning,
       skillProgress: this.skillProgress,
+      ownedItems: Array.from(this.ownedItems),
     };
   }
 
@@ -173,7 +246,8 @@ export default class GameState {
     state.currentJob = json.currentJob;
     state.jobProgress = json.jobProgress;
     state.currentLearning = json.currentLearning;
-    state.skillProgress = json.skillProgress || {}; // Ensure it's initialized even if not in JSON
+    state.skillProgress = json.skillProgress || {};
+    state.ownedItems = new Set(json.ownedItems || []);
     return state;
   }
 

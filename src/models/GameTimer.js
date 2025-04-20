@@ -35,12 +35,18 @@ export default class GameTimer {
     const deltaTime = (now - this.lastUpdate) / 1000; // Convert to seconds
     this.lastUpdate = now;
 
+    // Get current item effects
+    const effects = this.gameState.getItemEffects();
+
     // Update learning progress if currently learning
     if (this.gameState.currentLearning) {
       const skill = skills[this.gameState.currentLearning];
       if (skill) {
-        const progressPerSecond = 100 / skill.timeRequired;
-        const progress = deltaTime * progressPerSecond;
+        // Apply learning speed multiplier and skill time reduction
+        const baseProgressPerSecond = 100 / skill.timeRequired;
+        const adjustedProgressPerSecond =
+          baseProgressPerSecond * effects.learningSpeedMultiplier;
+        const progress = deltaTime * adjustedProgressPerSecond;
         this.gameState.updateLearningProgress(progress);
       }
     }
@@ -49,13 +55,17 @@ export default class GameTimer {
     if (this.gameState.currentJob) {
       const job = jobs[this.gameState.currentJob];
       if (job) {
-        const progressPerSecond = 100 / job.timeRequired;
-        const progress = deltaTime * progressPerSecond;
+        // Apply work progress multiplier
+        const baseProgressPerSecond = 100 / job.timeRequired;
+        const adjustedProgressPerSecond =
+          baseProgressPerSecond * effects.workProgressMultiplier;
+        const progress = deltaTime * adjustedProgressPerSecond;
         this.gameState.jobProgress += progress;
 
-        // If job is complete, pay the salary
+        // If job is complete, pay the salary with multiplier
         if (this.gameState.jobProgress >= 100) {
-          this.gameState.addMoney(job.salary);
+          const salaryWithMultiplier = job.salary * effects.salaryMultiplier;
+          this.gameState.addMoney(salaryWithMultiplier);
           this.gameState.jobProgress = 0; // Reset progress
         }
       }

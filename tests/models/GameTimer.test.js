@@ -38,6 +38,12 @@ describe("GameTimer", () => {
       jobProgress: 0,
       updateLearningProgress: jest.fn(),
       addMoney: jest.fn(),
+
+      getItemEffects: jest.fn().mockReturnValue({
+        learningSpeedMultiplier: 1,
+        workProgressMultiplier: 1,
+        salaryMultiplier: 1,
+      }),
     };
     timer = new GameTimer(mockGameState);
   });
