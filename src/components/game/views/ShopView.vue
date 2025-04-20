@@ -1,13 +1,59 @@
 <template>
   <div class="shop-view">
-    <h3>Shop</h3>
-    <p>Coming soon...</p>
+    <div v-for="(items, category) in itemsByCategory" :key="category">
+      <h4>{{ formatCategoryName(category) }}</h4>
+      <div class="items-list">
+        <ShopItem
+          v-for="item in items"
+          :key="item.id"
+          :item="item"
+          :game-state="gameState"
+        />
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
+import { items } from "@data/items";
+import ShopItem from "@items/ShopItem.vue";
+
 export default {
   name: "ShopView",
+  components: {
+    ShopItem,
+  },
+  props: {
+    gameState: {
+      type: Object,
+      required: true,
+    },
+  },
+  computed: {
+    itemsByCategory() {
+      const categories = {};
+      Object.values(items).forEach((item) => {
+        if (!categories[item.category]) {
+          categories[item.category] = [];
+        }
+        categories[item.category].push(item);
+      });
+      return categories;
+    },
+  },
+  methods: {
+    formatCategoryName(category) {
+      const names = {
+        salary: "Salary Boosts",
+        learning: "Learning Speed",
+        work: "Work Speed",
+        skill: "Skill Time Reduction",
+        job: "Job Progress",
+        premium: "Premium Packs",
+      };
+      return names[category] || category;
+    },
+  },
 };
 </script>
 
@@ -16,9 +62,16 @@ export default {
   overflow-x: hidden;
 }
 
-h3 {
+h4 {
   color: #ffffff;
-  margin-top: 24px;
-  margin-bottom: 16px;
+  margin-top: 16px;
+  margin-bottom: 8px;
+}
+
+.items-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 24px;
 }
 </style>

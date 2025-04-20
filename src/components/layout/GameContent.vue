@@ -3,7 +3,7 @@
     <h2>{{ viewTitle }}</h2>
     <SkillsView v-if="currentView === 'skills'" :game-state="gameState" />
     <JobsView v-if="currentView === 'job'" :game-state="gameState" />
-    <ShopView v-if="currentView === 'shop'" />
+    <ShopView v-if="currentView === 'shop'" :game-state="gameState" />
   </div>
 </template>
 
