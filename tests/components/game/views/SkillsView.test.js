@@ -24,7 +24,7 @@ describe("SkillsView.vue", () => {
 
   it("displays sorted skills", () => {
     const skills = wrapper.vm.sortedSkills;
-    expect(skills).toHaveLength(44);
+    expect(skills).toHaveLength(47);
     expect(skills[0].id).toBe("computer_basics");
   });
 
@@ -97,6 +97,6 @@ describe("SkillsView.vue", () => {
 
   it("renders SkillItem components for each skill", () => {
     const skillItems = wrapper.findAllComponents({ name: "SkillItem" });
-    expect(skillItems.length).toBe(44);
+    expect(skillItems.length).toBe(47);
   });
 });

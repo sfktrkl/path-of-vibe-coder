@@ -40,7 +40,7 @@ describe("GameState", () => {
 
     gameState.updateLearningProgress(60);
     expect(gameState.currentLearning).toBeNull();
-    expect(gameState.skillProgress["test_skill"]).toBe(110);
+    expect(gameState.skillProgress["test_skill"]).toBe(100);
   });
 
   test("should check skill completion", () => {
@@ -124,6 +124,9 @@ describe("GameState", () => {
 
   test("should handle learning completed skills", () => {
     gameState.startLearning("test_skill");
+    expect(gameState.currentLearning).toBe("test_skill");
+    expect(gameState.getLearningProgress()).toBe(0);
+
     gameState.updateLearningProgress(100);
     expect(gameState.hasSkill("test_skill")).toBe(true);
 
