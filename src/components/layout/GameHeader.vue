@@ -3,9 +3,9 @@
     <div class="header-content">
       <div
         class="character-info"
-        :class="{ 'default-title': gameState.title === 'Path of Vibe Coder' }"
+        :class="{ 'default-title': !gameState.currentJob }"
       >
-        <h1>{{ gameState.title }}</h1>
+        <h1>{{ gameState.currentJob || "Path of Vibe Coder" }}</h1>
         <div class="money">${{ gameState.money }}</div>
       </div>
 

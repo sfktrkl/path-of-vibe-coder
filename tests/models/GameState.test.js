@@ -11,7 +11,6 @@ describe("GameState", () => {
 
   test("should initialize with default values", () => {
     expect(gameState.money).toBe(0);
-    expect(gameState.title).toBe("Everyday Normal Guy");
     expect(gameState.currentJob).toBeNull();
     expect(gameState.jobProgress).toBe(0);
     expect(gameState.currentLearning).toBeNull();
@@ -81,7 +80,6 @@ describe("GameState", () => {
     const success = gameState.setJob("everyday_normal_guy");
     expect(success).toBe(true);
     expect(gameState.currentJob).toBe("everyday_normal_guy");
-    expect(gameState.title).toBe(jobs.everyday_normal_guy.name);
     expect(gameState.jobProgress).toBe(0);
   });
 

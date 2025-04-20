@@ -17,7 +17,6 @@ jest.mock("@data/jobs", () => ({
 describe("GameHeader.vue", () => {
   let wrapper;
   const mockGameState = {
-    title: "Test Game",
     money: 1000,
     currentLearning: null,
     currentJob: null,
@@ -35,7 +34,7 @@ describe("GameHeader.vue", () => {
   });
 
   test("renders header with title and money", () => {
-    expect(wrapper.find("h1").text()).toBe("Test Game");
+    expect(wrapper.find("h1").text()).toBe("Path of Vibe Coder");
     expect(wrapper.find(".money").text()).toBe("$1000");
   });
 

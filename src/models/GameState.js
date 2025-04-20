@@ -5,7 +5,6 @@ export default class GameState {
   constructor() {
     // Character basic info
     this.money = 0;
-    this.title = "Path of Vibe Coder";
 
     // Job related
     this.currentJob = null;
@@ -34,7 +33,6 @@ export default class GameState {
     if (this.isJobUnlocked(jobId)) {
       this.currentJob = jobId;
       this.jobProgress = 0; // Reset progress when changing jobs
-      this.title = jobs[jobId].name; // Update title to current job name
       return true;
     }
     return false;
@@ -154,18 +152,10 @@ export default class GameState {
     return this.skillProgress[skillId];
   }
 
-  // Add method to reset title when quitting job
-  quitJob() {
-    this.currentJob = null;
-    this.jobProgress = 0;
-    this.title = "Path of Vibe Coder";
-  }
-
   // State serialization
   toJSON() {
     return {
       money: this.money,
-      title: this.title,
       currentJob: this.currentJob,
       jobProgress: this.jobProgress,
       currentLearning: this.currentLearning,
@@ -177,7 +167,6 @@ export default class GameState {
   static fromJSON(json) {
     const state = new GameState();
     state.money = json.money;
-    state.title = json.title;
     state.currentJob = json.currentJob;
     state.jobProgress = json.jobProgress;
     state.currentLearning = json.currentLearning;
