@@ -62,12 +62,16 @@ describe("ShopItem", () => {
 
     // Check skill time stat
     const skillTimeStat = stats.at(2);
-    expect(skillTimeStat.find(".stat-name").text()).toBe("Skill Time:");
-    expect(skillTimeStat.find(".stat-value").text()).toBe("-20%");
+    expect(skillTimeStat.find(".stat-name").text()).toBe(
+      "Skill Time Reduction:"
+    );
+    expect(skillTimeStat.find(".stat-value").text()).toBe("+20%");
 
     // Check job progress stat
     const jobProgressStat = stats.at(3);
-    expect(jobProgressStat.find(".stat-name").text()).toBe("Job Progress:");
+    expect(jobProgressStat.find(".stat-name").text()).toBe(
+      "Job Initial Progress:"
+    );
     expect(jobProgressStat.find(".stat-value").text()).toBe("+10%");
   });
 

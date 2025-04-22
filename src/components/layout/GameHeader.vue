@@ -58,12 +58,14 @@
 import { skills } from "@data/skills";
 import { jobs } from "@data/jobs";
 import ProgressBar from "@items/ProgressBar.vue";
+import itemEffectMixin from "@mixins/itemEffectMixin";
 
 export default {
   name: "GameHeader",
   components: {
     ProgressBar,
   },
+  mixins: [itemEffectMixin],
   props: {
     currentView: {
       type: String,
@@ -94,30 +96,6 @@ export default {
     },
     totalItemEffects() {
       return this.gameState.getItemEffects();
-    },
-  },
-  methods: {
-    formatEffectName(effect) {
-      const names = {
-        salaryMultiplier: "Salary Boost",
-        learningSpeedMultiplier: "Learning Speed",
-        workSpeedMultiplier: "Work Speed",
-        skillTimeMultiplier: "Skill Time Reduction",
-        initialJobProgress: "Job Initial Progress",
-      };
-      return names[effect] || effect;
-    },
-    formatEffectValue(effect, value) {
-      if (effect === "skillTimeMultiplier") {
-        const percentage = ((1 - value) * 100).toFixed(0);
-        return `+${percentage}%`;
-      } else if (effect.includes("Multiplier")) {
-        const percentage = ((value - 1) * 100).toFixed(0);
-        return percentage > 0 ? `+${percentage}%` : `${percentage}%`;
-      } else if (effect === "initialJobProgress") {
-        return `+${value}%`;
-      }
-      return value;
     },
   },
 };

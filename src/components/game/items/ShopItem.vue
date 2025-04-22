@@ -18,9 +18,9 @@
       <span class="item-name">{{ item.name }}</span>
       <span class="item-description">{{ item.description }}</span>
       <div class="item-stats">
-        <div v-for="(value, stat) in item.stats" :key="stat" class="stat">
-          <span class="stat-name">{{ formatStatName(stat) }}:</span>
-          <span class="stat-value">{{ formatStatValue(stat, value) }}</span>
+        <div v-for="(value, effect) in item.stats" :key="effect" class="stat">
+          <span class="stat-name">{{ formatEffectName(effect) }}:</span>
+          <span class="stat-value">{{ formatEffectValue(effect, value) }}</span>
         </div>
       </div>
     </div>
@@ -43,9 +43,11 @@
 
 <script>
 import "@styles/item-styles.css";
+import itemEffectMixin from "@mixins/itemEffectMixin";
 
 export default {
   name: "ShopItem",
+  mixins: [itemEffectMixin],
   props: {
     item: {
       type: Object,
@@ -69,28 +71,6 @@ export default {
   methods: {
     purchaseItem(itemId) {
       this.gameState.purchaseItem(itemId);
-    },
-    formatStatName(stat) {
-      const names = {
-        salaryMultiplier: "Salary Boost",
-        learningSpeedMultiplier: "Learning Speed",
-        workSpeedMultiplier: "Work Speed",
-        skillTimeMultiplier: "Skill Time",
-        initialJobProgress: "Job Progress",
-      };
-      return names[stat] || stat;
-    },
-    formatStatValue(stat, value) {
-      if (stat.includes("Multiplier")) {
-        const percentage = ((value - 1) * 100).toFixed(0);
-        return percentage > 0 ? `+${percentage}%` : `${percentage}%`;
-      } else if (stat === "skillTimeMultiplier") {
-        const percentage = ((1 - value) * 100).toFixed(0);
-        return `-${percentage}%`;
-      } else if (stat === "initialJobProgress") {
-        return `+${value}%`;
-      }
-      return value;
     },
   },
 };
