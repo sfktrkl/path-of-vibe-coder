@@ -199,27 +199,27 @@ describe("GameState", () => {
     // Test basic salary boost
     gameState.purchaseItem("basic_salary_boost");
     let effects = gameState.getItemEffects();
-    expect(effects.salaryMultiplier).toBe(1.1);
+    expect(effects.salaryMultiplier).toBe(1.05);
 
     // Test learning speed boost
     gameState.purchaseItem("basic_learning_boost");
     effects = gameState.getItemEffects();
-    expect(effects.learningSpeedMultiplier).toBe(1.1);
+    expect(effects.learningSpeedMultiplier).toBe(1.05);
 
     // Test work speed boost
     gameState.purchaseItem("basic_work_boost");
     effects = gameState.getItemEffects();
-    expect(effects.workSpeedMultiplier).toBe(1.1);
+    expect(effects.workSpeedMultiplier).toBe(1.05);
 
     // Test skill time reducer
     gameState.purchaseItem("basic_skill_time_reducer");
     effects = gameState.getItemEffects();
-    expect(effects.skillTimeMultiplier).toBe(0.9);
+    expect(effects.skillTimeMultiplier).toBe(0.95);
 
     // Test job initial progress
     gameState.purchaseItem("basic_job_boost");
     effects = gameState.getItemEffects();
-    expect(effects.initialJobProgress).toBe(10);
+    expect(effects.initialJobProgress).toBe(5);
   });
 
   test("should handle item requirements correctly", () => {
@@ -251,7 +251,7 @@ describe("GameState", () => {
 
     const effects = gameState.getItemEffects();
     // Advanced should override basic
-    expect(effects.salaryMultiplier).toBe(1.25);
+    expect(effects.salaryMultiplier).toBe(1.1);
   });
 
   test("should handle premium pack requirements", () => {
@@ -296,10 +296,235 @@ describe("GameState", () => {
 
     // Verify the effects
     const effects = gameState.getItemEffects();
-    expect(effects.salaryMultiplier).toBe(1.2);
-    expect(effects.learningSpeedMultiplier).toBe(1.2);
-    expect(effects.workSpeedMultiplier).toBe(1.2);
-    expect(effects.skillTimeMultiplier).toBe(0.8);
-    expect(effects.initialJobProgress).toBe(20);
+    expect(effects.salaryMultiplier).toBe(1.3);
+    expect(effects.learningSpeedMultiplier).toBe(1.3);
+    expect(effects.workSpeedMultiplier).toBe(1.3);
+    expect(effects.skillTimeMultiplier).toBe(0.7);
+    expect(effects.initialJobProgress).toBe(30);
+  });
+
+  test("should handle ultimate pack requirements and effects", () => {
+    // Add enough money to purchase items
+    gameState.addMoney(200000);
+
+    // Try to purchase ultimate pack without premium pack
+    const success = gameState.purchaseItem("ultimate_boost_pack");
+    expect(success).toBe(false);
+    expect(gameState.hasItem("ultimate_boost_pack")).toBe(false);
+
+    // Purchase all prerequisites for premium pack
+    const prerequisites = [
+      "basic_salary_boost",
+      "advanced_salary_boost",
+      "expert_salary_boost",
+      "basic_learning_boost",
+      "advanced_learning_boost",
+      "expert_learning_boost",
+      "basic_work_boost",
+      "advanced_work_boost",
+      "expert_work_boost",
+      "basic_skill_time_reducer",
+      "advanced_skill_time_reducer",
+      "expert_skill_time_reducer",
+      "basic_job_boost",
+      "advanced_job_boost",
+      "expert_job_boost",
+    ];
+
+    prerequisites.forEach((item) => {
+      gameState.purchaseItem(item);
+    });
+
+    // Purchase premium pack
+    gameState.purchaseItem("premium_boost_pack");
+
+    // Now should be able to purchase ultimate pack
+    const success2 = gameState.purchaseItem("ultimate_boost_pack");
+    expect(success2).toBe(true);
+    expect(gameState.hasItem("ultimate_boost_pack")).toBe(true);
+
+    // Verify the effects - ultimate pack should override premium pack
+    const effects = gameState.getItemEffects();
+    expect(effects.salaryMultiplier).toBe(1.5);
+    expect(effects.learningSpeedMultiplier).toBe(1.5);
+    expect(effects.workSpeedMultiplier).toBe(1.5);
+    expect(effects.skillTimeMultiplier).toBe(0.5);
+    expect(effects.initialJobProgress).toBe(50);
+  });
+
+  test("should ensure combo packs are more powerful than individual items", () => {
+    // Add enough money
+    gameState.addMoney(200000);
+
+    // Purchase all required items in order
+    // Salary boost chain
+    gameState.purchaseItem("basic_salary_boost");
+    gameState.purchaseItem("advanced_salary_boost");
+    gameState.purchaseItem("expert_salary_boost");
+
+    // Learning boost chain
+    gameState.purchaseItem("basic_learning_boost");
+    gameState.purchaseItem("advanced_learning_boost");
+    gameState.purchaseItem("expert_learning_boost");
+
+    // Work boost chain
+    gameState.purchaseItem("basic_work_boost");
+    gameState.purchaseItem("advanced_work_boost");
+    gameState.purchaseItem("expert_work_boost");
+
+    // Skill time reducer chain
+    gameState.purchaseItem("basic_skill_time_reducer");
+    gameState.purchaseItem("advanced_skill_time_reducer");
+    gameState.purchaseItem("expert_skill_time_reducer");
+
+    // Job boost chain
+    gameState.purchaseItem("basic_job_boost");
+    gameState.purchaseItem("advanced_job_boost");
+    gameState.purchaseItem("expert_job_boost");
+
+    // Check individual expert effects
+    const expertEffects = gameState.getItemEffects();
+    expect(expertEffects.salaryMultiplier).toBe(1.25);
+    expect(expertEffects.learningSpeedMultiplier).toBe(1.25);
+    expect(expertEffects.workSpeedMultiplier).toBe(1.25);
+    expect(expertEffects.skillTimeMultiplier).toBe(0.75);
+    expect(expertEffects.initialJobProgress).toBe(25);
+
+    // Purchase premium pack
+    const premiumSuccess = gameState.purchaseItem("premium_boost_pack");
+    expect(premiumSuccess).toBe(true);
+
+    // Check premium pack effects (should be stronger)
+    const premiumEffects = gameState.getItemEffects();
+    expect(premiumEffects.salaryMultiplier).toBe(1.3);
+    expect(premiumEffects.learningSpeedMultiplier).toBe(1.3);
+    expect(premiumEffects.workSpeedMultiplier).toBe(1.3);
+    expect(premiumEffects.skillTimeMultiplier).toBe(0.7);
+    expect(premiumEffects.initialJobProgress).toBe(30);
+
+    // Purchase ultimate pack
+    const ultimateSuccess = gameState.purchaseItem("ultimate_boost_pack");
+    expect(ultimateSuccess).toBe(true);
+
+    // Check ultimate pack effects (should be strongest)
+    const ultimateEffects = gameState.getItemEffects();
+    expect(ultimateEffects.salaryMultiplier).toBe(1.5);
+    expect(ultimateEffects.learningSpeedMultiplier).toBe(1.5);
+    expect(ultimateEffects.workSpeedMultiplier).toBe(1.5);
+    expect(ultimateEffects.skillTimeMultiplier).toBe(0.5);
+    expect(ultimateEffects.initialJobProgress).toBe(50);
+  });
+
+  test("should apply item effects in correct order", () => {
+    // Add enough money
+    gameState.addMoney(200000);
+
+    // Purchase items in different orders to verify consistent effect application
+
+    // Order 1: Basic -> Advanced -> Expert -> Premium -> Ultimate
+    gameState.purchaseItem("basic_salary_boost");
+    expect(gameState.getItemEffects().salaryMultiplier).toBe(1.05);
+
+    gameState.purchaseItem("advanced_salary_boost");
+    expect(gameState.getItemEffects().salaryMultiplier).toBe(1.1);
+
+    gameState.purchaseItem("expert_salary_boost");
+    expect(gameState.getItemEffects().salaryMultiplier).toBe(1.25);
+
+    // Purchase all prerequisites for premium pack
+    const prerequisites = [
+      "basic_learning_boost",
+      "advanced_learning_boost",
+      "expert_learning_boost",
+      "basic_work_boost",
+      "advanced_work_boost",
+      "expert_work_boost",
+      "basic_skill_time_reducer",
+      "advanced_skill_time_reducer",
+      "expert_skill_time_reducer",
+      "basic_job_boost",
+      "advanced_job_boost",
+      "expert_job_boost",
+    ];
+
+    prerequisites.forEach((item) => {
+      gameState.purchaseItem(item);
+    });
+
+    gameState.purchaseItem("premium_boost_pack");
+    expect(gameState.getItemEffects().salaryMultiplier).toBe(1.3);
+
+    gameState.purchaseItem("ultimate_boost_pack");
+    expect(gameState.getItemEffects().salaryMultiplier).toBe(1.5);
+
+    // Order 2: Try to purchase Ultimate first (should fail)
+    gameState = new GameState();
+    gameState.addMoney(200000);
+
+    const ultimateSuccess = gameState.purchaseItem("ultimate_boost_pack");
+    expect(ultimateSuccess).toBe(false);
+    expect(gameState.getItemEffects().salaryMultiplier).toBe(1.0);
+  });
+
+  test("should get highest effect values from multiple items", () => {
+    // Add enough money to purchase items
+    gameState.addMoney(200000);
+
+    // Purchase items in random order with different values
+    gameState.purchaseItem("basic_salary_boost"); // 1.05
+    gameState.purchaseItem("expert_learning_boost"); // 1.25
+    gameState.purchaseItem("advanced_work_boost"); // 1.10
+    gameState.purchaseItem("expert_skill_time_reducer"); // 0.75
+    gameState.purchaseItem("advanced_job_boost"); // 10
+
+    // Purchase prerequisite items for premium pack in correct order
+    // Salary chain
+    gameState.purchaseItem("basic_salary_boost");
+    gameState.purchaseItem("advanced_salary_boost");
+    gameState.purchaseItem("expert_salary_boost");
+
+    // Learning chain
+    gameState.purchaseItem("basic_learning_boost");
+    gameState.purchaseItem("advanced_learning_boost");
+    gameState.purchaseItem("expert_learning_boost");
+
+    // Work chain
+    gameState.purchaseItem("basic_work_boost");
+    gameState.purchaseItem("advanced_work_boost");
+    gameState.purchaseItem("expert_work_boost");
+
+    // Skill time chain
+    gameState.purchaseItem("basic_skill_time_reducer");
+    gameState.purchaseItem("advanced_skill_time_reducer");
+    gameState.purchaseItem("expert_skill_time_reducer");
+
+    // Job boost chain
+    gameState.purchaseItem("basic_job_boost");
+    gameState.purchaseItem("advanced_job_boost");
+    gameState.purchaseItem("expert_job_boost");
+
+    // Now purchase premium pack
+    const premiumSuccess = gameState.purchaseItem("premium_boost_pack"); // 1.30, 1.30, 1.30, 0.70, 30
+    expect(premiumSuccess).toBe(true);
+
+    const effects = gameState.getItemEffects();
+
+    // Should get highest values for each effect
+    expect(effects.salaryMultiplier).toBe(1.3); // From premium pack
+    expect(effects.learningSpeedMultiplier).toBe(1.3); // From premium pack
+    expect(effects.workSpeedMultiplier).toBe(1.3); // From premium pack
+    expect(effects.skillTimeMultiplier).toBe(0.7); // From premium pack (lowest = most reduction)
+    expect(effects.initialJobProgress).toBe(30); // From premium pack
+
+    // Purchase ultimate pack which should override everything
+    const success2 = gameState.purchaseItem("ultimate_boost_pack");
+    expect(success2).toBe(true);
+
+    const newEffects = gameState.getItemEffects();
+    expect(newEffects.salaryMultiplier).toBe(1.5); // From ultimate pack
+    expect(newEffects.learningSpeedMultiplier).toBe(1.5); // From ultimate pack
+    expect(newEffects.workSpeedMultiplier).toBe(1.5); // From ultimate pack
+    expect(newEffects.skillTimeMultiplier).toBe(0.5); // From ultimate pack (lowest = most reduction)
+    expect(newEffects.initialJobProgress).toBe(50); // From ultimate pack
   });
 });

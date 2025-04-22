@@ -206,12 +206,44 @@ export default class GameState {
       initialJobProgress: 0,
     };
 
+    // Track the highest value for each effect
     this.ownedItems.forEach((itemId) => {
       const item = items[itemId];
       if (!item) return;
 
       Object.entries(item.stats).forEach(([stat, value]) => {
-        effects[stat] = value;
+        switch (stat) {
+          case "salaryMultiplier":
+            effects.salaryMultiplier = Math.max(
+              effects.salaryMultiplier,
+              value
+            );
+            break;
+          case "learningSpeedMultiplier":
+            effects.learningSpeedMultiplier = Math.max(
+              effects.learningSpeedMultiplier,
+              value
+            );
+            break;
+          case "workSpeedMultiplier":
+            effects.workSpeedMultiplier = Math.max(
+              effects.workSpeedMultiplier,
+              value
+            );
+            break;
+          case "skillTimeMultiplier":
+            effects.skillTimeMultiplier = Math.min(
+              effects.skillTimeMultiplier,
+              value
+            );
+            break;
+          case "initialJobProgress":
+            effects.initialJobProgress = Math.max(
+              effects.initialJobProgress,
+              value
+            );
+            break;
+        }
       });
     });
 
