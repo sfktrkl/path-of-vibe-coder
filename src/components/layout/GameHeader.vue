@@ -7,6 +7,21 @@
       >
         <h1>{{ currentJob ? currentJob.name : "Path of Vibe Coder" }}</h1>
         <div class="money">${{ gameState.money }}</div>
+        <div
+          class="item-effects"
+          v-if="totalItemEffects && gameState.currentJob"
+        >
+          <div
+            v-for="(value, effect) in totalItemEffects"
+            :key="effect"
+            class="effect"
+          >
+            <span class="effect-name">{{ formatEffectName(effect) }}:</span>
+            <span class="effect-value">{{
+              formatEffectValue(effect, value)
+            }}</span>
+          </div>
+        </div>
       </div>
 
       <div class="progress-bars" v-if="currentLearning || currentJob">
@@ -77,6 +92,32 @@ export default {
       if (!this.gameState.currentJob) return null;
       return jobs[this.gameState.currentJob];
     },
+    totalItemEffects() {
+      return this.gameState.getItemEffects();
+    },
+  },
+  methods: {
+    formatEffectName(effect) {
+      const names = {
+        salaryMultiplier: "Salary Boost",
+        learningSpeedMultiplier: "Learning Speed",
+        workProgressMultiplier: "Work Progress",
+        skillTimeReducer: "Skill Time Reduction",
+        jobInitialProgress: "Job Initial Progress",
+      };
+      return names[effect] || effect;
+    },
+    formatEffectValue(effect, value) {
+      if (effect.includes("Multiplier")) {
+        const percentage = ((value - 1) * 100).toFixed(0);
+        return percentage > 0 ? `+${percentage}%` : `${percentage}%`;
+      } else if (effect === "skillTimeReducer") {
+        return `-${value}%`;
+      } else if (effect === "jobInitialProgress") {
+        return `+${value}%`;
+      }
+      return value;
+    },
   },
 };
 </script>
@@ -117,7 +158,10 @@ export default {
   padding: 0.5rem;
   background-color: rgba(255, 255, 255, 0.05);
   border-radius: 4px;
-  height: 48px;
+  height: auto;
+  min-height: 48px;
+  flex-wrap: wrap;
+  gap: 0.5rem;
 }
 
 .character-info.default-title {
@@ -204,6 +248,30 @@ h1 {
   min-height: 180px;
 }
 
+.item-effects {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  width: 100%;
+  margin-top: 0.5rem;
+}
+
+.effect {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.9rem;
+}
+
+.effect-name {
+  color: #888;
+}
+
+.effect-value {
+  color: #2ecc71;
+  font-weight: 500;
+}
+
 @media (min-width: 768px) {
   .nav-button {
     font-size: 1.1rem;
@@ -232,6 +300,15 @@ h1 {
   h1,
   .money {
     font-size: 1rem;
+  }
+
+  .item-effects {
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .effect {
+    font-size: 0.8rem;
   }
 }
 </style>
