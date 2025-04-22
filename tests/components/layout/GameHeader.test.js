@@ -22,6 +22,13 @@ describe("GameHeader.vue", () => {
     currentJob: null,
     jobProgress: 0,
     getLearningProgress: () => 0,
+    getItemEffects: () => ({
+      salaryMultiplier: 1,
+      learningSpeedMultiplier: 1,
+      workSpeedMultiplier: 1,
+      skillTimeMultiplier: 1,
+      initialJobProgress: 0,
+    }),
   };
 
   beforeEach(() => {
@@ -97,5 +104,60 @@ describe("GameHeader.vue", () => {
     expect(progressBars).toHaveLength(1);
     expect(wrapper.text()).toContain("Learning: Test Skill");
     expect(wrapper.text()).toContain("Working: Test Job");
+  });
+
+  test("displays item effects correctly when effects exist", async () => {
+    await wrapper.setProps({
+      gameState: {
+        ...mockGameState,
+        currentJob: "test_job",
+        getItemEffects: () => ({
+          salaryMultiplier: 1.5,
+          learningSpeedMultiplier: 1.25,
+          workSpeedMultiplier: 1.1,
+          skillTimeMultiplier: 0.8,
+          initialJobProgress: 15,
+        }),
+      },
+    });
+
+    const effectsDiv = wrapper.find(".item-effects");
+    expect(effectsDiv.exists()).toBe(true);
+
+    const effectText = effectsDiv.text();
+    expect(effectText).toContain("Salary Boost:+50%");
+    expect(effectText).toContain("Learning Speed:+25%");
+    expect(effectText).toContain("Work Speed:+10%");
+    expect(effectText).toContain("Skill Time Reduction:+20%");
+    expect(effectText).toContain("Job Initial Progress:+15%");
+  });
+
+  test("does not display item effects section when no effects present", async () => {
+    await wrapper.setProps({
+      gameState: {
+        ...mockGameState,
+        currentJob: "test_job",
+        getItemEffects: () => null,
+      },
+    });
+
+    const effectsDiv = wrapper.find(".item-effects");
+    expect(effectsDiv.exists()).toBe(false);
+  });
+
+  test("does not display item effects when no current job", async () => {
+    await wrapper.setProps({
+      gameState: {
+        ...mockGameState,
+        currentJob: null,
+        getItemEffects: () => ({
+          salaryMultiplier: 1.5,
+          learningSpeedMultiplier: 1.25,
+        }),
+      },
+    });
+
+    const effectsDiv = wrapper.find(".item-effects");
+    expect(effectsDiv.exists()).toBe(false);
   });
 });

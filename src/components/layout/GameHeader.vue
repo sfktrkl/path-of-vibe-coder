@@ -101,19 +101,20 @@ export default {
       const names = {
         salaryMultiplier: "Salary Boost",
         learningSpeedMultiplier: "Learning Speed",
-        workProgressMultiplier: "Work Progress",
-        skillTimeReducer: "Skill Time Reduction",
-        jobInitialProgress: "Job Initial Progress",
+        workSpeedMultiplier: "Work Speed",
+        skillTimeMultiplier: "Skill Time Reduction",
+        initialJobProgress: "Job Initial Progress",
       };
       return names[effect] || effect;
     },
     formatEffectValue(effect, value) {
-      if (effect.includes("Multiplier")) {
+      if (effect === "skillTimeMultiplier") {
+        const percentage = ((1 - value) * 100).toFixed(0);
+        return `+${percentage}%`;
+      } else if (effect.includes("Multiplier")) {
         const percentage = ((value - 1) * 100).toFixed(0);
         return percentage > 0 ? `+${percentage}%` : `${percentage}%`;
-      } else if (effect === "skillTimeReducer") {
-        return `-${value}%`;
-      } else if (effect === "jobInitialProgress") {
+      } else if (effect === "initialJobProgress") {
         return `+${value}%`;
       }
       return value;

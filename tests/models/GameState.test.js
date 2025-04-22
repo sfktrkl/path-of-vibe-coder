@@ -191,4 +191,115 @@ describe("GameState", () => {
   test("should handle invalid learning progress", () => {
     expect(gameState.getLearningProgress()).toBe(0);
   });
+
+  test("should handle item effects correctly", () => {
+    // Add enough money to purchase items
+    gameState.addMoney(100000);
+
+    // Test basic salary boost
+    gameState.purchaseItem("basic_salary_boost");
+    let effects = gameState.getItemEffects();
+    expect(effects.salaryMultiplier).toBe(1.1);
+
+    // Test learning speed boost
+    gameState.purchaseItem("basic_learning_boost");
+    effects = gameState.getItemEffects();
+    expect(effects.learningSpeedMultiplier).toBe(1.1);
+
+    // Test work speed boost
+    gameState.purchaseItem("basic_work_boost");
+    effects = gameState.getItemEffects();
+    expect(effects.workSpeedMultiplier).toBe(1.1);
+
+    // Test skill time reducer
+    gameState.purchaseItem("basic_skill_time_reducer");
+    effects = gameState.getItemEffects();
+    expect(effects.skillTimeMultiplier).toBe(0.9);
+
+    // Test job initial progress
+    gameState.purchaseItem("basic_job_boost");
+    effects = gameState.getItemEffects();
+    expect(effects.initialJobProgress).toBe(10);
+  });
+
+  test("should handle item requirements correctly", () => {
+    // Add enough money to purchase items
+    gameState.addMoney(100000);
+
+    // Try to purchase advanced item without basic
+    const success = gameState.purchaseItem("advanced_salary_boost");
+    expect(success).toBe(false);
+    expect(gameState.hasItem("advanced_salary_boost")).toBe(false);
+
+    // Purchase basic item first
+    gameState.purchaseItem("basic_salary_boost");
+    expect(gameState.hasItem("basic_salary_boost")).toBe(true);
+
+    // Now should be able to purchase advanced
+    const success2 = gameState.purchaseItem("advanced_salary_boost");
+    expect(success2).toBe(true);
+    expect(gameState.hasItem("advanced_salary_boost")).toBe(true);
+  });
+
+  test("should handle item effects stacking correctly", () => {
+    // Add enough money to purchase items
+    gameState.addMoney(100000);
+
+    // Purchase basic and advanced salary boosts
+    gameState.purchaseItem("basic_salary_boost");
+    gameState.purchaseItem("advanced_salary_boost");
+
+    const effects = gameState.getItemEffects();
+    // Advanced should override basic
+    expect(effects.salaryMultiplier).toBe(1.25);
+  });
+
+  test("should handle premium pack requirements", () => {
+    // Add enough money to purchase items
+    gameState.addMoney(100000);
+
+    // Try to purchase premium pack without prerequisites
+    const success = gameState.purchaseItem("premium_boost_pack");
+    expect(success).toBe(false);
+    expect(gameState.hasItem("premium_boost_pack")).toBe(false);
+
+    // Purchase all required items in order
+    // Salary boost chain
+    gameState.purchaseItem("basic_salary_boost");
+    gameState.purchaseItem("advanced_salary_boost");
+    gameState.purchaseItem("expert_salary_boost");
+
+    // Learning boost chain
+    gameState.purchaseItem("basic_learning_boost");
+    gameState.purchaseItem("advanced_learning_boost");
+    gameState.purchaseItem("expert_learning_boost");
+
+    // Work boost chain
+    gameState.purchaseItem("basic_work_boost");
+    gameState.purchaseItem("advanced_work_boost");
+    gameState.purchaseItem("expert_work_boost");
+
+    // Skill time reducer chain
+    gameState.purchaseItem("basic_skill_time_reducer");
+    gameState.purchaseItem("advanced_skill_time_reducer");
+    gameState.purchaseItem("expert_skill_time_reducer");
+
+    // Job boost chain
+    gameState.purchaseItem("basic_job_boost");
+    gameState.purchaseItem("advanced_job_boost");
+    gameState.purchaseItem("expert_job_boost");
+
+    // Now should be able to purchase premium pack
+    const success2 = gameState.purchaseItem("premium_boost_pack");
+    expect(success2).toBe(true);
+    expect(gameState.hasItem("premium_boost_pack")).toBe(true);
+
+    // Verify the effects
+    const effects = gameState.getItemEffects();
+    expect(effects.salaryMultiplier).toBe(1.2);
+    expect(effects.learningSpeedMultiplier).toBe(1.2);
+    expect(effects.workSpeedMultiplier).toBe(1.2);
+    expect(effects.skillTimeMultiplier).toBe(0.8);
+    expect(effects.initialJobProgress).toBe(20);
+  });
 });

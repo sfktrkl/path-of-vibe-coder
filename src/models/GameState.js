@@ -194,9 +194,9 @@ export default class GameState {
     const effects = {
       salaryMultiplier: 1,
       learningSpeedMultiplier: 1,
-      workProgressMultiplier: 1,
-      skillTimeReducer: 0,
-      jobInitialProgress: 0,
+      workSpeedMultiplier: 1,
+      skillTimeMultiplier: 1,
+      initialJobProgress: 0,
     };
 
     this.ownedItems.forEach((itemId) => {
@@ -204,23 +204,7 @@ export default class GameState {
       if (!item) return;
 
       Object.entries(item.stats).forEach(([stat, value]) => {
-        switch (stat) {
-          case "salaryBoost":
-            effects.salaryMultiplier += value;
-            break;
-          case "learningSpeed":
-            effects.learningSpeedMultiplier += value;
-            break;
-          case "workProgress":
-            effects.workProgressMultiplier += value;
-            break;
-          case "skillTimeReduction":
-            effects.skillTimeReducer += value;
-            break;
-          case "jobInitialProgress":
-            effects.jobInitialProgress += value;
-            break;
-        }
+        effects[stat] = value;
       });
     });
 
