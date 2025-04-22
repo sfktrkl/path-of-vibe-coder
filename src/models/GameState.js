@@ -37,6 +37,13 @@ export default class GameState {
     if (this.isJobUnlocked(jobId)) {
       this.currentJob = jobId;
       this.jobProgress = 0; // Reset progress when changing jobs
+
+      // Apply initial job progress from effects
+      const effects = this.getItemEffects();
+      if (effects.initialJobProgress > 0) {
+        this.jobProgress = effects.initialJobProgress;
+      }
+
       return true;
     }
     return false;
