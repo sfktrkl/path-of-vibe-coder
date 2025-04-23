@@ -12,12 +12,14 @@ describe("SkillsView.vue", () => {
     hasSkill: jest.fn().mockReturnValue(false),
     currentLearning: null,
     getSkillProgress: jest.fn().mockReturnValue(0),
+    isSkillAvailable: jest.fn().mockReturnValue(false),
   };
 
   beforeEach(() => {
     jest.clearAllMocks();
     gameStateMock.hasSkill.mockReturnValue(false);
     gameStateMock.getSkillProgress.mockReturnValue(0);
+    gameStateMock.isSkillAvailable.mockReturnValue(false);
 
     wrapper = mount(SkillsView, {
       propsData: { gameState: gameStateMock },
@@ -32,12 +34,23 @@ describe("SkillsView.vue", () => {
     const basicSkills = Object.values(skills).filter(
       (skill) => skill.prerequisites.length === 0
     );
-    const skillItems = wrapper.findAllComponents(SkillItem);
+
+    // Mock isSkillAvailable to return true for basic skills
+    gameStateMock.isSkillAvailable.mockImplementation((skillId) => {
+      const skill = skills[skillId];
+      return skill.prerequisites.length === 0;
+    });
+
+    const newWrapper = mount(SkillsView, {
+      propsData: { gameState: gameStateMock },
+    });
+
+    const skillItems = newWrapper.findAllComponents(SkillItem);
 
     // Should only show skills without prerequisites when nothing is learned
     expect(skillItems.length).toBe(basicSkills.length);
     basicSkills.forEach((skill) => {
-      expect(wrapper.vm.sortedSkills).toContainEqual(
+      expect(newWrapper.vm.sortedSkills).toContainEqual(
         expect.objectContaining({ id: skill.id })
       );
     });
@@ -53,32 +66,26 @@ describe("SkillsView.vue", () => {
     gameStateMock.hasSkill.mockImplementation((skillId) =>
       learnedBasicSkills.some((skill) => skill.id === skillId)
     );
+    gameStateMock.isSkillAvailable.mockImplementation((skillId) => {
+      const skill = skills[skillId];
+      return (
+        skill.prerequisites.length === 0 || // Basic skills
+        skill.prerequisites.every((prereq) => gameStateMock.hasSkill(prereq))
+      );
+    });
 
     const newWrapper = mount(SkillsView, {
       propsData: { gameState: gameStateMock },
     });
 
-    // Find skills that should be available (have prerequisites met)
-    const availableSkills = Object.values(skills).filter(
+    const skillItems = newWrapper.findAllComponents(SkillItem);
+    // Should show basic skills plus skills with met prerequisites
+    const expectedSkills = Object.values(skills).filter(
       (skill) =>
         skill.prerequisites.length === 0 || // Basic skills
-        skill.prerequisites.every((prereq) =>
-          learnedBasicSkills.some((learned) => learned.id === prereq)
-        )
+        skill.prerequisites.every((prereq) => gameStateMock.hasSkill(prereq))
     );
-
-    const skillItems = newWrapper.findAllComponents(SkillItem);
-    expect(skillItems.length).toBe(availableSkills.length);
-
-    // Verify each displayed skill is either basic or has met prerequisites
-    newWrapper.vm.sortedSkills.forEach((skill) => {
-      expect(
-        skill.prerequisites.length === 0 || // Basic skill
-          skill.prerequisites.every((prereq) =>
-            learnedBasicSkills.some((learned) => learned.id === prereq)
-          ) // Prerequisites met
-      ).toBe(true);
-    });
+    expect(skillItems.length).toBe(expectedSkills.length);
   });
 
   it("sorts skills with learned ones at the bottom", () => {
@@ -139,6 +146,7 @@ describe("SkillsView.vue", () => {
     gameStateMock.hasSkill.mockImplementation((skillId) =>
       skillWithPrereqs.prerequisites.includes(skillId)
     );
+    gameStateMock.isSkillAvailable.mockReturnValue(true);
     await wrapper.setProps({ gameState: { ...gameStateMock } });
 
     // Now the skill should be available
@@ -157,6 +165,7 @@ describe("SkillsView.vue", () => {
     gameStateMock.hasSkill.mockImplementation(
       (skillId) => skillId === firstPrereq
     );
+    gameStateMock.isSkillAvailable.mockReturnValue(false);
 
     const firstWrapper = mount(SkillsView, {
       propsData: { gameState: gameStateMock },
@@ -173,6 +182,7 @@ describe("SkillsView.vue", () => {
     gameStateMock.hasSkill.mockImplementation((skillId) =>
       skillWithMultiplePrereqs.prerequisites.includes(skillId)
     );
+    gameStateMock.isSkillAvailable.mockReturnValue(true);
 
     const secondWrapper = mount(SkillsView, {
       propsData: { gameState: gameStateMock },

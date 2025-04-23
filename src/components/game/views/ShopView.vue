@@ -33,13 +33,8 @@ export default {
     itemsByCategory() {
       const categories = {};
       Object.values(items).forEach((item) => {
-        // Check if item is available (meets requirements)
-        const isAvailable = item.requiredItems.every((requiredItem) =>
-          this.gameState.hasItem(requiredItem)
-        );
-
-        // Only add available items to categories
-        if (isAvailable) {
+        // Check if item is available using GameState method
+        if (this.gameState.isItemAvailable(item.id)) {
           if (!categories[item.category]) {
             categories[item.category] = [];
           }

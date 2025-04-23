@@ -109,14 +109,21 @@ export default class GameState {
     return this.skillProgress[skillId] >= 100;
   }
 
+  isSkillAvailable(skillId) {
+    const skill = skills[skillId];
+    if (!skill) return false;
+
+    return skill.prerequisites.every((prereq) => this.hasSkill(prereq));
+  }
+
   // Get available skills that can be learned
   getAvailableSkills() {
     return Object.values(skills).filter((skill) => {
       // Check if skill is already learned
       if (this.hasSkill(skill.id)) return false;
 
-      // Check if prerequisites are met
-      return skill.prerequisites.every((prereq) => this.hasSkill(prereq));
+      // Check if prerequisites are met using isSkillAvailable
+      return this.isSkillAvailable(skill.id);
     });
   }
 
@@ -171,6 +178,15 @@ export default class GameState {
     return this.ownedItems.has(itemId);
   }
 
+  isItemAvailable(itemId) {
+    const item = items[itemId];
+    if (!item) return false;
+
+    return item.requiredItems.every((requiredItem) =>
+      this.hasItem(requiredItem)
+    );
+  }
+
   purchaseItem(itemId) {
     const item = items[itemId];
     if (!item) return false;
@@ -178,11 +194,8 @@ export default class GameState {
     // Check if already owned
     if (this.hasItem(itemId)) return false;
 
-    // Check if requirements are met
-    if (
-      item.requiredItems &&
-      !item.requiredItems.every((id) => this.hasItem(id))
-    ) {
+    // Check if requirements are met using isItemAvailable
+    if (!this.isItemAvailable(itemId)) {
       return false;
     }
 

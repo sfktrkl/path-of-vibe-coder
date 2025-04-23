@@ -6,7 +6,7 @@
         :key="skill.id"
         :skill="skill"
         :game-state="gameState"
-        :is-available="isSkillAvailable(skill)"
+        :is-available="gameState.isSkillAvailable(skill.id)"
       />
     </div>
   </div>
@@ -33,7 +33,7 @@ export default {
       const filteredSkills = allSkills.filter(
         (skill) =>
           this.gameState.hasSkill(skill.id) ||
-          this.isSkillAvailable(skill) ||
+          this.gameState.isSkillAvailable(skill.id) ||
           this.gameState.currentLearning === skill.id
       );
 
@@ -48,13 +48,6 @@ export default {
         // For remaining skills, sort by prerequisites length
         return a.prerequisites.length - b.prerequisites.length;
       });
-    },
-  },
-  methods: {
-    isSkillAvailable(skill) {
-      return skill.prerequisites.every((prereq) =>
-        this.gameState.hasSkill(prereq)
-      );
     },
   },
 };

@@ -37,11 +37,13 @@ describe("JobsView.vue", () => {
     );
   });
 
-  it("displays jobs by category when unlocked", () => {
-    // Mock some jobs as unlocked
+  it("displays and filters jobs based on unlock status", () => {
+    // Mock specific jobs as unlocked
     const unlockedJobs = Object.values(jobs).slice(0, 3);
-    gameStateMock.isJobUnlocked.mockImplementation((jobId) =>
-      unlockedJobs.some((job) => job.id === jobId)
+    gameStateMock.isJobUnlocked.mockImplementation(
+      (jobId) =>
+        jobId === "everyday_normal_guy" ||
+        unlockedJobs.some((job) => job.id === jobId)
     );
 
     const newWrapper = mount(JobsView, {
@@ -49,20 +51,22 @@ describe("JobsView.vue", () => {
     });
 
     const jobItems = newWrapper.findAllComponents(JobItem);
+    // Should show starting job plus unlocked jobs
     expect(jobItems.length).toBe(unlockedJobs.length);
 
-    // Verify each displayed job is unlocked
+    // Verify each displayed job is either starting job or unlocked
     Object.values(newWrapper.vm.jobsByCategory)
       .flat()
       .forEach((job) => {
-        if (job.id !== "everyday_normal_guy") {
-          expect(gameStateMock.isJobUnlocked(job.id)).toBe(true);
-        }
+        expect(
+          job.id === "everyday_normal_guy" ||
+            gameStateMock.isJobUnlocked(job.id)
+        ).toBe(true);
       });
   });
 
-  it("capitalizes category names", () => {
-    // Mock some jobs as unlocked to see categories
+  it("displays category names with proper capitalization", () => {
+    // Mock all jobs as unlocked to see all categories
     gameStateMock.isJobUnlocked.mockReturnValue(true);
     const newWrapper = mount(JobsView, {
       propsData: { gameState: gameStateMock },
@@ -70,38 +74,14 @@ describe("JobsView.vue", () => {
 
     const categories = Object.keys(newWrapper.vm.jobsByCategory);
     categories.forEach((category) => {
-      const displayedCategory = newWrapper
-        .text()
-        .includes(category.charAt(0).toUpperCase() + category.slice(1));
+      const capitalizedCategory =
+        category.charAt(0).toUpperCase() + category.slice(1);
+      const displayedCategory = newWrapper.text().includes(capitalizedCategory);
       expect(displayedCategory).toBe(true);
     });
   });
 
-  it("filters jobs based on unlock status", () => {
-    // Mock some jobs as unlocked
-    const unlockedJobs = Object.values(jobs).slice(0, 3);
-    gameStateMock.isJobUnlocked.mockImplementation((jobId) =>
-      unlockedJobs.some((job) => job.id === jobId)
-    );
-
-    const newWrapper = mount(JobsView, {
-      propsData: { gameState: gameStateMock },
-    });
-
-    const jobItems = newWrapper.findAllComponents(JobItem);
-    expect(jobItems.length).toBe(unlockedJobs.length);
-
-    // Verify each displayed job is unlocked
-    Object.values(newWrapper.vm.jobsByCategory)
-      .flat()
-      .forEach((job) => {
-        if (job.id !== "everyday_normal_guy") {
-          expect(gameStateMock.isJobUnlocked(job.id)).toBe(true);
-        }
-      });
-  });
-
-  it("hides empty categories", () => {
+  it("hides categories that have no available jobs", () => {
     // Mock only one job in one category as unlocked
     const jobInCategory = Object.values(jobs).find(
       (job) => job.category !== "basic" && job.id !== "everyday_normal_guy"
@@ -121,11 +101,11 @@ describe("JobsView.vue", () => {
     expect(categories.length).toBe(2);
   });
 
-  it("updates when unlock status changes", async () => {
+  it("updates displayed jobs when unlock status changes", async () => {
     // Initially only starting job
     expect(wrapper.findAllComponents(JobItem).length).toBe(1);
 
-    // Mock some jobs as becoming unlocked
+    // Mock all jobs as becoming unlocked
     gameStateMock.isJobUnlocked.mockReturnValue(true);
     await wrapper.setProps({
       gameState: { ...gameStateMock },
@@ -137,19 +117,22 @@ describe("JobsView.vue", () => {
     );
   });
 
-  it("displays jobs in correct categories", () => {
+  it("groups jobs by their respective categories", () => {
     // Mock jobs from different categories as unlocked
     const unlockedJobs = Object.values(jobs).slice(0, 3);
-    gameStateMock.isJobUnlocked.mockImplementation((jobId) =>
-      unlockedJobs.some((job) => job.id === jobId)
+    gameStateMock.isJobUnlocked.mockImplementation(
+      (jobId) =>
+        jobId === "everyday_normal_guy" ||
+        unlockedJobs.some((job) => job.id === jobId)
     );
 
     const newWrapper = mount(JobsView, {
       propsData: { gameState: gameStateMock },
     });
 
-    // Get unique categories from unlocked jobs
+    // Get unique categories from unlocked jobs plus starting job
     const expectedCategories = [
+      "basic", // Starting job category
       ...new Set(unlockedJobs.map((job) => job.category)),
     ];
 
