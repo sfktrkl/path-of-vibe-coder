@@ -33,12 +33,24 @@ export default {
     itemsByCategory() {
       const categories = {};
       Object.values(items).forEach((item) => {
-        if (!categories[item.category]) {
-          categories[item.category] = [];
+        // Check if item is available (meets requirements)
+        const isAvailable = item.requiredItems.every((requiredItem) =>
+          this.gameState.hasItem(requiredItem)
+        );
+
+        // Only add available items to categories
+        if (isAvailable) {
+          if (!categories[item.category]) {
+            categories[item.category] = [];
+          }
+          categories[item.category].push(item);
         }
-        categories[item.category].push(item);
       });
-      return categories;
+
+      // Filter out empty categories
+      return Object.fromEntries(
+        Object.entries(categories).filter(([, items]) => items.length > 0)
+      );
     },
   },
   methods: {

@@ -110,36 +110,7 @@ describe("ShopItem", () => {
     expect(wrapper.find(".unaffordable-badge").text()).toBe("$100");
   });
 
-  it("shows locked badge when requirements not met", async () => {
-    const mockItem = {
-      id: "test_item",
-      name: "Test Item",
-      description: "Test Description",
-      price: 100,
-      stats: { learning: 1.5 },
-      requiredItems: ["required_item"],
-    };
-
-    const mockGameState = {
-      money: 1000,
-      hasItem: jest.fn().mockReturnValue(false),
-      canAfford: jest.fn().mockReturnValue(true),
-    };
-
-    const wrapper = mount(ShopItem, {
-      propsData: {
-        item: mockItem,
-        gameState: mockGameState,
-      },
-    });
-
-    await wrapper.vm.$nextTick();
-    expect(mockGameState.hasItem).toHaveBeenCalledWith("required_item");
-    expect(wrapper.find(".locked-badge").exists()).toBe(true);
-    expect(wrapper.find(".locked-badge").text()).toBe("Requirements");
-  });
-
-  it("calls purchaseItem when clicked and available", async () => {
+  it("calls purchaseItem when clicked and not owned", async () => {
     gameStateMock.hasItem.mockReturnValue(false);
     gameStateMock.money = 1000;
     await wrapper.setProps({
@@ -151,7 +122,7 @@ describe("ShopItem", () => {
     expect(gameStateMock.purchaseItem).toHaveBeenCalledWith(mockItem.id);
   });
 
-  it("does not call purchaseItem when clicked and not available", async () => {
+  it("does not call purchaseItem when clicked and owned", async () => {
     gameStateMock.hasItem.mockReturnValue(true);
     await wrapper.setProps({
       item: mockItem,
@@ -172,7 +143,6 @@ describe("ShopItem", () => {
 
     expect(wrapper.classes()).toContain("item-base");
     expect(wrapper.classes()).toContain("affordable");
-    expect(wrapper.classes()).toContain("available");
     expect(wrapper.classes()).not.toContain("owned");
   });
 });

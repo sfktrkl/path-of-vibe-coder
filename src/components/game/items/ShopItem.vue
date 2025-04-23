@@ -5,13 +5,10 @@
       {
         owned: gameState.hasItem(item.id),
         affordable: canAfford,
-        available: isAvailable,
       },
     ]"
     @click="
-      !gameState.hasItem(item.id) && canAfford && isAvailable
-        ? purchaseItem(item.id)
-        : null
+      !gameState.hasItem(item.id) && canAfford ? purchaseItem(item.id) : null
     "
   >
     <div class="item-info">
@@ -27,9 +24,6 @@
     <div class="item-status">
       <span v-if="gameState.hasItem(item.id)" class="status-badge owned-badge"
         >Owned</span
-      >
-      <span v-else-if="!isAvailable" class="status-badge locked-badge"
-        >Requirements</span
       >
       <span v-else-if="canAfford" class="status-badge affordable-badge"
         >${{ item.price }}</span
@@ -61,11 +55,6 @@ export default {
   computed: {
     canAfford() {
       return this.gameState.money >= this.item.price;
-    },
-    isAvailable() {
-      return this.item.requiredItems.every((requiredItem) =>
-        this.gameState.hasItem(requiredItem)
-      );
     },
   },
   methods: {

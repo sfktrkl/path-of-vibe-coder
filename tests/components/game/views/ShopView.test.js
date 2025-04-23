@@ -16,6 +16,10 @@ describe("ShopView.vue", () => {
   };
 
   beforeEach(() => {
+    // Reset all mocks
+    jest.clearAllMocks();
+    mockGameState.hasItem.mockReturnValue(false);
+
     wrapper = mount(ShopView, {
       props: {
         gameState: mockGameState,
@@ -29,7 +33,14 @@ describe("ShopView.vue", () => {
   });
 
   it("displays item categories", () => {
-    const categories = wrapper.vm.itemsByCategory;
+    // Mock meeting all requirements to show items
+    mockGameState.hasItem.mockReturnValue(true);
+    const newWrapper = mount(ShopView, {
+      props: {
+        gameState: mockGameState,
+      },
+    });
+    const categories = newWrapper.vm.itemsByCategory;
     expect(Object.keys(categories).length).toBeGreaterThan(0);
   });
 
@@ -38,16 +49,31 @@ describe("ShopView.vue", () => {
     expect(formattedName).toBe("Salary Boosts");
   });
 
-  it("renders ShopItem components for each item", () => {
-    const shopItems = wrapper.findAllComponents(ShopItem);
-    const totalItems = Object.values(items).length;
-    expect(shopItems.length).toBe(totalItems);
+  it("renders ShopItem components for available items", () => {
+    // Mock meeting all requirements
+    mockGameState.hasItem.mockReturnValue(true);
+    const newWrapper = mount(ShopView, {
+      props: {
+        gameState: mockGameState,
+      },
+    });
+
+    const shopItems = newWrapper.findAllComponents(ShopItem);
+    expect(shopItems.length).toBe(Object.keys(items).length); // All items should be shown
   });
 
   it("groups items by category", () => {
-    const categories = wrapper.vm.itemsByCategory;
-    Object.entries(categories).forEach(([category, items]) => {
-      items.forEach((item) => {
+    // Mock meeting all requirements
+    mockGameState.hasItem.mockReturnValue(true);
+    const newWrapper = mount(ShopView, {
+      props: {
+        gameState: mockGameState,
+      },
+    });
+
+    const categories = newWrapper.vm.itemsByCategory;
+    Object.entries(categories).forEach(([category, categoryItems]) => {
+      categoryItems.forEach((item) => {
         expect(item.category).toBe(category);
       });
     });
@@ -67,13 +93,113 @@ describe("ShopView.vue", () => {
     expect(wrapper.vm.gameState.money).toBe(2000);
   });
 
-  it("displays correct number of items per category", () => {
-    const categories = wrapper.vm.itemsByCategory;
-    Object.entries(categories).forEach(([category, items]) => {
-      const expectedCount = Object.values(items).filter(
-        (item) => item.category === category
-      ).length;
-      expect(items.length).toBe(expectedCount);
+  it("filters out items that don't meet requirements", () => {
+    // Initially, show only items with no requirements
+    const noRequirementItems = Object.values(items).filter(
+      (item) => item.requiredItems.length === 0
+    );
+    expect(Object.keys(wrapper.vm.itemsByCategory).length).toBeGreaterThan(0);
+    expect(wrapper.findAllComponents(ShopItem).length).toBe(
+      noRequirementItems.length
+    );
+
+    // Mock meeting requirements for an item with requirements
+    const itemWithRequirements = Object.values(items).find(
+      (item) => item.requiredItems.length > 0
+    );
+    mockGameState.hasItem.mockImplementation((itemId) =>
+      itemWithRequirements.requiredItems.includes(itemId)
+    );
+    const newWrapper = mount(ShopView, {
+      props: {
+        gameState: mockGameState,
+      },
     });
+
+    // Should show the item with met requirements plus items with no requirements
+    expect(newWrapper.findAllComponents(ShopItem).length).toBe(
+      noRequirementItems.length + 1
+    );
+    expect(
+      newWrapper.vm.itemsByCategory[itemWithRequirements.category]
+    ).toContainEqual(expect.objectContaining({ id: itemWithRequirements.id }));
+  });
+
+  it("hides categories with no available items", () => {
+    // Initially, only categories with no-requirement items should be shown
+    const noRequirementCategories = [
+      ...new Set(
+        Object.values(items)
+          .filter((item) => item.requiredItems.length === 0)
+          .map((item) => item.category)
+      ),
+    ];
+    expect(Object.keys(wrapper.vm.itemsByCategory).length).toBe(
+      noRequirementCategories.length
+    );
+
+    // Mock meeting requirements for items in a new category
+    const categoryWithRequirements = Object.values(items).find(
+      (item) => item.requiredItems.length > 0
+    ).category;
+    const categoryItems = Object.values(items).filter(
+      (item) => item.category === categoryWithRequirements
+    );
+
+    mockGameState.hasItem.mockImplementation((itemId) =>
+      categoryItems.some((item) => item.requiredItems.includes(itemId))
+    );
+    const newWrapper = mount(ShopView, {
+      props: {
+        gameState: mockGameState,
+      },
+    });
+
+    // Should show the new category plus categories with no-requirement items
+    expect(Object.keys(newWrapper.vm.itemsByCategory)).toContain(
+      categoryWithRequirements
+    );
+    noRequirementCategories.forEach((category) => {
+      expect(Object.keys(newWrapper.vm.itemsByCategory)).toContain(category);
+    });
+  });
+
+  it("shows correct number of items after filtering", () => {
+    // Get base number of items (ones with no requirements)
+    const noRequirementItems = Object.values(items).filter(
+      (item) => item.requiredItems.length === 0
+    );
+
+    // Mock meeting requirements for half of the items that have requirements
+    const itemsWithRequirements = Object.values(items).filter(
+      (item) => item.requiredItems.length > 0
+    );
+    const halfIndex = Math.floor(itemsWithRequirements.length / 2);
+    const availableItems = itemsWithRequirements.slice(0, halfIndex);
+
+    mockGameState.hasItem.mockImplementation((itemId) =>
+      availableItems.some((item) => item.requiredItems.includes(itemId))
+    );
+
+    const newWrapper = mount(ShopView, {
+      props: {
+        gameState: mockGameState,
+      },
+    });
+
+    // Should show no-requirement items plus half of the items with requirements
+    const expectedTotal = noRequirementItems.length + halfIndex;
+    const shopItems = newWrapper.findAllComponents(ShopItem);
+    expect(shopItems.length).toBe(expectedTotal);
+
+    // Verify specific items
+    const allExpectedItems = [...noRequirementItems, ...availableItems];
+    Object.values(newWrapper.vm.itemsByCategory)
+      .flat()
+      .forEach((item) => {
+        expect(allExpectedItems).toContainEqual(
+          expect.objectContaining({ id: item.id })
+        );
+      });
   });
 });
