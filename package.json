@@ -7,9 +7,9 @@
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
     "format": "prettier --write \"src/**/*.{js,vue}\"",
-    "test:unit": "vue-cli-service test:unit",
-    "test:unit:watch": "vue-cli-service test:unit --watch",
-    "test:unit:coverage": "vue-cli-service test:unit --coverage"
+    "test": "vue-cli-service test:unit",
+    "test:watch": "vue-cli-service test:unit --watch",
+    "test:coverage": "vue-cli-service test:unit --coverage"
   },
   "dependencies": {
     "core-js": "^3.8.3",
