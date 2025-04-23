@@ -1,6 +1,7 @@
 import { mount } from "@vue/test-utils";
 import SkillsView from "@views/SkillsView.vue";
 import { skills } from "@data/skills";
+import SkillItem from "@items/SkillItem.vue";
 
 // Mock the style import
 jest.mock("@styles/item-styles.css", () => ({}));
@@ -8,11 +9,16 @@ jest.mock("@styles/item-styles.css", () => ({}));
 describe("SkillsView.vue", () => {
   let wrapper;
   const gameStateMock = {
-    hasSkill: jest.fn().mockReturnValue(true),
+    hasSkill: jest.fn().mockReturnValue(false),
     currentLearning: null,
+    getSkillProgress: jest.fn().mockReturnValue(0),
   };
 
   beforeEach(() => {
+    jest.clearAllMocks();
+    gameStateMock.hasSkill.mockReturnValue(false);
+    gameStateMock.getSkillProgress.mockReturnValue(0);
+
     wrapper = mount(SkillsView, {
       propsData: { gameState: gameStateMock },
     });
@@ -22,81 +28,161 @@ describe("SkillsView.vue", () => {
     expect(wrapper.exists()).toBe(true);
   });
 
-  it("displays sorted skills", () => {
-    const skills = wrapper.vm.sortedSkills;
-    expect(skills).toHaveLength(47);
-    expect(skills[0].id).toBe("computer_basics");
+  it("displays basic skills without prerequisites", () => {
+    const basicSkills = Object.values(skills).filter(
+      (skill) => skill.prerequisites.length === 0
+    );
+    const skillItems = wrapper.findAllComponents(SkillItem);
+
+    // Should only show skills without prerequisites when nothing is learned
+    expect(skillItems.length).toBe(basicSkills.length);
+    basicSkills.forEach((skill) => {
+      expect(wrapper.vm.sortedSkills).toContainEqual(
+        expect.objectContaining({ id: skill.id })
+      );
+    });
   });
 
-  it("sorts skills correctly based on learned status", () => {
-    const mockHasSkill = jest
-      .fn()
-      .mockImplementation(
-        (skillId) => skillId === "computer_basics" || skillId === "typing"
-      );
-    const wrapper = mount(SkillsView, {
-      propsData: {
-        gameState: {
-          hasSkill: mockHasSkill,
-          currentLearning: null,
-        },
-      },
-    });
+  it("filters skills based on prerequisites", () => {
+    // Mock some basic skills as learned
+    const basicSkills = Object.values(skills).filter(
+      (skill) => skill.prerequisites.length === 0
+    );
+    const learnedBasicSkills = basicSkills.slice(0, 2);
 
-    const sortedSkills = wrapper.vm.sortedSkills;
-    const learnedSkills = sortedSkills.filter(
-      (skill) => skill.id === "computer_basics" || skill.id === "typing"
+    gameStateMock.hasSkill.mockImplementation((skillId) =>
+      learnedBasicSkills.some((skill) => skill.id === skillId)
     );
 
-    // Learned skills should be at the bottom
-    expect(sortedSkills.slice(-2)).toEqual(learnedSkills);
+    const newWrapper = mount(SkillsView, {
+      propsData: { gameState: gameStateMock },
+    });
+
+    // Find skills that should be available (have prerequisites met)
+    const availableSkills = Object.values(skills).filter(
+      (skill) =>
+        skill.prerequisites.length === 0 || // Basic skills
+        skill.prerequisites.every((prereq) =>
+          learnedBasicSkills.some((learned) => learned.id === prereq)
+        )
+    );
+
+    const skillItems = newWrapper.findAllComponents(SkillItem);
+    expect(skillItems.length).toBe(availableSkills.length);
+
+    // Verify each displayed skill is either basic or has met prerequisites
+    newWrapper.vm.sortedSkills.forEach((skill) => {
+      expect(
+        skill.prerequisites.length === 0 || // Basic skill
+          skill.prerequisites.every((prereq) =>
+            learnedBasicSkills.some((learned) => learned.id === prereq)
+          ) // Prerequisites met
+      ).toBe(true);
+    });
+  });
+
+  it("sorts skills with learned ones at the bottom", () => {
+    // Mock some skills as learned
+    const learnedSkills = Object.values(skills).slice(0, 3);
+    gameStateMock.hasSkill.mockImplementation((skillId) =>
+      learnedSkills.some((skill) => skill.id === skillId)
+    );
+
+    const newWrapper = mount(SkillsView, {
+      propsData: { gameState: gameStateMock },
+    });
+
+    const sortedSkills = newWrapper.vm.sortedSkills;
+    const learnedIndices = learnedSkills.map((skill) =>
+      sortedSkills.findIndex((s) => s.id === skill.id)
+    );
+
+    // All learned skills should be at the end
+    learnedIndices.forEach((index) => {
+      expect(index).toBeGreaterThan(
+        sortedSkills.length - learnedSkills.length - 1
+      );
+    });
   });
 
   it("includes currently learning skill", () => {
-    const mockHasSkill = jest.fn().mockReturnValue(false);
-    const currentLearning = "programming";
-    const wrapper = mount(SkillsView, {
+    const learningSkill = Object.values(skills).find(
+      (skill) => skill.prerequisites.length > 0
+    );
+    const newWrapper = mount(SkillsView, {
       propsData: {
         gameState: {
-          hasSkill: mockHasSkill,
-          currentLearning,
+          ...gameStateMock,
+          currentLearning: learningSkill.id,
         },
       },
     });
 
-    const sortedSkills = wrapper.vm.sortedSkills;
-    // Check if the skill is in the list or if it's being learned
+    // The learning skill should be in the list even if prerequisites aren't met
     expect(
-      sortedSkills.some((skill) => skill.id === currentLearning) ||
-        wrapper.vm.gameState.currentLearning === currentLearning
+      newWrapper.vm.sortedSkills.some((skill) => skill.id === learningSkill.id)
     ).toBe(true);
   });
 
-  it("correctly determines skill availability", () => {
-    const mockHasSkill = jest
-      .fn()
-      .mockImplementation((skillId) => skillId === "computer_basics");
-    const wrapper = mount(SkillsView, {
-      propsData: {
-        gameState: {
-          hasSkill: mockHasSkill,
-          currentLearning: null,
-        },
-      },
-    });
-
-    const skillWithPrereq = Object.values(skills).find(
+  it("updates skill availability when prerequisites are met", async () => {
+    // Start with no skills learned
+    const skillWithPrereqs = Object.values(skills).find(
       (skill) => skill.prerequisites.length > 0
     );
-    expect(wrapper.vm.isSkillAvailable(skillWithPrereq)).toBe(
-      skillWithPrereq.prerequisites.every(
-        (prereq) => prereq === "computer_basics"
-      )
+
+    // Initially the skill should not be available
+    expect(
+      wrapper.vm.sortedSkills.some((skill) => skill.id === skillWithPrereqs.id)
+    ).toBe(false);
+
+    // Mock prerequisites as learned
+    gameStateMock.hasSkill.mockImplementation((skillId) =>
+      skillWithPrereqs.prerequisites.includes(skillId)
     );
+    await wrapper.setProps({ gameState: { ...gameStateMock } });
+
+    // Now the skill should be available
+    expect(
+      wrapper.vm.sortedSkills.some((skill) => skill.id === skillWithPrereqs.id)
+    ).toBe(true);
   });
 
-  it("renders SkillItem components for each skill", () => {
-    const skillItems = wrapper.findAllComponents({ name: "SkillItem" });
-    expect(skillItems.length).toBe(47);
+  it("handles skills with multiple prerequisites", () => {
+    const skillWithMultiplePrereqs = Object.values(skills).find(
+      (skill) => skill.prerequisites.length > 1
+    );
+
+    // Mock only one prerequisite as learned
+    const firstPrereq = skillWithMultiplePrereqs.prerequisites[0];
+    gameStateMock.hasSkill.mockImplementation(
+      (skillId) => skillId === firstPrereq
+    );
+
+    const firstWrapper = mount(SkillsView, {
+      propsData: { gameState: gameStateMock },
+    });
+
+    // Skill should not be available with only one prerequisite
+    expect(
+      firstWrapper.vm.sortedSkills.some(
+        (skill) => skill.id === skillWithMultiplePrereqs.id
+      )
+    ).toBe(false);
+
+    // Mock all prerequisites as learned
+    gameStateMock.hasSkill.mockImplementation((skillId) =>
+      skillWithMultiplePrereqs.prerequisites.includes(skillId)
+    );
+
+    const secondWrapper = mount(SkillsView, {
+      propsData: { gameState: gameStateMock },
+    });
+
+    // Skill should be available with all prerequisites
+    expect(
+      secondWrapper.vm.sortedSkills.some(
+        (skill) => skill.id === skillWithMultiplePrereqs.id
+      )
+    ).toBe(true);
   });
 });
