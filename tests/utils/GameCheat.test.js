@@ -5,8 +5,13 @@ describe("GameCheat", () => {
   let gameState;
   let gameCheat;
   let mockWindow;
+  let originalConsoleLog;
 
   beforeEach(() => {
+    // Mock console.log before any test setup
+    originalConsoleLog = console.log;
+    console.log = jest.fn();
+
     // Create a mock window object
     mockWindow = {
       console: console,
@@ -20,6 +25,7 @@ describe("GameCheat", () => {
   afterEach(() => {
     // Clean up
     delete global.window;
+    console.log = originalConsoleLog;
   });
 
   it("should initialize with cheats disabled", () => {
@@ -80,18 +86,11 @@ describe("GameCheat", () => {
     // Enable cheats
     mockWindow[gameCheat.cheatCode];
 
-    // Mock console.log
-    const originalConsoleLog = console.log;
-    console.log = jest.fn();
-
     // Execute help command
     mockWindow.help();
 
     // Check if help message was shown
     expect(console.log).toHaveBeenCalled();
     expect(console.log.mock.calls[0][0]).toContain("Available cheat commands:");
-
-    // Restore console.log
-    console.log = originalConsoleLog;
   });
 });
