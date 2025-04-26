@@ -1,4 +1,4 @@
-import GameCheat from "../../src/models/GameCheat.js";
+import GameCheat from "../../src/utils/GameCheat.js";
 import GameState from "../../src/models/GameState.js";
 
 describe("GameCheat", () => {

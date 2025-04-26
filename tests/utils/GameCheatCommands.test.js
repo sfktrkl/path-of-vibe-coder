@@ -1,4 +1,4 @@
-import GameCheatCommands from "../../src/models/GameCheatCommands.js";
+import GameCheatCommands from "../../src/utils/GameCheatCommands.js";
 import GameState from "../../src/models/GameState.js";
 import { jobs } from "../../src/data/jobs.js";
 import { skills } from "../../src/data/skills.js";
