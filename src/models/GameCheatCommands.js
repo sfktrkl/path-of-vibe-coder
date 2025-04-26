@@ -1,5 +1,6 @@
 import { jobs } from "../data/jobs.js";
 import { skills } from "../data/skills.js";
+import { items } from "../data/items.js";
 
 export default class GameCheatCommands {
   constructor(gameState) {
@@ -134,6 +135,75 @@ export default class GameCheatCommands {
         // Format the output
         let output = "Available Skill IDs:\n\n";
         Object.entries(skillsByCategory).forEach(([category, ids]) => {
+          output += `[${category}]\n${ids.join("\n")}\n\n`;
+        });
+
+        console.log(output);
+      },
+    };
+  }
+
+  getItem() {
+    return {
+      description: "getItem(itemId: string) - Get an item and its requirements",
+      execute: (itemId) => {
+        const item = items[itemId];
+        if (!item) {
+          console.log(`Item ${itemId} not found!`);
+          return;
+        }
+
+        // Check if item is already owned
+        if (this.gameState.hasItem(itemId)) {
+          return;
+        }
+
+        // Recursively collect all required items
+        const collectRequiredItems = (itemId, collectedItems = new Set()) => {
+          const item = items[itemId];
+          if (!item) {
+            console.log(`Item ${itemId} not found!`);
+            return collectedItems;
+          }
+
+          item.requiredItems.forEach((requiredItem) => {
+            if (!this.gameState.hasItem(requiredItem)) {
+              collectedItems.add(requiredItem);
+            }
+          });
+
+          return collectedItems;
+        };
+
+        // Get all required items
+        const allRequiredItems = collectRequiredItems(itemId);
+        for (const requiredItemId of allRequiredItems) {
+          this.getItem().execute(requiredItemId);
+        }
+
+        // Directly add the item to inventory
+        this.gameState.ownedItems.add(itemId);
+        console.log(`Got item ${itemId}!`);
+      },
+    };
+  }
+
+  listItemIds() {
+    return {
+      description: "listItemIds() - List all item IDs with their categories",
+      execute: () => {
+        // Group items by category
+        const itemsByCategory = {};
+        Object.values(items).forEach((item) => {
+          if (!itemsByCategory[item.category]) {
+            itemsByCategory[item.category] = [];
+          }
+          itemsByCategory[item.category].push(item.id);
+        });
+
+        // Format the output
+        let output = "Available Item IDs:\n\n";
+        Object.entries(itemsByCategory).forEach(([category, ids]) => {
           output += `[${category}]\n${ids.join("\n")}\n\n`;
         });
 
