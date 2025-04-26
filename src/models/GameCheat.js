@@ -10,11 +10,17 @@ export default class GameCheat {
   }
 
   setupConsoleListener() {
+    // Check if property already exists and delete it first
+    if (Object.getOwnPropertyDescriptor(window, this.cheatCode)) {
+      delete window[this.cheatCode];
+    }
+
     Object.defineProperty(window, this.cheatCode, {
       get: () => {
         this.enableCheats();
         return "Cheats enabled! Type 'help' in console for available commands.";
       },
+      configurable: true, // Allow property to be redefined
     });
   }
 
