@@ -28,6 +28,7 @@ module.exports = defineConfig({
         "@data": path.resolve(__dirname, "src/data"),
         "@mixins": path.resolve(__dirname, "src/mixins"),
         "@models": path.resolve(__dirname, "src/models"),
+        "@utils": path.resolve(__dirname, "src/utils"),
       },
     },
   },

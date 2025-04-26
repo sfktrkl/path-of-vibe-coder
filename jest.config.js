@@ -13,6 +13,7 @@ module.exports = {
     "^@data/(.*)$": "<rootDir>/src/data/$1",
     "^@mixins/(.*)$": "<rootDir>/src/mixins/$1",
     "^@models/(.*)$": "<rootDir>/src/models/$1",
+    "^@utils/(.*)$": "<rootDir>/src/utils/$1",
   },
   testEnvironment: "jsdom",
   testEnvironmentOptions: {

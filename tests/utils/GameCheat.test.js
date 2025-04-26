@@ -1,5 +1,5 @@
-import GameCheat from "../../src/utils/GameCheat.js";
-import GameState from "../../src/models/GameState.js";
+import GameState from "@models/GameState.js";
+import GameCheat from "@utils/GameCheat.js";
 
 describe("GameCheat", () => {
   let gameState;

@@ -16,7 +16,7 @@ import GameHeader from "@layout/GameHeader.vue";
 import GameContent from "@layout/GameContent.vue";
 import GameState from "@models/GameState.js";
 import GameTimer from "@models/GameTimer.js";
-import GameCheat from "@models/GameCheat.js";
+import GameCheat from "@utils/GameCheat.js";
 
 export default {
   name: "App",
