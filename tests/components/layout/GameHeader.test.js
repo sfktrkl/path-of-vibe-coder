@@ -47,10 +47,11 @@ describe("GameHeader.vue", () => {
 
   test("renders navigation buttons", () => {
     const navButtons = wrapper.findAll(".nav-button");
-    expect(navButtons).toHaveLength(3);
+    expect(navButtons).toHaveLength(4);
     expect(navButtons[0].text()).toBe("Jobs");
     expect(navButtons[1].text()).toBe("Skills");
     expect(navButtons[2].text()).toBe("Shop");
+    expect(navButtons[3].text()).toBe("Save/Load");
   });
 
   test("highlights active navigation button", () => {
@@ -62,6 +63,12 @@ describe("GameHeader.vue", () => {
     const skillsButton = wrapper.findAll(".nav-button")[1];
     await skillsButton.trigger("click");
     expect(wrapper.emitted("view-change")[0][0]).toBe("skills");
+  });
+
+  test("emits view-change event for save/load button", async () => {
+    const saveLoadButton = wrapper.findAll(".nav-button")[3];
+    await saveLoadButton.trigger("click");
+    expect(wrapper.emitted("view-change")[0][0]).toBe("save");
   });
 
   test("shows learning progress bar when learning a skill", async () => {
