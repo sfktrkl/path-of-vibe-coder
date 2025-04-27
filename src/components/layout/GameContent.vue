@@ -4,10 +4,12 @@
     <SkillsView v-if="currentView === 'skills'" :game-state="gameState" />
     <JobsView v-if="currentView === 'job'" :game-state="gameState" />
     <ShopView v-if="currentView === 'shop'" :game-state="gameState" />
+    <SaveLoadView v-if="currentView === 'save'" :gameState="gameState" />
   </div>
 </template>
 
 <script>
+import SaveLoadView from "@views/SaveLoadView.vue";
 import SkillsView from "@views/SkillsView.vue";
 import JobsView from "@views/JobsView.vue";
 import ShopView from "@views/ShopView.vue";
@@ -19,6 +21,7 @@ export default {
     SkillsView,
     JobsView,
     ShopView,
+    SaveLoadView,
   },
   mixins: [viewMixin],
   props: {

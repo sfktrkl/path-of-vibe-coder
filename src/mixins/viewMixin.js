@@ -11,6 +11,7 @@ export default {
         job: "Career Path",
         skills: "Skills",
         shop: "Shop",
+        save: "Save & Load",
       }[this.currentView];
     },
   },

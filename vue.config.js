@@ -22,6 +22,10 @@ module.exports = defineConfig({
       alias: {
         "@": path.resolve(__dirname, "src"),
         "@styles": path.resolve(__dirname, "src/assets/styles"),
+        "@components": path.resolve(
+          __dirname,
+          "src/components/game/components"
+        ),
         "@items": path.resolve(__dirname, "src/components/game/items"),
         "@views": path.resolve(__dirname, "src/components/game/views"),
         "@layout": path.resolve(__dirname, "src/components/layout"),

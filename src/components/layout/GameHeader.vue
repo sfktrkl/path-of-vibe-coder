@@ -82,6 +82,7 @@ export default {
         { id: "job", name: "Jobs" },
         { id: "skills", name: "Skills" },
         { id: "shop", name: "Shop" },
+        { id: "save", name: "Save/Load" },
       ],
     };
   },
