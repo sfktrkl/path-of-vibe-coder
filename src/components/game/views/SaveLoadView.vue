@@ -93,6 +93,7 @@ export default {
           return;
         }
 
+        this.$emit("load-game", gameData);
         this.loadMessage = "Game loaded successfully!";
         this.loadSuccess = true;
         setTimeout(() => {
@@ -119,35 +120,40 @@ export default {
 
 <style scoped>
 .save-load-view {
-  padding: 1rem;
+  padding: 2rem;
   max-width: 800px;
   margin: 0 auto;
+}
+
+h1 {
+  color: #ffffff;
+  text-align: center;
+  margin-bottom: 2rem;
+  font-size: 2rem;
 }
 
 .save-load-container {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
-  padding: 0.5rem;
+  gap: 2rem;
+  padding: 1rem;
   max-width: 600px;
   margin: 0 auto;
 }
 
 .save-load-section {
   background-color: rgba(255, 255, 255, 0.05);
-  padding: 1rem;
+  padding: 1.5rem;
   border-radius: 8px;
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 1rem;
 }
 
 h2 {
   color: #ffffff;
   margin: 0;
-  font-size: 1.25rem;
-  padding-bottom: 0.5rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 1.5rem;
 }
 
 .save-button,
@@ -174,7 +180,6 @@ h2 {
   border-radius: 4px;
   background-color: #e74c3c;
   color: white;
-  margin-top: 0.5rem;
 }
 
 .message.success {
@@ -183,9 +188,9 @@ h2 {
 
 .save-code {
   background-color: rgba(255, 255, 255, 0.1);
-  padding: 0.75rem;
+  padding: 1rem;
   border-radius: 4px;
-  margin-top: 0.5rem;
+  margin-top: 1rem;
 }
 
 .save-code p {
@@ -240,19 +245,24 @@ h2 {
 
 @media (max-width: 480px) {
   .save-load-view {
-    padding: 0.5rem;
+    padding: 1rem;
+  }
+
+  h1 {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
   }
 
   .save-load-container {
-    padding: 0.25rem;
+    padding: 0.5rem;
   }
 
   .save-load-section {
-    padding: 0.75rem;
+    padding: 1rem;
   }
 
   h2 {
-    font-size: 1.1rem;
+    font-size: 1.2rem;
   }
 
   .save-button,

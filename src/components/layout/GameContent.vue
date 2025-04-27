@@ -4,7 +4,12 @@
     <SkillsView v-if="currentView === 'skills'" :game-state="gameState" />
     <JobsView v-if="currentView === 'job'" :game-state="gameState" />
     <ShopView v-if="currentView === 'shop'" :game-state="gameState" />
-    <SaveLoadView v-if="currentView === 'save'" :gameState="gameState" />
+
+    <SaveLoadView
+      v-if="currentView === 'save'"
+      :gameState="gameState"
+      @load-game="$emit('update-game-state', $event)"
+    />
   </div>
 </template>
 

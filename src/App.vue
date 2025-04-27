@@ -6,7 +6,11 @@
       @view-change="handleViewChange"
     />
     <main class="main-content">
-      <GameContent :currentView="currentView" :gameState="gameState" />
+      <GameContent
+        :currentView="currentView"
+        :gameState="gameState"
+        @update-game-state="handleGameStateUpdate"
+      />
     </main>
   </div>
 </template>
@@ -35,6 +39,22 @@ export default {
   methods: {
     handleViewChange(view) {
       this.currentView = view;
+    },
+    handleGameStateUpdate(newState) {
+      // Stop the current timer
+      if (this.gameTimer) {
+        this.gameTimer.stop();
+      }
+
+      // Update the game state
+      this.gameState = newState;
+
+      // Reinitialize the timer with the new state
+      this.gameTimer = new GameTimer(this.gameState);
+      this.gameTimer.start();
+
+      // Reinitialize game cheats
+      this.gameCheat = new GameCheat(this.gameState);
     },
   },
   created() {
