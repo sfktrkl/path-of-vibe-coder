@@ -329,8 +329,7 @@ export default class GameState {
       // Parse JSON and create new state
       return GameState.fromJSON(JSON.parse(jsonString));
     } catch (error) {
-      console.error("Failed to decode game state:", error);
-      return new GameState(); // Return new state if decoding fails
+      return null;
     }
   }
 }

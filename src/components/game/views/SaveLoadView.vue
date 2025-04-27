@@ -85,22 +85,25 @@ export default {
           return;
         }
 
-        const gameData = GameState.decode(this.loadCode);
+        // Try to decode the save code
+        const decodedState = GameState.decode(this.loadCode);
 
-        if (!gameData) {
+        // Check if decode failed or state is invalid
+        if (!decodedState) {
           this.loadMessage = "Invalid save code!";
           this.loadSuccess = false;
           return;
         }
 
-        this.$emit("load-game", gameData);
+        // Emit the decoded state
+        this.$emit("load-game", decodedState);
         this.loadMessage = "Game loaded successfully!";
         this.loadSuccess = true;
         setTimeout(() => {
           this.loadMessage = "";
         }, 3000);
       } catch (error) {
-        this.loadMessage = "Error loading game: " + error.message;
+        this.loadMessage = "Invalid save code!";
         this.loadSuccess = false;
       }
     },
