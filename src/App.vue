@@ -23,7 +23,6 @@ import GameState from "@models/GameState.js";
 import GameTimer from "@models/GameTimer.js";
 import GameCheat from "@utils/GameCheat.js";
 import ThemeManager from "@styles/theme-manager.js";
-import ParticleSystem from "@styles/particle-system.js";
 
 export default {
   name: "App",
@@ -38,7 +37,6 @@ export default {
       gameTimer: null,
       gameCheat: null,
       themeManager: null,
-      particleSystem: null,
     };
   },
   methods: {
@@ -64,10 +62,6 @@ export default {
       // Reinitialize theme manager
       this.themeManager = new ThemeManager(this.gameState);
     },
-    initializeParticleSystem() {
-      this.particleSystem = new ParticleSystem();
-      this.particleSystem.start();
-    },
   },
   created() {
     // Load saved game state if exists
@@ -90,16 +84,10 @@ export default {
     // Initialize theme manager
     this.themeManager = new ThemeManager(this.gameState);
   },
-  mounted() {
-    this.initializeParticleSystem();
-  },
   beforeUnmount() {
     // Stop the timer when the component is destroyed
     if (this.gameTimer) {
       this.gameTimer.stop();
-    }
-    if (this.particleSystem) {
-      this.particleSystem.stop();
     }
   },
   watch: {

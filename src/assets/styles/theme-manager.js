@@ -1,11 +1,13 @@
 import { ref, watch } from "vue";
 import "../styles/themes/ai.css";
+import ParticleSystem from "./particle-system.js";
 
 class ThemeManager {
   constructor(gameState) {
     this.currentTheme = ref("normal");
     this.gameState = gameState;
     this.matrixBg = null;
+    this.particleSystem = null;
 
     this.initialize();
   }
@@ -29,12 +31,39 @@ class ThemeManager {
     this.currentTheme.value = "ai";
     document.body.classList.add("theme-ai");
     this.addMatrixBackground();
+
+    // Initialize and start particle system only for AI theme
+    if (!this.particleSystem) {
+      this.particleSystem = new ParticleSystem();
+    }
+
+    // Wait for the container to be available
+    this.waitForContainer(() => {
+      this.particleSystem.start();
+    });
   }
 
   deactivateAITheme() {
     this.currentTheme.value = "normal";
     document.body.classList.remove("theme-ai");
     this.removeMatrixBackground();
+
+    // Stop and cleanup particle system when deactivating AI theme
+    if (this.particleSystem) {
+      this.particleSystem.stop();
+    }
+  }
+
+  waitForContainer(callback) {
+    const checkContainer = () => {
+      const container = document.querySelector(".particle-background");
+      if (container) {
+        callback();
+      } else {
+        setTimeout(checkContainer, 100);
+      }
+    };
+    checkContainer();
   }
 
   addMatrixBackground() {
