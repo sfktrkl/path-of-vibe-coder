@@ -20,6 +20,8 @@ export default class GameState {
 
     // AI Path state
     this.aiPathUnlocked = false;
+    this.lastAIPathCheck = 0; // Timestamp of last check
+    this.aiPathCheckCooldown = 300000; // 5 minutes in milliseconds
   }
 
   // Money management
@@ -160,6 +162,8 @@ export default class GameState {
       // When learning is complete, mark as learned
       if (this.skillProgress[this.currentLearning] >= 100) {
         this.currentLearning = null;
+        // Check for AI path unlock when completing a skill
+        this.checkAIPathUnlock();
       }
     }
   }
@@ -268,9 +272,14 @@ export default class GameState {
 
   // AI Path management
   checkAIPathUnlock() {
-    // Point system for unlocking AI path
-    // Each achievement has a point value
-    // Need to reach threshold and pass random chance
+    // Check cooldown
+    const now = Date.now();
+    if (now - this.lastAIPathCheck < this.aiPathCheckCooldown) {
+      return false;
+    }
+
+    // Update check tracking
+    this.lastAIPathCheck = now;
 
     // High-value jobs that show expertise
     const jobPoints = {
@@ -287,6 +296,18 @@ export default class GameState {
       ai_architect: 30, // AI path gives bonus points
       security_architect: 25,
     };
+
+    // First check if player has at least one senior job by calculating job points
+    let seniorJobPoints = 0;
+    Object.entries(jobPoints).forEach(([jobId, points]) => {
+      if (this.isJobUnlocked(jobId)) {
+        seniorJobPoints += points;
+      }
+    });
+
+    if (seniorJobPoints === 0) {
+      return false;
+    }
 
     // High-value skills that show technical depth
     const skillPoints = {
@@ -313,14 +334,7 @@ export default class GameState {
     };
 
     // Calculate total points
-    let totalPoints = 0;
-
-    // Add points from jobs
-    Object.entries(jobPoints).forEach(([jobId, points]) => {
-      if (this.isJobUnlocked(jobId)) {
-        totalPoints += points;
-      }
-    });
+    let totalPoints = seniorJobPoints; // Start with the job points we already calculated
 
     // Add points from skills
     Object.entries(skillPoints).forEach(([skillId, points]) => {
@@ -373,6 +387,7 @@ export default class GameState {
       skillProgress: this.skillProgress,
       ownedItems: Array.from(this.ownedItems),
       aiPathUnlocked: this.aiPathUnlocked,
+      lastAIPathCheck: this.lastAIPathCheck,
     };
   }
 
@@ -386,6 +401,7 @@ export default class GameState {
     state.skillProgress = json.skillProgress || {};
     state.ownedItems = new Set(json.ownedItems || []);
     state.aiPathUnlocked = json.aiPathUnlocked || false;
+    state.lastAIPathCheck = json.lastAIPathCheck || 0;
     return state;
   }
 
