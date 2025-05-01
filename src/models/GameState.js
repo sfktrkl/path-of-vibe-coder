@@ -278,9 +278,6 @@ export default class GameState {
       return false;
     }
 
-    // Update check tracking
-    this.lastAIPathCheck = now;
-
     // High-value jobs that show expertise
     const jobPoints = {
       senior_web_dev: 15,
@@ -308,6 +305,9 @@ export default class GameState {
     if (seniorJobPoints === 0) {
       return false;
     }
+
+    // Update check tracking
+    this.lastAIPathCheck = now;
 
     // High-value skills that show technical depth
     const skillPoints = {

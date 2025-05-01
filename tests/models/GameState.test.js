@@ -7,7 +7,58 @@ describe("GameState", () => {
 
   beforeEach(() => {
     gameState = new GameState();
+    // Mock Date.now
+    const mockDate = new Date("2024-01-01");
+    Date.now = jest.fn(() => mockDate.getTime());
   });
+
+  afterEach(() => {
+    // Clean up Date.now mock
+    if (Date.now.mockRestore) {
+      Date.now.mockRestore();
+    }
+  });
+
+  // Helper function to unlock senior web dev prerequisites
+  const unlockSeniorWebDev = (state) => {
+    state.setJob("everyday_normal_guy");
+    state.startLearning("computer_basics");
+    state.updateLearningProgress(100);
+    state.setJob("computer_trainee");
+    state.startLearning("typing");
+    state.updateLearningProgress(100);
+    state.setJob("data_entry");
+    state.startLearning("internet_basics");
+    state.updateLearningProgress(100);
+    state.setJob("office_assistant");
+    state.startLearning("problem_solving");
+    state.updateLearningProgress(100);
+    state.startLearning("linux");
+    state.updateLearningProgress(100);
+    state.setJob("it_support");
+    state.startLearning("logic");
+    state.updateLearningProgress(100);
+    state.startLearning("git");
+    state.updateLearningProgress(100);
+    state.startLearning("html");
+    state.updateLearningProgress(100);
+    state.setJob("junior_tech");
+    state.startLearning("css");
+    state.updateLearningProgress(100);
+    state.startLearning("javascript");
+    state.updateLearningProgress(100);
+    state.setJob("web_intern");
+    state.startLearning("react");
+    state.updateLearningProgress(100);
+    state.setJob("junior_web_dev");
+    state.startLearning("nodejs");
+    state.updateLearningProgress(100);
+    state.startLearning("express");
+    state.updateLearningProgress(100);
+    state.setJob("web_dev");
+    state.startLearning("typescript");
+    state.updateLearningProgress(100);
+  };
 
   test("should initialize with default values", () => {
     expect(gameState.money).toBe(0);
@@ -526,5 +577,130 @@ describe("GameState", () => {
     expect(newEffects.workSpeedMultiplier).toBe(1.5); // From ultimate pack
     expect(newEffects.skillTimeMultiplier).toBe(0.5); // From ultimate pack (lowest = most reduction)
     expect(newEffects.initialJobProgress).toBe(50); // From ultimate pack
+  });
+
+  test("should handle AI path unlock requirements", () => {
+    // Initially AI path should be locked
+    expect(gameState.isAIPathUnlocked()).toBe(false);
+
+    // Mock random to ensure unlock
+    const mockRandom = jest.spyOn(Math, "random");
+    mockRandom.mockReturnValue(0); // Always return 0 to ensure unlock
+
+    // Try to unlock without senior job (should fail)
+    gameState.checkAIPathUnlock();
+    expect(gameState.isAIPathUnlocked()).toBe(false);
+
+    // Unlock prerequisites for senior web dev
+    unlockSeniorWebDev(gameState);
+    gameState.setJob("senior_web_dev");
+
+    expect(gameState.isJobUnlocked("senior_web_dev")).toBe(true);
+
+    // Try to unlock with just senior job (low chance)
+    gameState.checkAIPathUnlock();
+    expect(gameState.isAIPathUnlocked()).toBe(true); // Should unlock since Math.random is mocked to 0
+
+    mockRandom.mockRestore();
+  });
+
+  test("should respect AI path check cooldown", () => {
+    // Mock random to ensure unlock doesn't happen
+    const mockRandom = jest.spyOn(Math, "random");
+    mockRandom.mockReturnValue(1); // Always return 1 to ensure no unlock
+
+    // Unlock prerequisites for senior web dev
+    unlockSeniorWebDev(gameState);
+    gameState.setJob("senior_web_dev");
+
+    // First check
+    gameState.checkAIPathUnlock();
+    const firstCheckTime = gameState.lastAIPathCheck;
+
+    // Try to check again immediately
+    gameState.checkAIPathUnlock();
+    expect(gameState.lastAIPathCheck).toBe(firstCheckTime);
+
+    // Advance time by 10 minutes
+    const newDate = new Date("2024-01-01");
+    newDate.setMinutes(newDate.getMinutes() + 10);
+    Date.now = jest.fn(() => newDate.getTime());
+
+    // Now should be able to check again
+    gameState.checkAIPathUnlock();
+    expect(gameState.lastAIPathCheck).toBeGreaterThan(firstCheckTime);
+
+    mockRandom.mockRestore();
+  });
+
+  test("should check AI path unlock on skill completion", () => {
+    // Mock random to ensure unlock doesn't happen
+    const mockRandom = jest.spyOn(Math, "random");
+    mockRandom.mockReturnValue(1); // Always return 1 to ensure no unlock
+
+    // Unlock prerequisites for senior web dev
+    unlockSeniorWebDev(gameState);
+    gameState.setJob("senior_web_dev");
+
+    // Start learning a skill
+    gameState.startLearning("machine_learning");
+
+    // Complete the skill
+    gameState.updateLearningProgress(100);
+
+    // Should have triggered AI path check
+    expect(gameState.lastAIPathCheck).toBeGreaterThan(0);
+
+    mockRandom.mockRestore();
+  });
+
+  test("should calculate AI path points correctly", () => {
+    // Mock random to ensure unlock doesn't happen
+    const mockRandom = jest.spyOn(Math, "random");
+    mockRandom.mockReturnValue(1); // Always return 1 to ensure no unlock
+
+    // Unlock prerequisites for senior web dev
+    unlockSeniorWebDev(gameState);
+    gameState.setJob("senior_web_dev");
+    expect(gameState.isJobUnlocked("senior_web_dev")).toBe(true);
+
+    // Add some high-value skills
+    gameState.startLearning("machine_learning");
+    gameState.updateLearningProgress(100);
+    gameState.startLearning("deep_learning");
+    gameState.updateLearningProgress(100);
+
+    // Add some high-value items
+    gameState.addMoney(100000);
+    gameState.purchaseItem("expert_salary_boost");
+    gameState.purchaseItem("expert_learning_boost");
+
+    // Add money for bonus points
+    gameState.addMoney(100000);
+
+    // Check AI path unlock
+    gameState.checkAIPathUnlock();
+
+    // Should have checked for unlock
+    expect(gameState.lastAIPathCheck).toBeGreaterThan(0);
+
+    mockRandom.mockRestore();
+  });
+
+  test("should not check AI path unlock without senior job", () => {
+    // Start with no senior job
+    expect(gameState.isJobUnlocked("senior_web_dev")).toBe(false);
+
+    // Add some high-value skills and items
+    gameState.startLearning("machine_learning");
+    gameState.updateLearningProgress(100);
+    gameState.addMoney(100000);
+    gameState.purchaseItem("expert_salary_boost");
+
+    // Try to check AI path unlock
+    gameState.checkAIPathUnlock();
+
+    // Should not have checked (lastAIPathCheck should be 0)
+    expect(gameState.lastAIPathCheck).toBe(0);
   });
 });
