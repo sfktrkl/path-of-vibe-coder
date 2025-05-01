@@ -21,6 +21,7 @@ import GameContent from "@layout/GameContent.vue";
 import GameState from "@models/GameState.js";
 import GameTimer from "@models/GameTimer.js";
 import GameCheat from "@utils/GameCheat.js";
+import { useThemeManager } from "@styles/theme-manager.js";
 
 export default {
   name: "App",
@@ -34,6 +35,7 @@ export default {
       gameState: new GameState(),
       gameTimer: null,
       gameCheat: null,
+      currentTheme: "normal",
     };
   },
   methods: {
@@ -74,6 +76,10 @@ export default {
 
     // Initialize game cheats
     this.gameCheat = new GameCheat(this.gameState);
+
+    // Initialize theme manager
+    const { currentTheme } = useThemeManager(this.gameState);
+    this.currentTheme = currentTheme;
   },
   beforeUnmount() {
     // Stop the timer when the component is destroyed
