@@ -40,12 +40,3 @@ export default {
   },
 };
 </script>
-
-<style scoped>
-.job-salary {
-  color: #2ecc71;
-  font-weight: 500;
-  min-width: 100px;
-  text-align: center;
-}
-</style>
