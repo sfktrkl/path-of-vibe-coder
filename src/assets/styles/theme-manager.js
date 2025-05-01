@@ -1,34 +1,58 @@
 import { ref, watch } from "vue";
 import "../styles/themes/ai.css";
 
-const currentTheme = ref("normal");
+class ThemeManager {
+  constructor(gameState) {
+    this.currentTheme = ref("normal");
+    this.gameState = gameState;
+    this.matrixBg = null;
 
-export function useThemeManager(gameState) {
-  // Watch for AI path unlock state changes
-  watch(
-    () => gameState.aiPathUnlocked,
-    (unlocked) => {
-      if (unlocked) {
-        currentTheme.value = "ai";
-        document.body.classList.add("theme-ai");
+    this.initialize();
+  }
 
-        // Add matrix background
-        const matrixBg = document.createElement("div");
-        matrixBg.className = "matrix-bg";
-        document.body.appendChild(matrixBg);
-      } else {
-        currentTheme.value = "normal";
-        document.body.classList.remove("theme-ai");
+  initialize() {
+    // Watch for AI path unlock state changes
+    watch(
+      () => this.gameState.aiPathUnlocked,
+      (unlocked) => {
+        if (unlocked) {
+          this.activateAITheme();
+        } else {
+          this.deactivateAITheme();
+        }
+      },
+      { immediate: true }
+    );
+  }
 
-        // Remove AI-specific elements
-        const matrixBg = document.querySelector(".matrix-bg");
-        if (matrixBg) matrixBg.remove();
-      }
-    },
-    { immediate: true }
-  );
+  activateAITheme() {
+    this.currentTheme.value = "ai";
+    document.body.classList.add("theme-ai");
+    this.addMatrixBackground();
+  }
 
-  return {
-    currentTheme,
-  };
+  deactivateAITheme() {
+    this.currentTheme.value = "normal";
+    document.body.classList.remove("theme-ai");
+    this.removeMatrixBackground();
+  }
+
+  addMatrixBackground() {
+    this.matrixBg = document.createElement("div");
+    this.matrixBg.className = "matrix-bg";
+    document.body.appendChild(this.matrixBg);
+  }
+
+  removeMatrixBackground() {
+    if (this.matrixBg) {
+      this.matrixBg.remove();
+      this.matrixBg = null;
+    }
+  }
+
+  getCurrentTheme() {
+    return this.currentTheme.value;
+  }
 }
+
+export default ThemeManager;

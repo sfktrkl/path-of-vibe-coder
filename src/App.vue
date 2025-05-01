@@ -22,8 +22,8 @@ import GameContent from "@layout/GameContent.vue";
 import GameState from "@models/GameState.js";
 import GameTimer from "@models/GameTimer.js";
 import GameCheat from "@utils/GameCheat.js";
-import { useThemeManager } from "@styles/theme-manager.js";
-import ParticleSystem from "@styles/particle-system";
+import ThemeManager from "@styles/theme-manager.js";
+import ParticleSystem from "@styles/particle-system.js";
 
 export default {
   name: "App",
@@ -37,7 +37,7 @@ export default {
       gameState: new GameState(),
       gameTimer: null,
       gameCheat: null,
-      currentTheme: "normal",
+      themeManager: null,
       particleSystem: null,
     };
   },
@@ -60,6 +60,9 @@ export default {
 
       // Reinitialize game cheats
       this.gameCheat = new GameCheat(this.gameState);
+
+      // Reinitialize theme manager
+      this.themeManager = new ThemeManager(this.gameState);
     },
     initializeParticleSystem() {
       this.particleSystem = new ParticleSystem();
@@ -85,8 +88,7 @@ export default {
     this.gameCheat = new GameCheat(this.gameState);
 
     // Initialize theme manager
-    const { currentTheme } = useThemeManager(this.gameState);
-    this.currentTheme = currentTheme;
+    this.themeManager = new ThemeManager(this.gameState);
   },
   mounted() {
     this.initializeParticleSystem();
