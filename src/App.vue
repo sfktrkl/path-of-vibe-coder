@@ -1,5 +1,6 @@
 <template>
   <div class="app-container">
+    <div class="particle-background" />
     <GameHeader
       :currentView="currentView"
       :gameState="gameState"
@@ -22,6 +23,7 @@ import GameState from "@models/GameState.js";
 import GameTimer from "@models/GameTimer.js";
 import GameCheat from "@utils/GameCheat.js";
 import { useThemeManager } from "@styles/theme-manager.js";
+import ParticleSystem from "@styles/particle-system";
 
 export default {
   name: "App",
@@ -36,6 +38,7 @@ export default {
       gameTimer: null,
       gameCheat: null,
       currentTheme: "normal",
+      particleSystem: null,
     };
   },
   methods: {
@@ -57,6 +60,10 @@ export default {
 
       // Reinitialize game cheats
       this.gameCheat = new GameCheat(this.gameState);
+    },
+    initializeParticleSystem() {
+      this.particleSystem = new ParticleSystem();
+      this.particleSystem.start();
     },
   },
   created() {
@@ -81,10 +88,16 @@ export default {
     const { currentTheme } = useThemeManager(this.gameState);
     this.currentTheme = currentTheme;
   },
+  mounted() {
+    this.initializeParticleSystem();
+  },
   beforeUnmount() {
     // Stop the timer when the component is destroyed
     if (this.gameTimer) {
       this.gameTimer.stop();
+    }
+    if (this.particleSystem) {
+      this.particleSystem.stop();
     }
   },
   watch: {
@@ -124,6 +137,16 @@ body {
   padding: 0;
   box-sizing: border-box;
   overflow-x: hidden;
+}
+
+.particle-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
 }
 
 .main-content {
