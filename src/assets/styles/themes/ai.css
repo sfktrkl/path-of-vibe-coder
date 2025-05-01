@@ -66,7 +66,6 @@
 .theme-ai .character-info {
   background: var(--card-bg);
   border: var(--neon-border);
-  box-shadow: var(--glow);
 }
 
 .theme-ai .money {
@@ -85,13 +84,11 @@
 .theme-ai .nav-button:hover {
   background: rgba(0, 255, 157, 0.1);
   border-color: var(--primary);
-  box-shadow: var(--glow);
 }
 
 .theme-ai .nav-button.active {
   background: rgba(0, 255, 157, 0.15);
   border-color: var(--primary);
-  box-shadow: var(--glow);
   color: var(--primary);
 }
 
@@ -127,25 +124,27 @@
 .theme-ai .item-base {
   background: var(--card-bg);
   border: var(--neon-border);
-  box-shadow: var(--card-shadow);
-  transition: all 0.3s ease;
+  box-shadow: 0 0 3% rgba(0, 255, 157, 0.05);
+  transition: all 0.2s ease;
+  transform-origin: center;
 }
 
 .theme-ai .item-base:hover {
-  box-shadow: var(--card-shadow-hover);
-  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 0 4% rgba(0, 255, 157, 0.1);
+  transform: scale(0.98);
   border-color: var(--primary);
 }
 
 .theme-ai .item-base.current {
   background: rgba(0, 255, 157, 0.1);
   border-color: var(--primary);
-  box-shadow: var(--glow);
+  box-shadow: 0 0 4% rgba(0, 255, 157, 0.1);
 }
 
 .theme-ai .item-base.learned {
   background: rgba(0, 184, 255, 0.1);
   border-color: var(--secondary);
+  box-shadow: 0 0 3% rgba(0, 184, 255, 0.05);
 }
 
 .theme-ai .item-base.available {
@@ -210,7 +209,6 @@
 
 .theme-ai .progress {
   background: var(--gradient-primary);
-  box-shadow: var(--glow);
 }
 
 .theme-ai .progress.job-progress {
@@ -221,22 +219,26 @@
 .theme-ai .save-load-section {
   background: var(--card-bg);
   border: var(--neon-border);
-  box-shadow: var(--glow);
+  box-shadow: 0 0 3% rgba(0, 255, 157, 0.05);
 }
 
 .theme-ai .save-button,
-.theme-ai .load-button {
+.theme-ai .load-button,
+.theme-ai .copy-button {
   background: var(--gradient-primary);
   border: none;
-  box-shadow: var(--glow);
+  box-shadow: 0 0 3% rgba(0, 255, 157, 0.05);
   color: var(--background);
   font-weight: bold;
+  transition: all 0.2s ease;
+  transform-origin: center;
 }
 
 .theme-ai .save-button:hover,
-.theme-ai .load-button:hover {
-  box-shadow: 0 0 30px var(--primary);
-  transform: translateY(-2px);
+.theme-ai .load-button:hover,
+.theme-ai .copy-button:hover {
+  box-shadow: 0 0 4% rgba(0, 255, 157, 0.1);
+  transform: scale(0.98);
 }
 
 .theme-ai .code-display {

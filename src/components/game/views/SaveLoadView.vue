@@ -170,12 +170,13 @@ h2 {
   font-size: 1rem;
   font-weight: 500;
   transition: all 0.2s;
+  transform-origin: center;
 }
 
 .save-button:hover,
 .load-button:hover {
   background-color: #27ae60;
-  transform: translateY(-2px);
+  transform: scale(0.98);
 }
 
 .message {
@@ -221,10 +222,12 @@ h2 {
   cursor: pointer;
   font-size: 0.9rem;
   transition: all 0.2s;
+  transform-origin: center;
 }
 
 .copy-button:hover {
   background-color: #2980b9;
+  transform: scale(0.98);
 }
 
 .load-input {

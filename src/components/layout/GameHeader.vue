@@ -207,11 +207,12 @@ h1 {
   justify-content: center;
   white-space: nowrap;
   padding: 0 8px;
+  transform-origin: center;
 }
 
 .nav-button:hover {
   background-color: rgba(255, 255, 255, 0.2);
-  transform: translateY(-2px);
+  transform: scale(0.98);
 }
 
 .nav-button.active {
