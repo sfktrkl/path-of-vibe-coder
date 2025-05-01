@@ -198,7 +198,7 @@
 /* Progress bar styles */
 .theme-ai .progress-container {
   background: var(--card-bg);
-  border: none;
+  border: var(--neon-border);
 }
 
 .theme-ai .progress-bar {
