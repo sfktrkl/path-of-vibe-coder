@@ -17,6 +17,9 @@ export default class GameState {
 
     // Shop items
     this.ownedItems = new Set();
+
+    // AI Path state
+    this.aiPathUnlocked = false;
   }
 
   // Money management
@@ -263,6 +266,103 @@ export default class GameState {
     return effects;
   }
 
+  // AI Path management
+  checkAIPathUnlock() {
+    // Point system for unlocking AI path
+    // Each achievement has a point value
+    // Need to reach threshold and pass random chance
+
+    // High-value jobs that show expertise
+    const jobPoints = {
+      senior_web_dev: 15,
+      senior_devops: 15,
+      senior_game_dev: 15,
+      senior_mobile_dev: 15,
+      senior_ai_engineer: 20, // AI path gives bonus points
+      senior_security: 15,
+      web_architect: 25,
+      devops_architect: 25,
+      game_architect: 25,
+      mobile_architect: 25,
+      ai_architect: 30, // AI path gives bonus points
+      security_architect: 25,
+    };
+
+    // High-value skills that show technical depth
+    const skillPoints = {
+      machine_learning: 10,
+      deep_learning: 15,
+      tensorflow: 10,
+      algorithms: 8,
+      cpp: 8,
+      rust: 12,
+      kubernetes: 10,
+      security: 8,
+      cryptography: 10,
+      vulkan: 12,
+    };
+
+    // High-value items that show dedication
+    const itemPoints = {
+      expert_salary_boost: 10,
+      expert_learning_boost: 10,
+      expert_work_boost: 10,
+      expert_skill_time_reducer: 10,
+      premium_boost_pack: 20,
+      ultimate_boost_pack: 30,
+    };
+
+    // Calculate total points
+    let totalPoints = 0;
+
+    // Add points from jobs
+    Object.entries(jobPoints).forEach(([jobId, points]) => {
+      if (this.isJobUnlocked(jobId)) {
+        totalPoints += points;
+      }
+    });
+
+    // Add points from skills
+    Object.entries(skillPoints).forEach(([skillId, points]) => {
+      if (this.hasSkill(skillId)) {
+        totalPoints += points;
+      }
+    });
+
+    // Add points from items
+    Object.entries(itemPoints).forEach(([itemId, points]) => {
+      if (this.hasItem(itemId)) {
+        totalPoints += points;
+      }
+    });
+
+    // Money bonus points (up to 20 points)
+    const moneyThreshold = 100000;
+    const moneyPoints = Math.min(
+      Math.floor(this.money / moneyThreshold) * 20,
+      20
+    );
+    totalPoints += moneyPoints;
+
+    // Random chance based on total points
+    const baseChance = 5; // 5% base chance
+    const pointBonus = Math.min(totalPoints / 2, 45); // Up to 45% bonus from points
+    const unlockChance = baseChance + pointBonus;
+    const randomChance = Math.random() * 100;
+
+    // Unlock if chance succeeds
+    if (randomChance < unlockChance) {
+      this.aiPathUnlocked = true;
+      return true;
+    }
+
+    return false;
+  }
+
+  isAIPathUnlocked() {
+    return this.aiPathUnlocked;
+  }
+
   // State serialization
   toJSON() {
     return {
@@ -272,6 +372,7 @@ export default class GameState {
       currentLearning: this.currentLearning,
       skillProgress: this.skillProgress,
       ownedItems: Array.from(this.ownedItems),
+      aiPathUnlocked: this.aiPathUnlocked,
     };
   }
 
@@ -284,6 +385,7 @@ export default class GameState {
     state.currentLearning = json.currentLearning;
     state.skillProgress = json.skillProgress || {};
     state.ownedItems = new Set(json.ownedItems || []);
+    state.aiPathUnlocked = json.aiPathUnlocked || false;
     return state;
   }
 
