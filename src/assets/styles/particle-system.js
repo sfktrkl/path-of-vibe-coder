@@ -32,8 +32,12 @@ class ParticleSystem {
       particleSize: 3,
       gravity: 0.1,
       maxLife: 200,
+      baseWidth: 1920,
+      baseHeight: 1080,
     };
 
+    // Initialize scale with a default value
+    this.scale = 1;
     this.resize();
     window.addEventListener("resize", () => this.resize());
   }
@@ -41,8 +45,14 @@ class ParticleSystem {
   resize() {
     const container = document.querySelector(".particle-background");
     if (container) {
+      // Set canvas size to match container
       this.canvas.width = container.clientWidth;
       this.canvas.height = container.clientHeight;
+
+      // Calculate scale factor based on base dimensions
+      const scaleX = this.canvas.width / this.settings.baseWidth;
+      const scaleY = this.canvas.height / this.settings.baseHeight;
+      this.scale = Math.min(scaleX, scaleY); // Use the smaller scale to maintain proportions
     }
   }
 
@@ -87,7 +97,7 @@ class ParticleSystem {
     this.context.arc(
       particle.x,
       particle.y,
-      this.settings.particleSize,
+      this.settings.particleSize * this.scale,
       0,
       Math.PI * 2,
       true
@@ -124,8 +134,12 @@ class ParticleSystem {
     const container = document.querySelector(".particle-background");
     if (container) {
       container.appendChild(this.container);
-      this.animate();
-      console.log("Particle system started");
+      // Force a resize to ensure proper scaling
+      this.resize();
+      // Wait for next frame to ensure container is properly sized
+      requestAnimationFrame(() => {
+        this.animate();
+      });
     }
   }
 
@@ -133,7 +147,6 @@ class ParticleSystem {
     if (this.container.parentNode) {
       this.container.parentNode.removeChild(this.container);
     }
-    console.log("Particle system stopped");
   }
 }
 
