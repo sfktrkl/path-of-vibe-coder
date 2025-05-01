@@ -141,12 +141,6 @@
   box-shadow: 0 0 4% rgba(0, 255, 157, 0.1);
 }
 
-.theme-ai .item-base.learned {
-  background: rgba(0, 184, 255, 0.1);
-  border-color: rgba(0, 184, 255, 0.3);
-  box-shadow: 0 0 3% rgba(0, 184, 255, 0.05);
-}
-
 .theme-ai .item-base.available {
   border: 1px solid rgba(0, 255, 157, 0.3);
 }
@@ -155,6 +149,12 @@
   background: rgba(0, 255, 157, 0.1);
   border-color: var(--primary);
   box-shadow: 0 0 4% rgba(0, 255, 157, 0.1);
+}
+
+.theme-ai .item-base.learned {
+  background: rgba(0, 184, 255, 0.1);
+  border-color: rgba(0, 184, 255, 0.3);
+  box-shadow: 0 0 3% rgba(0, 184, 255, 0.05);
 }
 
 .theme-ai .item-name {
