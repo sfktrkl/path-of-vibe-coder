@@ -125,14 +125,10 @@
   background: var(--card-bg);
   border: 1px solid rgba(0, 255, 157, 0.3);
   box-shadow: 0 0 3% rgba(0, 255, 157, 0.05);
-  transition: all 0.2s ease;
-  transform-origin: center;
 }
 
 .theme-ai .item-base:hover {
   box-shadow: 0 0 4% rgba(0, 255, 157, 0.1);
-  transform: scale(0.98);
-  border-color: var(--primary);
 }
 
 .theme-ai .item-base.current {
@@ -151,7 +147,8 @@
   box-shadow: 0 0 4% rgba(0, 255, 157, 0.1);
 }
 
-.theme-ai .item-base.learned {
+.theme-ai .item-base.learned,
+.theme-ai .item-base.owned {
   background: rgba(0, 184, 255, 0.1);
   border-color: rgba(0, 184, 255, 0.3);
   box-shadow: 0 0 3% rgba(0, 184, 255, 0.05);
@@ -179,9 +176,10 @@
   text-shadow: 0 0 5px var(--primary);
 }
 
-.theme-ai .learned-badge {
+.theme-ai .learned-badge,
+.theme-ai .owned-badge {
   background: rgba(0, 184, 255, 0.1);
-  border-color: var(--secondary);
+  border-color: rgba(0, 184, 255, 0.3);
   color: var(--secondary);
 }
 

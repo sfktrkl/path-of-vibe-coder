@@ -30,15 +30,17 @@
   transform: scale(0.98);
 }
 
-/* Learned skill styling */
-.item-base.learned {
+/* Learned skill and owned item styling */
+.item-base.learned,
+.item-base.owned {
   background-color: rgba(149, 165, 166, 0.1);
   border-color: rgba(149, 165, 166, 0.3);
   opacity: 0.8;
   cursor: not-allowed;
 }
 
-.item-base.learned:hover {
+.item-base.learned:hover,
+.item-base.owned:hover {
   background-color: rgba(149, 165, 166, 0.1);
   transform: none;
 }
@@ -79,9 +81,10 @@
   text-align: center;
 }
 
-.learned-badge {
-  background-color: rgba(46, 204, 113, 0.2);
-  color: #2ecc71;
+.learned-badge,
+.owned-badge {
+  background-color: rgba(149, 165, 166, 0.2);
+  color: #95a5a6;
 }
 
 .available-badge {
@@ -117,9 +120,10 @@
 }
 
 /* Status colors for skills and jobs */
-.learned {
-  background-color: rgba(46, 204, 113, 0.1);
-  border-color: rgba(46, 204, 113, 0.3);
+.learned,
+.owned {
+  background-color: rgba(149, 165, 166, 0.1);
+  border-color: rgba(149, 165, 166, 0.3);
 }
 
 .available {
