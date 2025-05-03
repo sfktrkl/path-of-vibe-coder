@@ -180,6 +180,16 @@ export default class GameState {
     return this.skillProgress[skillId];
   }
 
+  setJobProgress(jobId, progress) {
+    if (this.currentJob === jobId) {
+      this.jobProgress = Math.min(Math.max(progress, 0), 100);
+    }
+  }
+
+  setSkillProgress(skillId, progress) {
+    this.skillProgress[skillId] = Math.min(Math.max(progress, 0), 100);
+  }
+
   // Shop management
   hasItem(itemId) {
     return this.ownedItems.has(itemId);

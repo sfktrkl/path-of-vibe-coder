@@ -17,6 +17,59 @@ export default class GameCheatCommands {
     };
   }
 
+  setMoney() {
+    return {
+      description:
+        "setMoney(amount: number) - Set your money balance to a specific amount",
+      execute: (amount) => {
+        this.gameState.money = amount;
+        console.log(`Set money to ${amount}!`);
+      },
+    };
+  }
+
+  setJobProgress() {
+    return {
+      description:
+        "setJobProgress(progress: number) - Set progress for current job (0-100)",
+      execute: (progress) => {
+        if (!this.gameState.currentJob) {
+          console.log("No job is currently selected!");
+          return;
+        }
+
+        if (progress < 0 || progress > 100) {
+          console.log("Progress must be between 0 and 100!");
+          return;
+        }
+
+        this.gameState.jobProgress = progress;
+        console.log(`Set progress for current job to ${progress}%!`);
+      },
+    };
+  }
+
+  setSkillProgress() {
+    return {
+      description:
+        "setSkillProgress(progress: number) - Set progress for current skill (0-100)",
+      execute: (progress) => {
+        if (!this.gameState.currentLearning) {
+          console.log("No skill is currently being learned!");
+          return;
+        }
+
+        if (progress < 0 || progress > 100) {
+          console.log("Progress must be between 0 and 100!");
+          return;
+        }
+
+        this.gameState.skillProgress[this.gameState.currentLearning] = progress;
+        console.log(`Set progress for current skill to ${progress}%!`);
+      },
+    };
+  }
+
   setJob() {
     return {
       description: "setJob(jobId: string) - Set your current job",

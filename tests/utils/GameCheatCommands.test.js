@@ -27,6 +27,72 @@ describe("GameCheatCommands", () => {
     });
   });
 
+  describe("setMoney", () => {
+    it("should set money to specific amount", () => {
+      commands.setMoney().execute(5000);
+      expect(gameState.money).toBe(5000);
+    });
+
+    it("should handle zero amount", () => {
+      commands.setMoney().execute(0);
+      expect(gameState.money).toBe(0);
+    });
+  });
+
+  describe("setJobProgress", () => {
+    it("should set progress for current job", () => {
+      // Set a current job first
+      const jobId = Object.keys(jobs)[0];
+      gameState.currentJob = jobId;
+
+      commands.setJobProgress().execute(75);
+      expect(gameState.jobProgress).toBe(75);
+    });
+
+    it("should not set progress if no job is selected", () => {
+      gameState.currentJob = null;
+      commands.setJobProgress().execute(50);
+      expect(console.log).toHaveBeenCalledWith("No job is currently selected!");
+    });
+
+    it("should not set progress outside valid range", () => {
+      const jobId = Object.keys(jobs)[0];
+      gameState.currentJob = jobId;
+      commands.setJobProgress().execute(150);
+      expect(console.log).toHaveBeenCalledWith(
+        "Progress must be between 0 and 100!"
+      );
+    });
+  });
+
+  describe("setSkillProgress", () => {
+    it("should set progress for current skill", () => {
+      // Set a current skill first
+      const skillId = Object.keys(skills)[0];
+      gameState.currentLearning = skillId;
+
+      commands.setSkillProgress().execute(60);
+      expect(gameState.skillProgress[skillId]).toBe(60);
+    });
+
+    it("should not set progress if no skill is being learned", () => {
+      gameState.currentLearning = null;
+      commands.setSkillProgress().execute(50);
+      expect(console.log).toHaveBeenCalledWith(
+        "No skill is currently being learned!"
+      );
+    });
+
+    it("should not set progress outside valid range", () => {
+      const skillId = Object.keys(skills)[0];
+      gameState.currentLearning = skillId;
+      commands.setSkillProgress().execute(-10);
+      expect(console.log).toHaveBeenCalledWith(
+        "Progress must be between 0 and 100!"
+      );
+    });
+  });
+
   describe("setJob", () => {
     it("should set job and handle requirements", () => {
       // Get a job that has requirements
