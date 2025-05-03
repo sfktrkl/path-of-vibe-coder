@@ -604,35 +604,6 @@ describe("GameState", () => {
     mockRandom.mockRestore();
   });
 
-  test("should respect AI path check cooldown", () => {
-    // Mock random to ensure unlock doesn't happen
-    const mockRandom = jest.spyOn(Math, "random");
-    mockRandom.mockReturnValue(1); // Always return 1 to ensure no unlock
-
-    // Unlock prerequisites for senior web dev
-    unlockSeniorWebDev(gameState);
-    gameState.setJob("senior_web_dev");
-
-    // First check
-    gameState.checkAIPathUnlock();
-    const firstCheckTime = gameState.lastAIPathCheck;
-
-    // Try to check again immediately
-    gameState.checkAIPathUnlock();
-    expect(gameState.lastAIPathCheck).toBe(firstCheckTime);
-
-    // Advance time by 10 minutes
-    const newDate = new Date("2024-01-01");
-    newDate.setMinutes(newDate.getMinutes() + 10);
-    Date.now = jest.fn(() => newDate.getTime());
-
-    // Now should be able to check again
-    gameState.checkAIPathUnlock();
-    expect(gameState.lastAIPathCheck).toBeGreaterThan(firstCheckTime);
-
-    mockRandom.mockRestore();
-  });
-
   test("should check AI path unlock on skill completion", () => {
     // Mock random to ensure unlock doesn't happen
     const mockRandom = jest.spyOn(Math, "random");
@@ -649,7 +620,7 @@ describe("GameState", () => {
     gameState.updateLearningProgress(100);
 
     // Should have triggered AI path check
-    expect(gameState.lastAIPathCheck).toBeGreaterThan(0);
+    expect(gameState.isAIPathUnlocked()).toBe(false);
 
     mockRandom.mockRestore();
   });
@@ -681,8 +652,8 @@ describe("GameState", () => {
     // Check AI path unlock
     gameState.checkAIPathUnlock();
 
-    // Should have checked for unlock
-    expect(gameState.lastAIPathCheck).toBeGreaterThan(0);
+    // Should not be unlocked due to random chance
+    expect(gameState.isAIPathUnlocked()).toBe(false);
 
     mockRandom.mockRestore();
   });
@@ -700,7 +671,7 @@ describe("GameState", () => {
     // Try to check AI path unlock
     gameState.checkAIPathUnlock();
 
-    // Should not have checked (lastAIPathCheck should be 0)
-    expect(gameState.lastAIPathCheck).toBe(0);
+    // Should not be unlocked without senior job
+    expect(gameState.isAIPathUnlocked()).toBe(false);
   });
 });

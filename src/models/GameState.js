@@ -20,8 +20,6 @@ export default class GameState {
 
     // AI Path state
     this.aiPathUnlocked = false;
-    this.lastAIPathCheck = 0; // Timestamp of last check
-    this.aiPathCheckCooldown = 300000; // 5 minutes in milliseconds
   }
 
   // Money management
@@ -282,12 +280,6 @@ export default class GameState {
 
   // AI Path management
   checkAIPathUnlock() {
-    // Check cooldown
-    const now = Date.now();
-    if (now - this.lastAIPathCheck < this.aiPathCheckCooldown) {
-      return false;
-    }
-
     // High-value jobs that show expertise
     const jobPoints = {
       senior_web_dev: 15,
@@ -315,9 +307,6 @@ export default class GameState {
     if (seniorJobPoints === 0) {
       return false;
     }
-
-    // Update check tracking
-    this.lastAIPathCheck = now;
 
     // High-value skills that show technical depth
     const skillPoints = {
@@ -397,7 +386,6 @@ export default class GameState {
       skillProgress: this.skillProgress,
       ownedItems: Array.from(this.ownedItems),
       aiPathUnlocked: this.aiPathUnlocked,
-      lastAIPathCheck: this.lastAIPathCheck,
     };
   }
 
@@ -411,7 +399,6 @@ export default class GameState {
     state.skillProgress = json.skillProgress || {};
     state.ownedItems = new Set(json.ownedItems || []);
     state.aiPathUnlocked = json.aiPathUnlocked || false;
-    state.lastAIPathCheck = json.lastAIPathCheck || 0;
     return state;
   }
 
