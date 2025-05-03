@@ -699,4 +699,35 @@ describe("GameState", () => {
 
     mockRandom.mockRestore();
   });
+
+  test("should update job progress within bounds", () => {
+    const state = new GameState();
+    state.setJob("everyday_normal_guy");
+    state.setJobProgress("everyday_normal_guy", 50);
+    expect(state.jobProgress).toBe(50);
+
+    state.setJobProgress("everyday_normal_guy", 150);
+    expect(state.jobProgress).toBe(100);
+
+    state.setJobProgress("everyday_normal_guy", -50);
+    expect(state.jobProgress).toBe(0);
+  });
+
+  test("should check AI path unlock when job is completed", () => {
+    // Mock random to ensure unlock
+    const mockRandom = jest.spyOn(Math, "random");
+    mockRandom.mockReturnValue(0); // Always return 0 to ensure unlock
+
+    const state = new GameState();
+
+    // Unlock prerequisites for senior web dev
+    unlockSeniorWebDev(state);
+    state.setJob("senior_web_dev");
+    state.setJobProgress("senior_web_dev", 100);
+
+    expect(state.jobProgress).toBe(100);
+    expect(state.isAIPathUnlocked()).toBe(true);
+
+    mockRandom.mockRestore();
+  });
 });

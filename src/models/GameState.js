@@ -181,6 +181,11 @@ export default class GameState {
   setJobProgress(jobId, progress) {
     if (this.currentJob === jobId) {
       this.jobProgress = Math.min(Math.max(progress, 0), 100);
+
+      // Check for AI path unlock when job is completed
+      if (this.jobProgress >= 100) {
+        this.checkAIPathUnlock();
+      }
     }
   }
 
