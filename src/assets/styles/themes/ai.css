@@ -199,6 +199,7 @@
 .theme-ai .progress-container {
   background: var(--card-bg);
   border: var(--neon-border);
+  box-shadow: var(--card-shadow);
 }
 
 .theme-ai .progress-bar {
@@ -208,10 +209,22 @@
 
 .theme-ai .progress {
   background: var(--gradient-primary);
+  box-shadow: var(--glow);
 }
 
 .theme-ai .progress.job-progress {
   background: linear-gradient(90deg, var(--primary), var(--accent));
+}
+
+/* Progress bar text styles */
+.theme-ai .progress-info {
+  color: var(--text);
+  text-shadow: 0 0 5px var(--primary);
+}
+
+.theme-ai .progress-info span {
+  color: var(--text);
+  text-shadow: 0 0 5px var(--primary);
 }
 
 /* Save/Load view styles */
@@ -308,4 +321,70 @@
   100% {
     background-position: 0 100%, 0 100%;
   }
+}
+
+/* GameHeader specific styles */
+.theme-ai .game-header h1 {
+  color: var(--text);
+  text-shadow: 0 0 10px var(--primary);
+}
+
+.theme-ai .game-header .money {
+  color: var(--primary);
+  text-shadow: 0 0 10px var(--primary);
+}
+
+.theme-ai .game-header .effect-name {
+  color: var(--text-light);
+}
+
+.theme-ai .game-header .effect-value {
+  color: var(--primary);
+  text-shadow: 0 0 5px var(--primary);
+}
+
+.theme-ai .game-header .nav-button {
+  background: var(--card-bg);
+  color: var(--text);
+  border: var(--neon-border);
+  text-shadow: 0 0 5px var(--primary);
+  transition: all 0.3s ease;
+}
+
+.theme-ai .game-header .nav-button:hover {
+  background: rgba(0, 255, 157, 0.1);
+  border-color: var(--primary);
+  box-shadow: var(--glow);
+}
+
+.theme-ai .game-header .nav-button.active {
+  background: rgba(0, 255, 157, 0.15);
+  border-color: var(--primary);
+  color: var(--primary);
+  box-shadow: var(--glow);
+}
+
+.theme-ai .game-header .progress-container {
+  background: var(--card-bg);
+  border: var(--neon-border);
+  box-shadow: var(--card-shadow);
+}
+
+.theme-ai .game-header .progress-bar {
+  background: rgba(0, 255, 157, 0.1);
+  border: none;
+}
+
+.theme-ai .game-header .progress {
+  background: var(--gradient-primary);
+  box-shadow: var(--glow);
+}
+
+.theme-ai .game-header .progress.job-progress {
+  background: linear-gradient(90deg, var(--primary), var(--accent));
+}
+
+.theme-ai .game-header .progress-label {
+  color: var(--text);
+  text-shadow: 0 0 5px var(--primary);
 } 
