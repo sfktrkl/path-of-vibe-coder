@@ -23,17 +23,17 @@ export default class GameCheatCommands {
         "setMoney(amount: number) - Set your money balance to a specific amount",
       execute: (amount) => {
         // First spend all money, then add the new amount
-        this.gameState.spendMoney(this.gameState.money);
+        this.gameState.spendMoney(this.gameState.getMoney());
         this.gameState.addMoney(amount);
         console.log(`Set money to ${amount}!`);
       },
     };
   }
 
-  setJobProgress() {
+  setCurrentJobProgress() {
     return {
       description:
-        "setJobProgress(progress: number) - Set progress for current job (0-100)",
+        "setCurrentJobProgress(progress: number) - Set progress for current job (0-100)",
       execute: (progress) => {
         const currentJobInfo = this.gameState.getCurrentJobInfo();
         if (!currentJobInfo) {
@@ -46,18 +46,18 @@ export default class GameCheatCommands {
           return;
         }
 
-        this.gameState.setJobProgress(progress);
+        this.gameState.setCurrentJobProgress(progress);
         console.log(`Set progress for current job to ${progress}%!`);
       },
     };
   }
 
-  setSkillProgress() {
+  setCurrentLearningProgress() {
     return {
       description:
-        "setSkillProgress(progress: number) - Set progress for current skill (0-100)",
+        "setCurrentLearningProgress(progress: number) - Set progress for current skill (0-100)",
       execute: (progress) => {
-        if (!this.gameState.currentLearning) {
+        if (!this.gameState.getCurrentLearning()) {
           console.log("No skill is currently being learned!");
           return;
         }
@@ -67,15 +67,15 @@ export default class GameCheatCommands {
           return;
         }
 
-        this.gameState.setSkillProgress(progress);
+        this.gameState.setCurrentLearningProgress(progress);
         console.log(`Set progress for current skill to ${progress}%!`);
       },
     };
   }
 
-  setJob() {
+  setCurrentJob() {
     return {
-      description: "setJob(jobId: string) - Set your current job",
+      description: "setCurrentJob(jobId: string) - Set your current job",
       execute: (jobId) => {
         const job = jobs[jobId];
         if (!job) {
@@ -114,7 +114,7 @@ export default class GameCheatCommands {
           this.completeSkill().execute(requiredSkillId);
         }
 
-        const success = this.gameState.setJob(jobId);
+        const success = this.gameState.setCurrentJob(jobId);
         if (success) {
           console.log(`Set job to ${jobId}!`);
         } else {
@@ -168,8 +168,8 @@ export default class GameCheatCommands {
           this.completeSkill().execute(prerequisiteId);
         }
 
-        this.gameState.startLearning(skillId);
-        this.gameState.updateLearningProgress(100);
+        this.gameState.setCurrentLearning(skillId);
+        this.gameState.setCurrentLearningProgress(100);
         console.log(`Completed skill ${skillId}!`);
       },
     };

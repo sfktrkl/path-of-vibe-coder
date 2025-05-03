@@ -5,13 +5,14 @@
       {
         learned: gameState.hasSkill(skill.id),
         available: isAvailable,
-        learning: gameState.currentLearning === skill.id,
+        learning: gameState.getCurrentLearning() === skill.id,
       },
     ]"
     @click="
-      gameState.hasSkill(skill.id) || gameState.currentLearning === skill.id
+      gameState.hasSkill(skill.id) ||
+      gameState.getCurrentLearning() === skill.id
         ? null
-        : startLearning(skill.id)
+        : setCurrentLearning(skill.id)
     "
   >
     <div class="item-info">
@@ -20,14 +21,14 @@
     </div>
     <div class="item-status">
       <div
-        v-if="gameState.currentLearning === skill.id"
+        v-if="gameState.getCurrentLearning() === skill.id"
         class="progress-container"
       >
         <div class="progress-bar">
           <div
             class="progress"
             :style="{
-              width: `${gameState.getSkillProgress(skill.id)}%`,
+              width: `${gameState.getCurrentLearningProgress()}%`,
             }"
           ></div>
         </div>
@@ -65,8 +66,8 @@ export default {
     },
   },
   methods: {
-    startLearning(skillId) {
-      this.gameState.startLearning(skillId);
+    setCurrentLearning(skillId) {
+      this.gameState.setCurrentLearning(skillId);
     },
   },
 };

@@ -11,12 +11,14 @@ describe("ShopView.vue", () => {
   const gameStateMock = {
     hasItem: jest.fn().mockReturnValue(false),
     isItemAvailable: jest.fn().mockReturnValue(false),
+    getMoney: jest.fn().mockReturnValue(0),
   };
 
   beforeEach(() => {
     jest.clearAllMocks();
     gameStateMock.hasItem.mockReturnValue(false);
     gameStateMock.isItemAvailable.mockReturnValue(false);
+    gameStateMock.getMoney.mockReturnValue(0);
 
     wrapper = mount(ShopView, {
       propsData: { gameState: gameStateMock },

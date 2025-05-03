@@ -17,11 +17,11 @@ jest.mock("@data/jobs", () => ({
 describe("GameHeader.vue", () => {
   let wrapper;
   const mockGameState = {
-    money: 1000,
-    currentLearning: null,
-    currentJob: null,
-    jobProgress: 0,
-    getLearningProgress: () => 0,
+    getMoney: () => 1000,
+    getCurrentLearning: () => null,
+    getCurrentJob: () => null,
+    getCurrentJobProgress: () => 0,
+    getCurrentLearningProgress: () => 0,
     getItemEffects: () => ({
       salaryMultiplier: 1,
       learningSpeedMultiplier: 1,
@@ -72,12 +72,13 @@ describe("GameHeader.vue", () => {
   });
 
   test("shows learning progress bar when learning a skill", async () => {
+    const learningGameState = {
+      ...mockGameState,
+      getCurrentLearning: () => "test_skill",
+      getCurrentLearningProgress: () => 50,
+    };
     await wrapper.setProps({
-      gameState: {
-        ...mockGameState,
-        currentLearning: "test_skill",
-        getLearningProgress: () => 50,
-      },
+      gameState: learningGameState,
     });
     const progressBars = wrapper.findAll(".progress-bars");
     expect(progressBars).toHaveLength(1);
@@ -85,12 +86,13 @@ describe("GameHeader.vue", () => {
   });
 
   test("shows job progress bar when working", async () => {
+    const workingGameState = {
+      ...mockGameState,
+      getCurrentJob: () => "test_job",
+      getCurrentJobProgress: () => 75,
+    };
     await wrapper.setProps({
-      gameState: {
-        ...mockGameState,
-        currentJob: "test_job",
-        jobProgress: 75,
-      },
+      gameState: workingGameState,
     });
     const progressBars = wrapper.findAll(".progress-bars");
     expect(progressBars).toHaveLength(1);
@@ -98,14 +100,15 @@ describe("GameHeader.vue", () => {
   });
 
   test("shows both progress bars when learning and working", async () => {
+    const bothGameState = {
+      ...mockGameState,
+      getCurrentLearning: () => "test_skill",
+      getCurrentJob: () => "test_job",
+      getCurrentJobProgress: () => 75,
+      getCurrentLearningProgress: () => 50,
+    };
     await wrapper.setProps({
-      gameState: {
-        ...mockGameState,
-        currentLearning: "test_skill",
-        currentJob: "test_job",
-        jobProgress: 75,
-        getLearningProgress: () => 50,
-      },
+      gameState: bothGameState,
     });
     const progressBars = wrapper.findAll(".progress-bars");
     expect(progressBars).toHaveLength(1);
@@ -114,18 +117,19 @@ describe("GameHeader.vue", () => {
   });
 
   test("displays item effects correctly when effects exist", async () => {
+    const effectsGameState = {
+      ...mockGameState,
+      getCurrentJob: () => "test_job",
+      getItemEffects: () => ({
+        salaryMultiplier: 1.5,
+        learningSpeedMultiplier: 1.25,
+        workSpeedMultiplier: 1.1,
+        skillTimeMultiplier: 0.8,
+        initialJobProgress: 15,
+      }),
+    };
     await wrapper.setProps({
-      gameState: {
-        ...mockGameState,
-        currentJob: "test_job",
-        getItemEffects: () => ({
-          salaryMultiplier: 1.5,
-          learningSpeedMultiplier: 1.25,
-          workSpeedMultiplier: 1.1,
-          skillTimeMultiplier: 0.8,
-          initialJobProgress: 15,
-        }),
-      },
+      gameState: effectsGameState,
     });
 
     const effectsDiv = wrapper.find(".item-effects");
@@ -140,12 +144,13 @@ describe("GameHeader.vue", () => {
   });
 
   test("does not display item effects section when no effects present", async () => {
+    const noEffectsGameState = {
+      ...mockGameState,
+      getCurrentJob: () => "test_job",
+      getItemEffects: () => null,
+    };
     await wrapper.setProps({
-      gameState: {
-        ...mockGameState,
-        currentJob: "test_job",
-        getItemEffects: () => null,
-      },
+      gameState: noEffectsGameState,
     });
 
     const effectsDiv = wrapper.find(".item-effects");
@@ -153,15 +158,16 @@ describe("GameHeader.vue", () => {
   });
 
   test("does not display item effects when no current job", async () => {
+    const noJobGameState = {
+      ...mockGameState,
+      getCurrentJob: () => null,
+      getItemEffects: () => ({
+        salaryMultiplier: 1.5,
+        learningSpeedMultiplier: 1.25,
+      }),
+    };
     await wrapper.setProps({
-      gameState: {
-        ...mockGameState,
-        currentJob: null,
-        getItemEffects: () => ({
-          salaryMultiplier: 1.5,
-          learningSpeedMultiplier: 1.25,
-        }),
-      },
+      gameState: noJobGameState,
     });
 
     const effectsDiv = wrapper.find(".item-effects");

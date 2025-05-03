@@ -10,15 +10,15 @@ describe("SkillsView.vue", () => {
   let wrapper;
   const gameStateMock = {
     hasSkill: jest.fn().mockReturnValue(false),
-    currentLearning: null,
-    getSkillProgress: jest.fn().mockReturnValue(0),
+    getCurrentLearning: jest.fn().mockReturnValue(null),
+    getCurrentLearningProgress: jest.fn().mockReturnValue(0),
     isSkillAvailable: jest.fn().mockReturnValue(false),
   };
 
   beforeEach(() => {
     jest.clearAllMocks();
     gameStateMock.hasSkill.mockReturnValue(false);
-    gameStateMock.getSkillProgress.mockReturnValue(0);
+    gameStateMock.getCurrentLearningProgress.mockReturnValue(0);
     gameStateMock.isSkillAvailable.mockReturnValue(false);
 
     wrapper = mount(SkillsView, {
@@ -120,7 +120,7 @@ describe("SkillsView.vue", () => {
       propsData: {
         gameState: {
           ...gameStateMock,
-          currentLearning: learningSkill.id,
+          getCurrentLearning: jest.fn().mockReturnValue(learningSkill.id),
         },
       },
     });

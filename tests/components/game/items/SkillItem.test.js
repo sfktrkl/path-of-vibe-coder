@@ -8,9 +8,9 @@ jest.mock("@styles/item-styles.css", () => ({}));
 describe("SkillItem", () => {
   const mockGameState = {
     hasSkill: jest.fn(),
-    startLearning: jest.fn(),
-    currentLearning: null,
-    getSkillProgress: jest.fn().mockReturnValue(50),
+    setCurrentLearning: jest.fn(),
+    getCurrentLearning: jest.fn().mockReturnValue(null),
+    getCurrentLearningProgress: jest.fn().mockReturnValue(50),
   };
 
   beforeEach(() => {
@@ -24,7 +24,9 @@ describe("SkillItem", () => {
     isLearning = false
   ) => {
     mockGameState.hasSkill.mockReturnValue(hasSkill);
-    mockGameState.currentLearning = isLearning ? skillId : null;
+    mockGameState.getCurrentLearning.mockReturnValue(
+      isLearning ? skillId : null
+    );
 
     return mount(SkillItem, {
       props: {
@@ -66,16 +68,18 @@ describe("SkillItem", () => {
     );
   });
 
-  it("calls startLearning when clicked and skill is available", () => {
+  it("calls setCurrentLearning when clicked and skill is available", () => {
     const wrapper = createWrapper("computer_basics", false, true);
     wrapper.trigger("click");
-    expect(mockGameState.startLearning).toHaveBeenCalledWith("computer_basics");
+    expect(mockGameState.setCurrentLearning).toHaveBeenCalledWith(
+      "computer_basics"
+    );
   });
 
-  it("does not call startLearning when clicked and skill is already learned", () => {
+  it("does not call setCurrentLearning when clicked and skill is already learned", () => {
     const wrapper = createWrapper("computer_basics", true, true);
     wrapper.trigger("click");
-    expect(mockGameState.startLearning).not.toHaveBeenCalled();
+    expect(mockGameState.setCurrentLearning).not.toHaveBeenCalled();
   });
 
   it("applies correct classes based on skill state", () => {

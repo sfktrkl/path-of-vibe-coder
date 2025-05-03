@@ -54,7 +54,7 @@ export default {
   },
   computed: {
     canAfford() {
-      return this.gameState.money >= this.item.price;
+      return this.gameState.getMoney() >= this.item.price;
     },
   },
   methods: {

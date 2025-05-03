@@ -23,6 +23,10 @@ export default class GameState {
   }
 
   // Money management
+  getMoney() {
+    return this.money;
+  }
+
   addMoney(amount) {
     this.money += amount;
   }
@@ -36,7 +40,11 @@ export default class GameState {
   }
 
   // Job management
-  setJob(jobId) {
+  getCurrentJob() {
+    return this.currentJob;
+  }
+
+  setCurrentJob(jobId) {
     if (this.isJobUnlocked(jobId)) {
       this.currentJob = jobId;
       this.jobProgress = 0; // Reset progress when changing jobs
@@ -50,6 +58,22 @@ export default class GameState {
       return true;
     }
     return false;
+  }
+
+  getCurrentJobProgress() {
+    if (!this.currentJob) return 0;
+    return this.jobProgress;
+  }
+
+  setCurrentJobProgress(progress) {
+    if (this.currentJob) {
+      this.jobProgress = Math.min(Math.max(progress, 0), 100);
+
+      // Check for AI path unlock when job is completed
+      if (progress >= 100) {
+        this.checkAIPathUnlock();
+      }
+    }
   }
 
   isJobUnlocked(jobId) {
@@ -69,7 +93,6 @@ export default class GameState {
     return hasRequiredSkills && hasRequiredJobs;
   }
 
-  // Get available jobs that can be unlocked
   getAvailableJobs() {
     return Object.values(jobs).filter((job) => {
       // Check if job is already unlocked
@@ -89,13 +112,11 @@ export default class GameState {
     });
   }
 
-  // Get current job info
   getCurrentJobInfo() {
     if (!this.currentJob) return null;
     return jobs[this.currentJob];
   }
 
-  // Get all jobs grouped by category
   getJobsByCategory() {
     const categories = {};
     Object.values(jobs).forEach((job) => {
@@ -108,6 +129,38 @@ export default class GameState {
   }
 
   // Skills management
+  getCurrentLearning() {
+    return this.currentLearning;
+  }
+
+  setCurrentLearning(learningId) {
+    this.currentLearning = learningId;
+    // Only initialize progress if it doesn't exist
+    if (this.skillProgress[learningId] === undefined) {
+      this.skillProgress[learningId] = 0;
+    }
+  }
+
+  getCurrentLearningProgress() {
+    if (!this.currentLearning) return 0;
+    return this.skillProgress[this.currentLearning] || 0;
+  }
+
+  setCurrentLearningProgress(progress) {
+    if (this.currentLearning) {
+      this.skillProgress[this.currentLearning] = Math.min(
+        Math.max(progress, 0),
+        100
+      );
+      // When learning is complete, mark as learned
+      if (progress >= 100) {
+        this.currentLearning = null;
+        // Check for AI path unlock when completing a skill
+        this.checkAIPathUnlock();
+      }
+    }
+  }
+
   hasSkill(skillId) {
     return this.skillProgress[skillId] >= 100;
   }
@@ -119,7 +172,6 @@ export default class GameState {
     return skill.prerequisites.every((prereq) => this.hasSkill(prereq));
   }
 
-  // Get available skills that can be learned
   getAvailableSkills() {
     return Object.values(skills).filter((skill) => {
       // Check if skill is already learned
@@ -130,7 +182,11 @@ export default class GameState {
     });
   }
 
-  // Get all skills grouped by category
+  getCurrentSkillInfo() {
+    if (!this.currentLearning) return null;
+    return skills[this.currentLearning];
+  }
+
   getSkillsByCategory() {
     const categories = {};
     Object.values(skills).forEach((skill) => {
@@ -140,68 +196,6 @@ export default class GameState {
       categories[skill.category].push(skill);
     });
     return categories;
-  }
-
-  // Learning management
-  startLearning(learningId) {
-    this.currentLearning = learningId;
-    // Only initialize progress if it doesn't exist
-    if (this.skillProgress[learningId] === undefined) {
-      this.skillProgress[learningId] = 0;
-    }
-  }
-
-  updateLearningProgress(amount) {
-    if (this.currentLearning) {
-      this.skillProgress[this.currentLearning] = Math.min(
-        (this.skillProgress[this.currentLearning] || 0) + amount,
-        100
-      );
-      // When learning is complete, mark as learned
-      if (this.skillProgress[this.currentLearning] >= 100) {
-        this.currentLearning = null;
-        // Check for AI path unlock when completing a skill
-        this.checkAIPathUnlock();
-      }
-    }
-  }
-
-  // Get current learning progress
-  getLearningProgress() {
-    if (!this.currentLearning) return 0;
-    return this.skillProgress[this.currentLearning] || 0;
-  }
-
-  // Get current skill progress
-  getSkillProgress() {
-    if (!this.currentLearning) return 0;
-    return this.skillProgress[this.currentLearning] || 0;
-  }
-
-  // Get current job progress
-  getJobProgress() {
-    if (!this.currentJob) return 0;
-    return this.jobProgress;
-  }
-
-  setJobProgress(progress) {
-    if (this.currentJob) {
-      this.jobProgress = Math.min(Math.max(progress, 0), 100);
-
-      // Check for AI path unlock when job is completed
-      if (this.jobProgress >= 100) {
-        this.checkAIPathUnlock();
-      }
-    }
-  }
-
-  setSkillProgress(progress) {
-    if (this.currentLearning) {
-      this.skillProgress[this.currentLearning] = Math.min(
-        Math.max(progress, 0),
-        100
-      );
-    }
   }
 
   // Shop management
@@ -295,6 +289,10 @@ export default class GameState {
   }
 
   // AI Path management
+  getAIPathUnlocked() {
+    return this.aiPathUnlocked;
+  }
+
   checkAIPathUnlock() {
     // If already unlocked, return true
     if (this.aiPathUnlocked) {

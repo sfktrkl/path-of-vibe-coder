@@ -23,12 +23,13 @@ describe("ShopItem", () => {
   const gameStateMock = {
     hasItem: jest.fn(),
     purchaseItem: jest.fn(),
-    money: 1000,
+    getMoney: jest.fn().mockReturnValue(1000),
   };
 
   beforeEach(() => {
     gameStateMock.hasItem.mockReset().mockReturnValue(false);
     gameStateMock.purchaseItem.mockReset().mockReturnValue(true);
+    gameStateMock.getMoney.mockReset().mockReturnValue(1000);
     wrapper = mount(ShopItem, {
       propsData: {
         item: mockItem,
@@ -88,7 +89,7 @@ describe("ShopItem", () => {
 
   it("shows affordable badge when can afford", async () => {
     gameStateMock.hasItem.mockReturnValue(false);
-    gameStateMock.money = 1000;
+    gameStateMock.getMoney.mockReturnValue(1000);
     await wrapper.setProps({
       item: mockItem,
       gameState: { ...gameStateMock },
@@ -100,7 +101,7 @@ describe("ShopItem", () => {
 
   it("shows unaffordable badge when cannot afford", async () => {
     gameStateMock.hasItem.mockReturnValue(false);
-    gameStateMock.money = 50;
+    gameStateMock.getMoney.mockReturnValue(50);
     await wrapper.setProps({
       item: mockItem,
       gameState: { ...gameStateMock },
@@ -112,7 +113,7 @@ describe("ShopItem", () => {
 
   it("calls purchaseItem when clicked and not owned", async () => {
     gameStateMock.hasItem.mockReturnValue(false);
-    gameStateMock.money = 1000;
+    gameStateMock.getMoney.mockReturnValue(1000);
     await wrapper.setProps({
       item: mockItem,
       gameState: { ...gameStateMock },
@@ -135,7 +136,7 @@ describe("ShopItem", () => {
 
   it("applies correct classes based on item state", async () => {
     gameStateMock.hasItem.mockReturnValue(false);
-    gameStateMock.money = 1000;
+    gameStateMock.getMoney.mockReturnValue(1000);
     await wrapper.setProps({
       item: mockItem,
       gameState: { ...gameStateMock },

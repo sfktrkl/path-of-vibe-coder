@@ -48,7 +48,7 @@ describe("GameCheat", () => {
 
     // Check if all commands are registered
     expect(typeof mockWindow.addMoney).toBe("function");
-    expect(typeof mockWindow.setJob).toBe("function");
+    expect(typeof mockWindow.setCurrentJob).toBe("function");
     expect(typeof mockWindow.listJobIds).toBe("function");
     expect(typeof mockWindow.completeSkill).toBe("function");
     expect(typeof mockWindow.listSkillIds).toBe("function");

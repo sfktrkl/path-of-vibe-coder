@@ -21,117 +21,118 @@ describe("GameState", () => {
 
   // Helper function to unlock senior web dev prerequisites
   const unlockSeniorWebDev = (state) => {
-    state.setJob("everyday_normal_guy");
-    state.startLearning("computer_basics");
-    state.updateLearningProgress(100);
-    state.setJob("computer_trainee");
-    state.startLearning("typing");
-    state.updateLearningProgress(100);
-    state.setJob("data_entry");
-    state.startLearning("internet_basics");
-    state.updateLearningProgress(100);
-    state.setJob("office_assistant");
-    state.startLearning("problem_solving");
-    state.updateLearningProgress(100);
-    state.startLearning("linux");
-    state.updateLearningProgress(100);
-    state.setJob("it_support");
-    state.startLearning("logic");
-    state.updateLearningProgress(100);
-    state.startLearning("git");
-    state.updateLearningProgress(100);
-    state.startLearning("html");
-    state.updateLearningProgress(100);
-    state.setJob("junior_tech");
-    state.startLearning("css");
-    state.updateLearningProgress(100);
-    state.startLearning("javascript");
-    state.updateLearningProgress(100);
-    state.setJob("web_intern");
-    state.startLearning("react");
-    state.updateLearningProgress(100);
-    state.setJob("junior_web_dev");
-    state.startLearning("nodejs");
-    state.updateLearningProgress(100);
-    state.startLearning("express");
-    state.updateLearningProgress(100);
-    state.setJob("web_dev");
-    state.startLearning("typescript");
-    state.updateLearningProgress(100);
+    state.setCurrentJob("everyday_normal_guy");
+    state.setCurrentLearning("computer_basics");
+    state.setCurrentLearningProgress(100);
+    state.setCurrentJob("computer_trainee");
+    state.setCurrentLearning("typing");
+    state.setCurrentLearningProgress(100);
+    state.setCurrentJob("data_entry");
+    state.setCurrentLearning("internet_basics");
+    state.setCurrentLearningProgress(100);
+    state.setCurrentJob("office_assistant");
+    state.setCurrentLearning("problem_solving");
+    state.setCurrentLearningProgress(100);
+    state.setCurrentLearning("linux");
+    state.setCurrentLearningProgress(100);
+    state.setCurrentJob("it_support");
+    state.setCurrentLearning("logic");
+    state.setCurrentLearningProgress(100);
+    state.setCurrentLearning("git");
+    state.setCurrentLearningProgress(100);
+    state.setCurrentLearning("html");
+    state.setCurrentLearningProgress(100);
+    state.setCurrentJob("junior_tech");
+    state.setCurrentLearning("css");
+    state.setCurrentLearningProgress(100);
+    state.setCurrentLearning("javascript");
+    state.setCurrentLearningProgress(100);
+    state.setCurrentJob("web_intern");
+    state.setCurrentLearning("react");
+    state.setCurrentLearningProgress(100);
+    state.setCurrentJob("junior_web_dev");
+    state.setCurrentLearning("nodejs");
+    state.setCurrentLearningProgress(100);
+    state.setCurrentLearning("express");
+    state.setCurrentLearningProgress(100);
+    state.setCurrentJob("web_dev");
+    state.setCurrentLearning("typescript");
+    state.setCurrentLearningProgress(100);
   };
 
   test("should initialize with default values", () => {
-    expect(gameState.money).toBe(0);
-    expect(gameState.currentJob).toBeNull();
-    expect(gameState.jobProgress).toBe(0);
-    expect(gameState.currentLearning).toBeNull();
+    expect(gameState.getMoney()).toBe(0);
+    expect(gameState.getCurrentJob()).toBeNull();
+    expect(gameState.getCurrentJobProgress()).toBe(0);
+    expect(gameState.getCurrentLearning()).toBeNull();
     expect(gameState.skillProgress).toEqual({});
   });
 
   test("should manage money correctly", () => {
     gameState.addMoney(100);
-    expect(gameState.money).toBe(100);
+    expect(gameState.getMoney()).toBe(100);
 
     const success = gameState.spendMoney(50);
     expect(success).toBe(true);
-    expect(gameState.money).toBe(50);
+    expect(gameState.getMoney()).toBe(50);
 
     const failure = gameState.spendMoney(100);
     expect(failure).toBe(false);
-    expect(gameState.money).toBe(50);
+    expect(gameState.getMoney()).toBe(50);
   });
 
   test("should manage learning progress", () => {
-    gameState.startLearning("test_skill");
-    expect(gameState.currentLearning).toBe("test_skill");
-    expect(gameState.getLearningProgress()).toBe(0);
+    gameState.setCurrentLearning("test_skill");
+    expect(gameState.getCurrentLearning()).toBe("test_skill");
+    expect(gameState.getCurrentLearningProgress()).toBe(0);
 
-    gameState.updateLearningProgress(50);
-    expect(gameState.getLearningProgress()).toBe(50);
+    gameState.setCurrentLearningProgress(50);
+    expect(gameState.getCurrentLearningProgress()).toBe(50);
+    expect(gameState.getCurrentLearning()).toBe("test_skill");
 
-    gameState.updateLearningProgress(60);
-    expect(gameState.currentLearning).toBeNull();
+    gameState.setCurrentLearningProgress(100);
+    expect(gameState.getCurrentLearning()).toBeNull();
     expect(gameState.skillProgress["test_skill"]).toBe(100);
   });
 
   test("should check skill completion", () => {
     expect(gameState.hasSkill("test_skill")).toBe(false);
 
-    gameState.startLearning("test_skill");
-    gameState.updateLearningProgress(100);
+    gameState.setCurrentLearning("test_skill");
+    gameState.setCurrentLearningProgress(100);
 
     expect(gameState.hasSkill("test_skill")).toBe(true);
   });
 
   test("should serialize and deserialize state", () => {
     gameState.addMoney(100);
-    gameState.startLearning("test_skill");
-    gameState.updateLearningProgress(50);
+    gameState.setCurrentLearning("test_skill");
+    gameState.setCurrentLearningProgress(50);
 
     const json = gameState.toJSON();
     const newState = GameState.fromJSON(json);
 
-    expect(newState.money).toBe(100);
+    expect(newState.getMoney()).toBe(100);
     expect(newState.skillProgress["test_skill"]).toBe(50);
   });
 
   test("should encode and decode state", () => {
     gameState.addMoney(100);
-    gameState.startLearning("test_skill");
-    gameState.updateLearningProgress(50);
+    gameState.setCurrentLearning("test_skill");
+    gameState.setCurrentLearningProgress(50);
 
     const encoded = gameState.encode();
     const decoded = GameState.decode(encoded);
 
-    expect(decoded.money).toBe(100);
+    expect(decoded.getMoney()).toBe(100);
     expect(decoded.skillProgress["test_skill"]).toBe(50);
   });
 
   test("should handle job changes", () => {
-    const success = gameState.setJob("everyday_normal_guy");
+    const success = gameState.setCurrentJob("everyday_normal_guy");
     expect(success).toBe(true);
-    expect(gameState.currentJob).toBe("everyday_normal_guy");
-    expect(gameState.jobProgress).toBe(0);
+    expect(gameState.getCurrentJob()).toBe("everyday_normal_guy");
+    expect(gameState.getCurrentJobProgress()).toBe(0);
   });
 
   test("should check job unlock conditions", () => {
@@ -147,12 +148,12 @@ describe("GameState", () => {
 
       // Unlock prerequisites
       jobWithPrereqs.requiredSkills?.forEach((skill) => {
-        gameState.startLearning(skill);
-        gameState.updateLearningProgress(100);
+        gameState.setCurrentLearning(skill);
+        gameState.setCurrentLearningProgress(100);
       });
 
       jobWithPrereqs.requiredJobs?.forEach((jobId) => {
-        gameState.setJob(jobId);
+        gameState.setCurrentJob(jobId);
       });
 
       expect(gameState.isJobUnlocked(jobWithPrereqs.id)).toBe(true);
@@ -161,30 +162,30 @@ describe("GameState", () => {
 
   test("should handle invalid job changes", () => {
     const invalidJob = "nonexistent_job";
-    const success = gameState.setJob(invalidJob);
+    const success = gameState.setCurrentJob(invalidJob);
     expect(success).toBe(false);
-    expect(gameState.currentJob).toBeNull();
+    expect(gameState.getCurrentJob()).toBeNull();
   });
 
   test("should handle concurrent skill learning", () => {
-    gameState.startLearning("test_skill_1");
-    gameState.startLearning("test_skill_2");
-    expect(gameState.currentLearning).toBe("test_skill_2");
-    expect(gameState.getLearningProgress()).toBe(0);
+    gameState.setCurrentLearning("test_skill_1");
+    gameState.setCurrentLearning("test_skill_2");
+    expect(gameState.getCurrentLearning()).toBe("test_skill_2");
+    expect(gameState.getCurrentLearningProgress()).toBe(0);
   });
 
   test("should handle learning completed skills", () => {
-    gameState.startLearning("test_skill");
-    expect(gameState.currentLearning).toBe("test_skill");
-    expect(gameState.getLearningProgress()).toBe(0);
+    gameState.setCurrentLearning("test_skill");
+    expect(gameState.getCurrentLearning()).toBe("test_skill");
+    expect(gameState.getCurrentLearningProgress()).toBe(0);
 
-    gameState.updateLearningProgress(100);
+    gameState.setCurrentLearningProgress(100);
     expect(gameState.hasSkill("test_skill")).toBe(true);
 
     // Starting to learn again keeps the existing progress
-    gameState.startLearning("test_skill");
-    expect(gameState.currentLearning).toBe("test_skill");
-    expect(gameState.getLearningProgress()).toBe(100);
+    gameState.setCurrentLearning("test_skill");
+    expect(gameState.getCurrentLearning()).toBe("test_skill");
+    expect(gameState.getCurrentLearningProgress()).toBe(100);
   });
 
   test("should handle skill prerequisites", () => {
@@ -197,8 +198,8 @@ describe("GameState", () => {
 
       // Learn prerequisites
       skillWithPrereqs.prerequisites.forEach((prereq) => {
-        gameState.startLearning(prereq);
-        gameState.updateLearningProgress(100);
+        gameState.setCurrentLearning(prereq);
+        gameState.setCurrentLearningProgress(100);
       });
 
       const newAvailableSkills = gameState.getAvailableSkills();
@@ -213,7 +214,7 @@ describe("GameState", () => {
   });
 
   test("should get current job info", () => {
-    gameState.setJob("everyday_normal_guy");
+    gameState.setCurrentJob("everyday_normal_guy");
     const jobInfo = gameState.getCurrentJobInfo();
     expect(jobInfo).toEqual(jobs.everyday_normal_guy);
   });
@@ -236,12 +237,12 @@ describe("GameState", () => {
   });
 
   test("should handle invalid skill progress", () => {
-    gameState.startLearning("test_skill");
-    expect(gameState.getSkillProgress()).toBe(0);
+    gameState.setCurrentLearning("test_skill");
+    expect(gameState.getCurrentLearningProgress()).toBe(0);
   });
 
   test("should handle invalid learning progress", () => {
-    expect(gameState.getLearningProgress()).toBe(0);
+    expect(gameState.getCurrentLearningProgress()).toBe(0);
   });
 
   test("should handle item effects correctly", () => {
@@ -594,7 +595,7 @@ describe("GameState", () => {
 
     // Unlock prerequisites for senior web dev
     unlockSeniorWebDev(gameState);
-    gameState.setJob("senior_web_dev");
+    gameState.setCurrentJob("senior_web_dev");
 
     expect(gameState.isJobUnlocked("senior_web_dev")).toBe(true);
 
@@ -612,13 +613,13 @@ describe("GameState", () => {
 
     // Unlock prerequisites for senior web dev
     unlockSeniorWebDev(gameState);
-    gameState.setJob("senior_web_dev");
+    gameState.setCurrentJob("senior_web_dev");
 
     // Start learning a skill
-    gameState.startLearning("machine_learning");
+    gameState.setCurrentLearning("machine_learning");
 
     // Complete the skill
-    gameState.updateLearningProgress(100);
+    gameState.setCurrentLearningProgress(100);
 
     // Should have triggered AI path check
     expect(gameState.isAIPathUnlocked()).toBe(false);
@@ -633,14 +634,14 @@ describe("GameState", () => {
 
     // Unlock prerequisites for senior web dev
     unlockSeniorWebDev(gameState);
-    gameState.setJob("senior_web_dev");
+    gameState.setCurrentJob("senior_web_dev");
     expect(gameState.isJobUnlocked("senior_web_dev")).toBe(true);
 
     // Add some high-value skills
-    gameState.startLearning("machine_learning");
-    gameState.updateLearningProgress(100);
-    gameState.startLearning("deep_learning");
-    gameState.updateLearningProgress(100);
+    gameState.setCurrentLearning("machine_learning");
+    gameState.setCurrentLearningProgress(100);
+    gameState.setCurrentLearning("deep_learning");
+    gameState.setCurrentLearningProgress(100);
 
     // Add some high-value items
     gameState.addMoney(100000);
@@ -664,8 +665,8 @@ describe("GameState", () => {
     expect(gameState.isJobUnlocked("senior_web_dev")).toBe(false);
 
     // Add some high-value skills and items
-    gameState.startLearning("machine_learning");
-    gameState.updateLearningProgress(100);
+    gameState.setCurrentLearning("machine_learning");
+    gameState.setCurrentLearningProgress(100);
     gameState.addMoney(100000);
     gameState.purchaseItem("expert_salary_boost");
 
@@ -683,7 +684,7 @@ describe("GameState", () => {
 
     // Unlock prerequisites for senior web dev
     unlockSeniorWebDev(gameState);
-    gameState.setJob("senior_web_dev");
+    gameState.setCurrentJob("senior_web_dev");
 
     // First check should unlock
     const firstCheck = gameState.checkAIPathUnlock();
@@ -703,15 +704,15 @@ describe("GameState", () => {
 
   test("should update job progress within bounds", () => {
     const state = new GameState();
-    state.setJob("everyday_normal_guy");
-    state.setJobProgress(50);
-    expect(state.jobProgress).toBe(50);
+    state.setCurrentJob("everyday_normal_guy");
+    state.setCurrentJobProgress(50);
+    expect(state.getCurrentJobProgress()).toBe(50);
 
-    state.setJobProgress(150);
-    expect(state.jobProgress).toBe(100);
+    state.setCurrentJobProgress(150);
+    expect(state.getCurrentJobProgress()).toBe(100);
 
-    state.setJobProgress(-50);
-    expect(state.jobProgress).toBe(0);
+    state.setCurrentJobProgress(-50);
+    expect(state.getCurrentJobProgress()).toBe(0);
   });
 
   test("should check AI path unlock when job is completed", () => {
@@ -723,10 +724,10 @@ describe("GameState", () => {
 
     // Unlock prerequisites for senior web dev
     unlockSeniorWebDev(state);
-    state.setJob("senior_web_dev");
-    state.setJobProgress(100);
+    state.setCurrentJob("senior_web_dev");
+    state.setCurrentJobProgress(100);
 
-    expect(state.jobProgress).toBe(100);
+    expect(state.getCurrentJobProgress()).toBe(100);
     expect(state.isAIPathUnlocked()).toBe(true);
 
     mockRandom.mockRestore();
@@ -739,11 +740,11 @@ describe("GameState", () => {
     // Test with senior job (10% cap)
     const state1 = new GameState();
     unlockSeniorWebDev(state1);
-    state1.setJob("senior_web_dev");
+    state1.setCurrentJob("senior_web_dev");
 
     // Add points to reach near cap
-    state1.startLearning("machine_learning");
-    state1.updateLearningProgress(100);
+    state1.setCurrentLearning("machine_learning");
+    state1.setCurrentLearningProgress(100);
     state1.addMoney(100000);
 
     // Calculate expected points:
@@ -762,31 +763,31 @@ describe("GameState", () => {
 
     // First unlock senior web dev
     unlockSeniorWebDev(state2);
-    state2.setJob("senior_web_dev");
+    state2.setCurrentJob("senior_web_dev");
 
     // Add required skills for web architect
-    state2.startLearning("system_design");
-    state2.updateLearningProgress(100);
-    state2.startLearning("cloud_architecture");
-    state2.updateLearningProgress(100);
-    state2.startLearning("microservices");
-    state2.updateLearningProgress(100);
-    state2.startLearning("distributed_systems");
-    state2.updateLearningProgress(100);
-    state2.startLearning("ci_cd");
-    state2.updateLearningProgress(100);
+    state2.setCurrentLearning("system_design");
+    state2.setCurrentLearningProgress(100);
+    state2.setCurrentLearning("cloud_architecture");
+    state2.setCurrentLearningProgress(100);
+    state2.setCurrentLearning("microservices");
+    state2.setCurrentLearningProgress(100);
+    state2.setCurrentLearning("distributed_systems");
+    state2.setCurrentLearningProgress(100);
+    state2.setCurrentLearning("ci_cd");
+    state2.setCurrentLearningProgress(100);
 
     // Add high-value skills for points
-    state2.startLearning("machine_learning");
-    state2.updateLearningProgress(100);
-    state2.startLearning("deep_learning");
-    state2.updateLearningProgress(100);
-    state2.startLearning("tensorflow");
-    state2.updateLearningProgress(100);
-    state2.startLearning("algorithms");
-    state2.updateLearningProgress(100);
-    state2.startLearning("cpp");
-    state2.updateLearningProgress(100);
+    state2.setCurrentLearning("machine_learning");
+    state2.setCurrentLearningProgress(100);
+    state2.setCurrentLearning("deep_learning");
+    state2.setCurrentLearningProgress(100);
+    state2.setCurrentLearning("tensorflow");
+    state2.setCurrentLearningProgress(100);
+    state2.setCurrentLearning("algorithms");
+    state2.setCurrentLearningProgress(100);
+    state2.setCurrentLearning("cpp");
+    state2.setCurrentLearningProgress(100);
 
     // Add money for items and points
     state2.addMoney(500000);
@@ -798,7 +799,7 @@ describe("GameState", () => {
     state2.purchaseItem("expert_skill_time_reducer");
 
     // Set web architect job (15 points)
-    state2.setJob("web_architect");
+    state2.setCurrentJob("web_architect");
 
     // Calculate expected points:
     // - Web architect: 15 points

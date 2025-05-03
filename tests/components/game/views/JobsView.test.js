@@ -10,11 +10,16 @@ describe("JobsView.vue", () => {
   let wrapper;
   const gameStateMock = {
     isJobUnlocked: jest.fn().mockReturnValue(false),
+    getCurrentJob: jest.fn().mockReturnValue(null),
+    setCurrentJob: jest.fn(),
+    getCurrentJobProgress: jest.fn().mockReturnValue(0),
   };
 
   beforeEach(() => {
     jest.clearAllMocks();
     gameStateMock.isJobUnlocked.mockReturnValue(false);
+    gameStateMock.getCurrentJob.mockReturnValue(null);
+    gameStateMock.getCurrentJobProgress.mockReturnValue(0);
 
     wrapper = mount(JobsView, {
       propsData: { gameState: gameStateMock },

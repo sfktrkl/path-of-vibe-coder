@@ -4,12 +4,12 @@
       'item-base',
       {
         unlocked: gameState.isJobUnlocked(job.id),
-        current: gameState.currentJob === job.id,
+        current: gameState.getCurrentJob() === job.id,
       },
     ]"
     @click="
-      gameState.isJobUnlocked(job.id) && gameState.currentJob !== job.id
-        ? gameState.setJob(job.id)
+      gameState.isJobUnlocked(job.id) && gameState.getCurrentJob() !== job.id
+        ? gameState.setCurrentJob(job.id)
         : null
     "
   >

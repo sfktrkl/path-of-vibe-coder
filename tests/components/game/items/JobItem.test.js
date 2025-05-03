@@ -8,13 +8,13 @@ jest.mock("@styles/item-styles.css", () => ({}));
 describe("JobItem", () => {
   const mockGameState = {
     isJobUnlocked: jest.fn(),
-    setJob: jest.fn(),
-    currentJob: null,
+    setCurrentJob: jest.fn(),
+    getCurrentJob: jest.fn().mockReturnValue(null),
   };
 
   beforeEach(() => {
     jest.clearAllMocks();
-    mockGameState.currentJob = null;
+    mockGameState.getCurrentJob.mockReturnValue(null);
   });
 
   const createWrapper = (jobId, isUnlocked = true) => {
@@ -38,29 +38,31 @@ describe("JobItem", () => {
   });
 
   it("applies correct classes based on job state", () => {
-    mockGameState.currentJob = "everyday_normal_guy";
+    mockGameState.getCurrentJob.mockReturnValue("everyday_normal_guy");
     const wrapper = createWrapper("everyday_normal_guy");
     expect(wrapper.classes()).toContain("unlocked");
     expect(wrapper.classes()).toContain("current");
   });
 
-  it("calls setJob when clicked and job is unlocked and not current", () => {
-    mockGameState.currentJob = "different_job";
+  it("calls setCurrentJob when clicked and job is unlocked and not current", () => {
+    mockGameState.getCurrentJob.mockReturnValue("different_job");
     const wrapper = createWrapper("everyday_normal_guy");
     wrapper.trigger("click");
-    expect(mockGameState.setJob).toHaveBeenCalledWith("everyday_normal_guy");
+    expect(mockGameState.setCurrentJob).toHaveBeenCalledWith(
+      "everyday_normal_guy"
+    );
   });
 
-  it("does not call setJob when clicked and job is locked", () => {
+  it("does not call setCurrentJob when clicked and job is locked", () => {
     const wrapper = createWrapper("everyday_normal_guy", false);
     wrapper.trigger("click");
-    expect(mockGameState.setJob).not.toHaveBeenCalled();
+    expect(mockGameState.setCurrentJob).not.toHaveBeenCalled();
   });
 
-  it("does not call setJob when clicked and job is current", () => {
-    mockGameState.currentJob = "everyday_normal_guy";
+  it("does not call setCurrentJob when clicked and job is current", () => {
+    mockGameState.getCurrentJob.mockReturnValue("everyday_normal_guy");
     const wrapper = createWrapper("everyday_normal_guy");
     wrapper.trigger("click");
-    expect(mockGameState.setJob).not.toHaveBeenCalled();
+    expect(mockGameState.setCurrentJob).not.toHaveBeenCalled();
   });
 });

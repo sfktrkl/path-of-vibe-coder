@@ -3,13 +3,13 @@
     <div class="header-content">
       <div
         class="character-info"
-        :class="{ 'default-title': !gameState.currentJob }"
+        :class="{ 'default-title': !gameState.getCurrentJob() }"
       >
         <h1>{{ currentJob ? currentJob.name : "Path of Vibe Coder" }}</h1>
-        <div class="money">${{ gameState.money }}</div>
+        <div class="money">${{ gameState.getMoney() }}</div>
         <div
           class="item-effects"
-          v-if="totalItemEffects && gameState.currentJob"
+          v-if="totalItemEffects && gameState.getCurrentJob()"
         >
           <div
             v-for="(value, effect) in totalItemEffects"
@@ -28,14 +28,14 @@
         <ProgressBar
           v-if="currentLearning"
           :label="`Learning: ${currentLearning.name}`"
-          :progress="gameState.getLearningProgress()"
+          :progress="gameState.getCurrentLearningProgress()"
           type="learning"
         />
 
         <ProgressBar
           v-if="currentJob"
           :label="`Working: ${currentJob.name}`"
-          :progress="gameState.jobProgress"
+          :progress="gameState.getCurrentJobProgress()"
           type="job"
         />
       </div>
@@ -88,12 +88,12 @@ export default {
   },
   computed: {
     currentLearning() {
-      if (!this.gameState.currentLearning) return null;
-      return skills[this.gameState.currentLearning];
+      if (!this.gameState.getCurrentLearning()) return null;
+      return skills[this.gameState.getCurrentLearning()];
     },
     currentJob() {
-      if (!this.gameState.currentJob) return null;
-      return jobs[this.gameState.currentJob];
+      if (!this.gameState.getCurrentJob()) return null;
+      return jobs[this.gameState.getCurrentJob()];
     },
     totalItemEffects() {
       return this.gameState.getItemEffects();

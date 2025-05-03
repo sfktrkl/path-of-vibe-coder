@@ -15,7 +15,7 @@ class ThemeManager {
   initialize() {
     // Watch for AI path unlock state changes
     watch(
-      () => this.gameState.aiPathUnlocked,
+      () => this.gameState.getAIPathUnlocked(),
       (unlocked) => {
         if (unlocked) {
           this.activateAITheme();

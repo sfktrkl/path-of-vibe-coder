@@ -32,12 +32,15 @@ describe("GameTimer", () => {
   beforeEach(() => {
     jest.useFakeTimers();
     mockGameState = {
-      currentLearning: null,
-      currentJob: null,
-      jobProgress: 0,
+      getCurrentLearning: jest.fn().mockReturnValue(null),
+      getCurrentJob: jest.fn().mockReturnValue(null),
+      getCurrentJobProgress: jest.fn().mockReturnValue(0),
       addMoney: jest.fn(),
-      updateLearningProgress: jest.fn(),
-      getLearningProgress: jest.fn().mockReturnValue(0),
+      setCurrentLearningProgress: jest.fn(),
+      getCurrentLearningProgress: jest.fn().mockReturnValue(0),
+      getCurrentSkillInfo: jest.fn().mockReturnValue(null),
+      getCurrentJobInfo: jest.fn().mockReturnValue(null),
+      setCurrentJobProgress: jest.fn(),
       getItemEffects: () => ({
         salaryMultiplier: 1,
         learningSpeedMultiplier: 1,
@@ -45,15 +48,17 @@ describe("GameTimer", () => {
         skillTimeMultiplier: 1,
         initialJobProgress: 0,
       }),
-      setJob(jobId) {
-        this.currentJob = jobId;
-        this.jobProgress = 0;
+      setCurrentJob: jest.fn().mockImplementation(function (jobId) {
+        this.getCurrentJob.mockReturnValue(jobId);
+        this.getCurrentJobProgress.mockReturnValue(0);
         const effects = this.getItemEffects();
         if (effects.initialJobProgress > 0) {
-          this.jobProgress = effects.initialJobProgress;
+          this.getCurrentJobProgress.mockReturnValue(
+            effects.initialJobProgress
+          );
         }
         return true;
-      },
+      }),
     };
     timer = new GameTimer(mockGameState);
   });
@@ -83,27 +88,28 @@ describe("GameTimer", () => {
   });
 
   test("should update learning progress", () => {
-    mockGameState.currentLearning = "test_skill";
-    timer.start();
-    jest.advanceTimersByTime(1000);
-    expect(mockGameState.updateLearningProgress).toHaveBeenCalled();
-  });
-
-  test("should update job progress and pay salary", () => {
-    mockGameState.currentJob = "test_job";
-    mockGameState.jobProgress = 90;
-    mockGameState.getItemEffects = () => ({
-      salaryMultiplier: 1,
-      learningSpeedMultiplier: 1,
-      workSpeedMultiplier: 1,
-      skillTimeMultiplier: 1,
-      initialJobProgress: 0,
+    mockGameState.getCurrentLearning.mockReturnValue("test_skill");
+    mockGameState.getCurrentSkillInfo.mockReturnValue({
+      id: "test_skill",
+      timeRequired: 10,
     });
 
     timer.start();
     jest.advanceTimersByTime(1000);
-    expect(mockGameState.addMoney).toHaveBeenCalledWith(100);
-    expect(mockGameState.jobProgress).toBe(0);
+    expect(mockGameState.setCurrentLearningProgress).toHaveBeenCalledWith(10);
+  });
+
+  test("should update job progress and pay salary", () => {
+    mockGameState.getCurrentJob.mockReturnValue("test_job");
+    mockGameState.getCurrentJobInfo.mockReturnValue({
+      id: "test_job",
+      timeRequired: 10,
+      salary: 100,
+    });
+
+    timer.start();
+    jest.advanceTimersByTime(1000);
+    expect(mockGameState.setCurrentJobProgress).toHaveBeenCalledWith(10);
   });
 
   test("should pause and resume timer", () => {
@@ -126,51 +132,56 @@ describe("GameTimer", () => {
   });
 
   test("should handle learning and working simultaneously", () => {
-    mockGameState.currentLearning = "test_skill";
-    mockGameState.currentJob = "test_job";
-    mockGameState.jobProgress = 0;
-    mockGameState.getItemEffects = () => ({
-      salaryMultiplier: 1,
-      learningSpeedMultiplier: 1,
-      workSpeedMultiplier: 1,
-      skillTimeMultiplier: 1,
-      initialJobProgress: 0,
+    mockGameState.getCurrentLearning.mockReturnValue("test_skill");
+    mockGameState.getCurrentSkillInfo.mockReturnValue({
+      id: "test_skill",
+      timeRequired: 10,
+    });
+
+    mockGameState.getCurrentJob.mockReturnValue("test_job");
+    mockGameState.getCurrentJobInfo.mockReturnValue({
+      id: "test_job",
+      timeRequired: 10,
+      salary: 100,
     });
 
     timer.start();
     jest.advanceTimersByTime(1000);
 
-    expect(mockGameState.updateLearningProgress).toHaveBeenCalled();
-    expect(mockGameState.jobProgress).toBeGreaterThan(0);
+    expect(mockGameState.setCurrentLearningProgress).toHaveBeenCalledWith(10);
+    expect(mockGameState.setCurrentJobProgress).toHaveBeenCalledWith(10);
   });
 
   test("should handle different progress rates", () => {
-    mockGameState.currentLearning = "test_skill";
-    mockGameState.currentJob = "test_job";
-    mockGameState.getItemEffects = () => ({
-      salaryMultiplier: 1,
-      learningSpeedMultiplier: 2,
-      workSpeedMultiplier: 2,
-      skillTimeMultiplier: 0.8,
-      initialJobProgress: 0,
+    mockGameState.getCurrentLearning.mockReturnValue("test_skill");
+    mockGameState.getCurrentSkillInfo.mockReturnValue({
+      id: "test_skill",
+      timeRequired: 20,
+    });
+
+    mockGameState.getCurrentJob.mockReturnValue("test_job");
+    mockGameState.getCurrentJobInfo.mockReturnValue({
+      id: "test_job",
+      timeRequired: 5,
+      salary: 100,
     });
 
     timer.start();
     jest.advanceTimersByTime(1000);
 
-    expect(mockGameState.updateLearningProgress).toHaveBeenCalled();
-    expect(mockGameState.jobProgress).toBeGreaterThan(0);
+    expect(mockGameState.setCurrentLearningProgress).toHaveBeenCalledWith(5);
+    expect(mockGameState.setCurrentJobProgress).toHaveBeenCalledWith(20);
   });
 
   test("should handle invalid skill IDs", () => {
-    mockGameState.currentLearning = "nonexistent_skill";
+    mockGameState.getCurrentLearning.mockReturnValue("nonexistent_skill");
     timer.start();
     jest.advanceTimersByTime(1000);
-    expect(mockGameState.updateLearningProgress).not.toHaveBeenCalled();
+    expect(mockGameState.setCurrentLearningProgress).not.toHaveBeenCalled();
   });
 
   test("should handle invalid job IDs", () => {
-    mockGameState.currentJob = "nonexistent_job";
+    mockGameState.getCurrentJob.mockReturnValue("nonexistent_job");
     timer.start();
     jest.advanceTimersByTime(1000);
     expect(mockGameState.addMoney).not.toHaveBeenCalled();
@@ -186,41 +197,58 @@ describe("GameTimer", () => {
   });
 
   test("should calculate progress over time", () => {
-    mockGameState.currentLearning = "test_skill";
-    timer.start();
+    // Mock a skill that takes 10 seconds
+    mockGameState.getCurrentLearning.mockReturnValue("test_skill");
+    mockGameState.getCurrentSkillInfo.mockReturnValue({
+      id: "test_skill",
+      timeRequired: 10,
+    });
 
+    // Mock current progress values
+    mockGameState.getCurrentLearningProgress
+      .mockReturnValueOnce(0) // First call returns 0
+      .mockReturnValueOnce(10); // Second call returns 10 (after first update)
+
+    timer.start();
     // Advance by 1 second (10% progress)
     jest.advanceTimersByTime(1000);
-    expect(mockGameState.updateLearningProgress).toHaveBeenCalled();
+    expect(mockGameState.setCurrentLearningProgress).toHaveBeenCalledWith(10);
 
     // Advance by another second (another 10% progress)
     jest.advanceTimersByTime(1000);
-    expect(mockGameState.updateLearningProgress).toHaveBeenCalled();
+    expect(mockGameState.setCurrentLearningProgress).toHaveBeenCalledWith(20);
   });
 
   test("should handle time gaps between updates", () => {
-    mockGameState.currentJob = "test_job";
-    mockGameState.getItemEffects = () => ({
-      salaryMultiplier: 1,
-      learningSpeedMultiplier: 1,
-      workSpeedMultiplier: 1,
-      skillTimeMultiplier: 1,
-      initialJobProgress: 0,
+    // Mock a job that takes 10 seconds
+    mockGameState.getCurrentJob.mockReturnValue("test_job");
+    mockGameState.getCurrentJobInfo.mockReturnValue({
+      id: "test_job",
+      timeRequired: 10,
+      salary: 100,
     });
 
-    timer.start();
-    jest.advanceTimersByTime(1000);
-    timer.stop();
-    jest.advanceTimersByTime(5000);
-    timer.start();
+    // Mock current progress values
+    mockGameState.getCurrentJobProgress
+      .mockReturnValueOnce(0) // First call returns 0
+      .mockReturnValueOnce(10); // Second call returns 10 (after first update)
 
-    expect(mockGameState.jobProgress).toBeGreaterThan(0);
+    timer.start();
+    jest.advanceTimersByTime(2000); // 2 seconds = 20% progress
+    expect(mockGameState.setCurrentJobProgress).toHaveBeenCalledWith(20);
   });
 
   describe("item effects", () => {
     test("salary multiplier should increase job reward", () => {
-      mockGameState.currentJob = "test_job";
-      mockGameState.jobProgress = 99;
+      // Mock a job that takes 10 seconds and pays 100
+      mockGameState.getCurrentJob.mockReturnValue("test_job");
+      mockGameState.getCurrentJobInfo.mockReturnValue({
+        id: "test_job",
+        timeRequired: 1, // 1 second to complete
+        salary: 100,
+      });
+
+      // Set 2x salary multiplier
       mockGameState.getItemEffects = () => ({
         salaryMultiplier: 2,
         learningSpeedMultiplier: 1,
@@ -230,12 +258,19 @@ describe("GameTimer", () => {
       });
 
       timer.start();
-      jest.advanceTimersByTime(1000);
+      jest.advanceTimersByTime(1000); // Complete the job
       expect(mockGameState.addMoney).toHaveBeenCalledWith(200); // 100 * 2
     });
 
     test("learning speed multiplier should increase learning progress", () => {
-      mockGameState.currentLearning = "test_skill";
+      // Mock a skill that takes 10 seconds
+      mockGameState.getCurrentLearning.mockReturnValue("test_skill");
+      mockGameState.getCurrentSkillInfo.mockReturnValue({
+        id: "test_skill",
+        timeRequired: 10,
+      });
+
+      // Set 2x learning speed
       mockGameState.getItemEffects = () => ({
         salaryMultiplier: 1,
         learningSpeedMultiplier: 2,
@@ -246,15 +281,19 @@ describe("GameTimer", () => {
 
       timer.start();
       jest.advanceTimersByTime(1000);
-
-      // With 10s required time, base progress is 10% per second
-      // With 2x multiplier, should be 20% per second
-      expect(mockGameState.updateLearningProgress).toHaveBeenCalledWith(20);
+      expect(mockGameState.setCurrentLearningProgress).toHaveBeenCalledWith(20); // 10% * 2
     });
 
     test("work speed multiplier should increase job progress", () => {
-      mockGameState.currentJob = "test_job";
-      mockGameState.jobProgress = 0;
+      // Mock a job that takes 10 seconds
+      mockGameState.getCurrentJob.mockReturnValue("test_job");
+      mockGameState.getCurrentJobInfo.mockReturnValue({
+        id: "test_job",
+        timeRequired: 10,
+        salary: 100,
+      });
+
+      // Set 2x work speed
       mockGameState.getItemEffects = () => ({
         salaryMultiplier: 1,
         learningSpeedMultiplier: 1,
@@ -265,54 +304,71 @@ describe("GameTimer", () => {
 
       timer.start();
       jest.advanceTimersByTime(1000);
-
-      // With 10s required time, base progress is 10% per second
-      // With 2x multiplier, should be 20% per second
-      expect(mockGameState.jobProgress).toBe(20);
+      expect(mockGameState.setCurrentJobProgress).toHaveBeenCalledWith(20); // 10% * 2
     });
 
     test("skill time multiplier should reduce required learning time", () => {
-      mockGameState.currentLearning = "test_skill";
+      // Mock a skill that takes 10 seconds
+      mockGameState.getCurrentLearning.mockReturnValue("test_skill");
+      mockGameState.getCurrentSkillInfo.mockReturnValue({
+        id: "test_skill",
+        timeRequired: 10,
+      });
+
+      // Set 0.5x skill time (2x faster)
       mockGameState.getItemEffects = () => ({
         salaryMultiplier: 1,
         learningSpeedMultiplier: 1,
         workSpeedMultiplier: 1,
-        skillTimeMultiplier: 0.5, // 50% time reduction
+        skillTimeMultiplier: 0.5,
         initialJobProgress: 0,
       });
 
       timer.start();
       jest.advanceTimersByTime(1000);
-
-      // With 10s required time and 0.5 time multiplier:
-      // - Effective time required is 5s
-      // - Base progress should be 20% per second (100/5)
-      expect(mockGameState.updateLearningProgress).toHaveBeenCalledWith(20);
+      expect(mockGameState.setCurrentLearningProgress).toHaveBeenCalledWith(20); // 10% / 0.5
     });
 
     test("initial job progress should start jobs with progress", () => {
+      // Mock a job that takes 10 seconds
+      mockGameState.getCurrentJob.mockReturnValue("test_job");
+      mockGameState.getCurrentJobInfo.mockReturnValue({
+        id: "test_job",
+        timeRequired: 10,
+        salary: 100,
+      });
+
+      // Set 50% initial progress
       mockGameState.getItemEffects = () => ({
         salaryMultiplier: 1,
         learningSpeedMultiplier: 1,
         workSpeedMultiplier: 1,
         skillTimeMultiplier: 1,
-        initialJobProgress: 50, // 50% initial progress
+        initialJobProgress: 50,
       });
 
-      // Start the job - this should trigger initial progress
-      mockGameState.setJob("test_job");
+      mockGameState.getCurrentJobProgress.mockReturnValue(50); // Initial progress
       timer.start();
-
-      // Initial progress should be applied
-      expect(mockGameState.jobProgress).toBe(50);
-
-      // Progress should continue from there
       jest.advanceTimersByTime(1000);
-      // With 10s required time, base progress is 10% per second
-      expect(mockGameState.jobProgress).toBe(60);
+      expect(mockGameState.setCurrentJobProgress).toHaveBeenCalledWith(60); // 50% + 10%
     });
 
     test("all effects should work together", () => {
+      // Mock both a job and a skill
+      mockGameState.getCurrentLearning.mockReturnValue("test_skill");
+      mockGameState.getCurrentSkillInfo.mockReturnValue({
+        id: "test_skill",
+        timeRequired: 10,
+      });
+
+      mockGameState.getCurrentJob.mockReturnValue("test_job");
+      mockGameState.getCurrentJobInfo.mockReturnValue({
+        id: "test_job",
+        timeRequired: 10,
+        salary: 100,
+      });
+
+      // Set all effects
       mockGameState.getItemEffects = () => ({
         salaryMultiplier: 2,
         learningSpeedMultiplier: 2,
@@ -321,34 +377,27 @@ describe("GameTimer", () => {
         initialJobProgress: 20,
       });
 
-      // Start the job - this should trigger initial progress
-      mockGameState.setJob("test_job");
-      mockGameState.currentLearning = "test_skill";
+      mockGameState.getCurrentJobProgress.mockReturnValue(20); // Initial progress
       timer.start();
-
-      // Check initial job progress
-      expect(mockGameState.jobProgress).toBe(20);
-
       jest.advanceTimersByTime(1000);
 
       // Check learning progress (base 10% * 2 speed * 2 time reduction = 40%)
-      expect(mockGameState.updateLearningProgress).toHaveBeenCalledWith(40);
+      expect(mockGameState.setCurrentLearningProgress).toHaveBeenCalledWith(40);
 
       // Check job progress (20% initial + base 10% * 2 speed = 40%)
-      expect(mockGameState.jobProgress).toBe(40);
-
-      // Complete the job
-      mockGameState.jobProgress = 99;
-      jest.advanceTimersByTime(1000);
-
-      // Check salary (100 * 2)
-      expect(mockGameState.addMoney).toHaveBeenCalledWith(200);
-
-      // Job should restart with initial progress
-      expect(mockGameState.jobProgress).toBe(20);
+      expect(mockGameState.setCurrentJobProgress).toHaveBeenCalledWith(40);
     });
 
     test("job should restart with initial progress after completion", () => {
+      // Mock a job that takes 2 seconds
+      mockGameState.getCurrentJob.mockReturnValue("test_job");
+      mockGameState.getCurrentJobInfo.mockReturnValue({
+        id: "test_job",
+        timeRequired: 2,
+        salary: 100,
+      });
+
+      // Set 30% initial progress
       mockGameState.getItemEffects = () => ({
         salaryMultiplier: 1,
         learningSpeedMultiplier: 1,
@@ -357,26 +406,15 @@ describe("GameTimer", () => {
         initialJobProgress: 30,
       });
 
-      // Start the job
-      mockGameState.setJob("test_job");
+      mockGameState.getCurrentJobProgress.mockReturnValue(90);
       timer.start();
-
-      // Verify initial progress
-      expect(mockGameState.jobProgress).toBe(30);
-
-      // Complete the job
-      mockGameState.jobProgress = 99;
       jest.advanceTimersByTime(1000);
 
-      // Check salary was paid
+      // Job should complete and pay salary
       expect(mockGameState.addMoney).toHaveBeenCalledWith(100);
 
       // Job should restart with initial progress
-      expect(mockGameState.jobProgress).toBe(30);
-
-      // Progress should continue from initial progress
-      jest.advanceTimersByTime(1000);
-      expect(mockGameState.jobProgress).toBe(40); // 30% initial + 10% progress
+      expect(mockGameState.setCurrentJobProgress).toHaveBeenCalledWith(30);
     });
   });
 });

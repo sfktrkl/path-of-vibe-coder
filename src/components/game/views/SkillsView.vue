@@ -34,7 +34,7 @@ export default {
         (skill) =>
           this.gameState.hasSkill(skill.id) ||
           this.gameState.isSkillAvailable(skill.id) ||
-          this.gameState.currentLearning === skill.id
+          this.gameState.getCurrentLearning() === skill.id
       );
 
       // Sort skills: learned at the bottom, maintain original order for others
