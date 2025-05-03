@@ -46,7 +46,7 @@ export default class GameCheatCommands {
           return;
         }
 
-        this.gameState.setJobProgress(this.gameState.currentJob, progress);
+        this.gameState.setJobProgress(progress);
         console.log(`Set progress for current job to ${progress}%!`);
       },
     };
@@ -67,10 +67,7 @@ export default class GameCheatCommands {
           return;
         }
 
-        this.gameState.setSkillProgress(
-          this.gameState.currentLearning,
-          progress
-        );
+        this.gameState.setSkillProgress(progress);
         console.log(`Set progress for current skill to ${progress}%!`);
       },
     };

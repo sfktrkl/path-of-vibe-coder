@@ -236,7 +236,8 @@ describe("GameState", () => {
   });
 
   test("should handle invalid skill progress", () => {
-    expect(gameState.getSkillProgress("nonexistent_skill")).toBe(0);
+    gameState.startLearning("test_skill");
+    expect(gameState.getSkillProgress()).toBe(0);
   });
 
   test("should handle invalid learning progress", () => {
@@ -703,13 +704,13 @@ describe("GameState", () => {
   test("should update job progress within bounds", () => {
     const state = new GameState();
     state.setJob("everyday_normal_guy");
-    state.setJobProgress("everyday_normal_guy", 50);
+    state.setJobProgress(50);
     expect(state.jobProgress).toBe(50);
 
-    state.setJobProgress("everyday_normal_guy", 150);
+    state.setJobProgress(150);
     expect(state.jobProgress).toBe(100);
 
-    state.setJobProgress("everyday_normal_guy", -50);
+    state.setJobProgress(-50);
     expect(state.jobProgress).toBe(0);
   });
 
@@ -723,7 +724,7 @@ describe("GameState", () => {
     // Unlock prerequisites for senior web dev
     unlockSeniorWebDev(state);
     state.setJob("senior_web_dev");
-    state.setJobProgress("senior_web_dev", 100);
+    state.setJobProgress(100);
 
     expect(state.jobProgress).toBe(100);
     expect(state.isAIPathUnlocked()).toBe(true);
@@ -772,7 +773,7 @@ describe("GameState", () => {
     state2.updateLearningProgress(100);
     state2.startLearning("distributed_systems");
     state2.updateLearningProgress(100);
-    state2.startLearning("ci_cd"); // Required for web architect
+    state2.startLearning("ci_cd");
     state2.updateLearningProgress(100);
 
     // Add high-value skills for points

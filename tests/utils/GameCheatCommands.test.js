@@ -43,7 +43,7 @@ describe("GameCheatCommands", () => {
     it("should set progress for current job", () => {
       // Set a current job first
       const jobId = Object.keys(jobs)[0];
-      gameState.currentJob = jobId;
+      gameState.setJob(jobId);
 
       commands.setJobProgress().execute(75);
       expect(gameState.jobProgress).toBe(75);
@@ -57,7 +57,7 @@ describe("GameCheatCommands", () => {
 
     it("should not set progress outside valid range", () => {
       const jobId = Object.keys(jobs)[0];
-      gameState.currentJob = jobId;
+      gameState.setJob(jobId);
       commands.setJobProgress().execute(150);
       expect(console.log).toHaveBeenCalledWith(
         "Progress must be between 0 and 100!"
@@ -69,7 +69,7 @@ describe("GameCheatCommands", () => {
     it("should set progress for current skill", () => {
       // Set a current skill first
       const skillId = Object.keys(skills)[0];
-      gameState.currentLearning = skillId;
+      gameState.startLearning(skillId);
 
       commands.setSkillProgress().execute(60);
       expect(gameState.skillProgress[skillId]).toBe(60);
@@ -85,7 +85,7 @@ describe("GameCheatCommands", () => {
 
     it("should not set progress outside valid range", () => {
       const skillId = Object.keys(skills)[0];
-      gameState.currentLearning = skillId;
+      gameState.startLearning(skillId);
       commands.setSkillProgress().execute(-10);
       expect(console.log).toHaveBeenCalledWith(
         "Progress must be between 0 and 100!"

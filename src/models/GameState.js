@@ -172,14 +172,20 @@ export default class GameState {
     return this.skillProgress[this.currentLearning] || 0;
   }
 
-  // Get skill progress
-  getSkillProgress(skillId) {
-    if (!this.skillProgress[skillId]) return 0;
-    return this.skillProgress[skillId];
+  // Get current skill progress
+  getSkillProgress() {
+    if (!this.currentLearning) return 0;
+    return this.skillProgress[this.currentLearning] || 0;
   }
 
-  setJobProgress(jobId, progress) {
-    if (this.currentJob === jobId) {
+  // Get current job progress
+  getJobProgress() {
+    if (!this.currentJob) return 0;
+    return this.jobProgress;
+  }
+
+  setJobProgress(progress) {
+    if (this.currentJob) {
       this.jobProgress = Math.min(Math.max(progress, 0), 100);
 
       // Check for AI path unlock when job is completed
@@ -189,8 +195,13 @@ export default class GameState {
     }
   }
 
-  setSkillProgress(skillId, progress) {
-    this.skillProgress[skillId] = Math.min(Math.max(progress, 0), 100);
+  setSkillProgress(progress) {
+    if (this.currentLearning) {
+      this.skillProgress[this.currentLearning] = Math.min(
+        Math.max(progress, 0),
+        100
+      );
+    }
   }
 
   // Shop management
