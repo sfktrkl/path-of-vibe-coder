@@ -674,4 +674,29 @@ describe("GameState", () => {
     // Should not be unlocked without senior job
     expect(gameState.isAIPathUnlocked()).toBe(false);
   });
+
+  test("should return early if AI path is already unlocked", () => {
+    // Mock random to ensure unlock
+    const mockRandom = jest.spyOn(Math, "random");
+    mockRandom.mockReturnValue(0); // Always return 0 to ensure unlock
+
+    // Unlock prerequisites for senior web dev
+    unlockSeniorWebDev(gameState);
+    gameState.setJob("senior_web_dev");
+
+    // First check should unlock
+    const firstCheck = gameState.checkAIPathUnlock();
+    expect(firstCheck).toBe(true);
+    expect(gameState.isAIPathUnlocked()).toBe(true);
+
+    // Mock random to ensure no unlock (to verify early return)
+    mockRandom.mockReturnValue(1);
+
+    // Second check should return true immediately without running the full check
+    const secondCheck = gameState.checkAIPathUnlock();
+    expect(secondCheck).toBe(true);
+    expect(gameState.isAIPathUnlocked()).toBe(true);
+
+    mockRandom.mockRestore();
+  });
 });

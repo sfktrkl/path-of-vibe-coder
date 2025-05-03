@@ -280,6 +280,11 @@ export default class GameState {
 
   // AI Path management
   checkAIPathUnlock() {
+    // If already unlocked, return true
+    if (this.aiPathUnlocked) {
+      return true;
+    }
+
     // High-value jobs that show expertise
     const jobPoints = {
       senior_web_dev: 15,
