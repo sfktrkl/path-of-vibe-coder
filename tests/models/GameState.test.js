@@ -730,4 +730,87 @@ describe("GameState", () => {
 
     mockRandom.mockRestore();
   });
+
+  test("should have higher unlock chance with architect job", () => {
+    // Mock random to test different unlock chances
+    const mockRandom = jest.spyOn(Math, "random");
+
+    // Test with senior job (10% cap)
+    const state1 = new GameState();
+    unlockSeniorWebDev(state1);
+    state1.setJob("senior_web_dev");
+
+    // Add points to reach near cap
+    state1.startLearning("machine_learning");
+    state1.updateLearningProgress(100);
+    state1.addMoney(100000);
+
+    // Calculate expected points:
+    // - Senior web dev: 5 points
+    // - Machine learning: 3 points
+    // - Money: 5 points
+    // Total: 13 points -> 6.5% chance (under 10% cap)
+
+    // Set random to above 6.5% to prevent unlock (0.08 * 100 = 8)
+    mockRandom.mockReturnValue(0.08);
+    state1.checkAIPathUnlock();
+    expect(state1.isAIPathUnlocked()).toBe(false);
+
+    // Test with architect job (25% cap)
+    const state2 = new GameState();
+
+    // First unlock senior web dev
+    unlockSeniorWebDev(state2);
+    state2.setJob("senior_web_dev");
+
+    // Add required skills for web architect
+    state2.startLearning("system_design");
+    state2.updateLearningProgress(100);
+    state2.startLearning("cloud_architecture");
+    state2.updateLearningProgress(100);
+    state2.startLearning("microservices");
+    state2.updateLearningProgress(100);
+    state2.startLearning("distributed_systems");
+    state2.updateLearningProgress(100);
+    state2.startLearning("ci_cd"); // Required for web architect
+    state2.updateLearningProgress(100);
+
+    // Add high-value skills for points
+    state2.startLearning("machine_learning");
+    state2.updateLearningProgress(100);
+    state2.startLearning("deep_learning");
+    state2.updateLearningProgress(100);
+    state2.startLearning("tensorflow");
+    state2.updateLearningProgress(100);
+    state2.startLearning("algorithms");
+    state2.updateLearningProgress(100);
+    state2.startLearning("cpp");
+    state2.updateLearningProgress(100);
+
+    // Add money for items and points
+    state2.addMoney(500000);
+
+    // Add high-value items
+    state2.purchaseItem("expert_salary_boost");
+    state2.purchaseItem("expert_learning_boost");
+    state2.purchaseItem("expert_work_boost");
+    state2.purchaseItem("expert_skill_time_reducer");
+
+    // Set web architect job (15 points)
+    state2.setJob("web_architect");
+
+    // Calculate expected points:
+    // - Web architect: 15 points
+    // - Skills: ~14 points (ML:3, DL:4, TF:3, Algo:2, CPP:2)
+    // - Items: 12 points (4 expert items * 3)
+    // - Money: 5 points (max)
+    // Total: ~46 points -> 23% chance (capped at 25% for architect)
+
+    // Set random to below 23% to allow unlock (0.20 * 100 = 20)
+    mockRandom.mockReturnValue(0.2);
+    state2.checkAIPathUnlock();
+    expect(state2.isAIPathUnlocked()).toBe(true);
+
+    mockRandom.mockRestore();
+  });
 });
