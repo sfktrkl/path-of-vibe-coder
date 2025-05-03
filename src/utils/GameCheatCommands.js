@@ -22,7 +22,9 @@ export default class GameCheatCommands {
       description:
         "setMoney(amount: number) - Set your money balance to a specific amount",
       execute: (amount) => {
-        this.gameState.money = amount;
+        // First spend all money, then add the new amount
+        this.gameState.spendMoney(this.gameState.money);
+        this.gameState.addMoney(amount);
         console.log(`Set money to ${amount}!`);
       },
     };
@@ -33,7 +35,8 @@ export default class GameCheatCommands {
       description:
         "setJobProgress(progress: number) - Set progress for current job (0-100)",
       execute: (progress) => {
-        if (!this.gameState.currentJob) {
+        const currentJobInfo = this.gameState.getCurrentJobInfo();
+        if (!currentJobInfo) {
           console.log("No job is currently selected!");
           return;
         }
@@ -43,7 +46,7 @@ export default class GameCheatCommands {
           return;
         }
 
-        this.gameState.jobProgress = progress;
+        this.gameState.setJobProgress(this.gameState.currentJob, progress);
         console.log(`Set progress for current job to ${progress}%!`);
       },
     };
@@ -64,7 +67,10 @@ export default class GameCheatCommands {
           return;
         }
 
-        this.gameState.skillProgress[this.gameState.currentLearning] = progress;
+        this.gameState.setSkillProgress(
+          this.gameState.currentLearning,
+          progress
+        );
         console.log(`Set progress for current skill to ${progress}%!`);
       },
     };
@@ -234,9 +240,18 @@ export default class GameCheatCommands {
           this.getItem().execute(requiredItemId);
         }
 
-        // Directly add the item to inventory
-        this.gameState.ownedItems.add(itemId);
-        console.log(`Got item ${itemId}!`);
+        // Add money if needed for purchase
+        if (item.price > 0) {
+          this.gameState.addMoney(item.price);
+        }
+
+        // Use purchaseItem to properly handle the item acquisition
+        const success = this.gameState.purchaseItem(itemId);
+        if (success) {
+          console.log(`Got item ${itemId}!`);
+        } else {
+          console.log(`Failed to get item ${itemId}!`);
+        }
       },
     };
   }
