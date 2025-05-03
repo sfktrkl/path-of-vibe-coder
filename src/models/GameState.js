@@ -292,58 +292,62 @@ export default class GameState {
 
     // High-value jobs that show expertise
     const jobPoints = {
-      senior_web_dev: 15,
-      senior_devops: 15,
-      senior_game_dev: 15,
-      senior_mobile_dev: 15,
-      senior_ai_engineer: 20, // AI path gives bonus points
-      senior_security: 15,
-      web_architect: 25,
-      devops_architect: 25,
-      game_architect: 25,
-      mobile_architect: 25,
-      ai_architect: 30, // AI path gives bonus points
-      security_architect: 25,
+      senior_web_dev: 5,
+      senior_devops: 5,
+      senior_game_dev: 5,
+      senior_mobile_dev: 5,
+      senior_ai_engineer: 6, // AI path gives bonus points
+      senior_security: 5,
+      web_architect: 15,
+      devops_architect: 15,
+      game_architect: 15,
+      mobile_architect: 15,
+      ai_architect: 18, // AI path gives bonus points
+      security_architect: 15,
     };
 
-    // First check if player has at least one senior job by calculating job points
-    let seniorJobPoints = 0;
+    // Calculate total job points and check if has any architect job
+    let totalJobPoints = 0;
+    let hasArchitectJob = false;
     Object.entries(jobPoints).forEach(([jobId, points]) => {
       if (this.isJobUnlocked(jobId)) {
-        seniorJobPoints += points;
+        totalJobPoints += points;
+        if (jobId.includes("architect")) {
+          hasArchitectJob = true;
+        }
       }
     });
 
-    if (seniorJobPoints === 0) {
+    if (totalJobPoints === 0) {
       return false;
     }
 
     // High-value skills that show technical depth
     const skillPoints = {
-      machine_learning: 10,
-      deep_learning: 15,
-      tensorflow: 10,
-      algorithms: 8,
-      cpp: 8,
-      rust: 12,
-      kubernetes: 10,
-      security: 8,
-      cryptography: 10,
-      vulkan: 12,
+      machine_learning: 3,
+      deep_learning: 4,
+      tensorflow: 3,
+      algorithms: 2,
+      cpp: 2,
+      rust: 3,
+      kubernetes: 3,
+      security: 2,
+      cryptography: 3,
+      vulkan: 3,
     };
 
     // High-value items that show dedication
     const itemPoints = {
-      expert_salary_boost: 10,
-      expert_learning_boost: 10,
-      expert_work_boost: 10,
-      expert_skill_time_reducer: 10,
-      premium_boost_pack: 20,
-      ultimate_boost_pack: 30,
+      expert_salary_boost: 3,
+      expert_learning_boost: 3,
+      expert_work_boost: 3,
+      expert_skill_time_reducer: 3,
+      premium_boost_pack: 5,
+      ultimate_boost_pack: 7,
     };
 
     // Calculate total points
-    let totalPoints = seniorJobPoints; // Start with the job points we already calculated
+    let totalPoints = totalJobPoints;
 
     // Add points from skills
     Object.entries(skillPoints).forEach(([skillId, points]) => {
@@ -359,18 +363,19 @@ export default class GameState {
       }
     });
 
-    // Money bonus points (up to 20 points)
+    // Money bonus points (up to 5 points)
     const moneyThreshold = 100000;
     const moneyPoints = Math.min(
-      Math.floor(this.money / moneyThreshold) * 20,
-      20
+      Math.floor(this.money / moneyThreshold) * 5,
+      5
     );
     totalPoints += moneyPoints;
 
-    // Random chance based on total points
-    const baseChance = 5; // 5% base chance
-    const pointBonus = Math.min(totalPoints / 2, 45); // Up to 45% bonus from points
-    const unlockChance = baseChance + pointBonus;
+    // Calculate unlock chance
+    // If no architect job, cap at 10%
+    // If has architect job, cap at 25%
+    const maxChance = hasArchitectJob ? 25 : 10;
+    const unlockChance = Math.min(totalPoints / 2, maxChance);
     const randomChance = Math.random() * 100;
 
     // Unlock if chance succeeds
