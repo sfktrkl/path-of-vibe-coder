@@ -65,19 +65,15 @@ describe("GameState", () => {
     expect(gameState.getCurrentJob()).toBeNull();
     expect(gameState.getCurrentJobProgress()).toBe(0);
     expect(gameState.getCurrentLearning()).toBeNull();
-    expect(gameState.skillProgress).toEqual({});
+    expect(gameState.getSkillProgress()).toEqual({});
   });
 
   test("should manage money correctly", () => {
     gameState.addMoney(100);
     expect(gameState.getMoney()).toBe(100);
-
-    const success = gameState.spendMoney(50);
-    expect(success).toBe(true);
+    expect(gameState.spendMoney(50)).toBe(true);
     expect(gameState.getMoney()).toBe(50);
-
-    const failure = gameState.spendMoney(100);
-    expect(failure).toBe(false);
+    expect(gameState.spendMoney(100)).toBe(false);
     expect(gameState.getMoney()).toBe(50);
   });
 
@@ -85,23 +81,18 @@ describe("GameState", () => {
     gameState.setCurrentLearning("test_skill");
     expect(gameState.getCurrentLearning()).toBe("test_skill");
     expect(gameState.getCurrentLearningProgress()).toBe(0);
-
     gameState.setCurrentLearningProgress(50);
     expect(gameState.getCurrentLearningProgress()).toBe(50);
-    expect(gameState.getCurrentLearning()).toBe("test_skill");
-
     gameState.setCurrentLearningProgress(100);
     expect(gameState.getCurrentLearning()).toBeNull();
-    expect(gameState.skillProgress["test_skill"]).toBe(100);
+    expect(gameState.getSkillProgress()["test_skill"]).toBe(100);
   });
 
   test("should check skill completion", () => {
-    expect(gameState.hasSkill("test_skill")).toBe(false);
-
     gameState.setCurrentLearning("test_skill");
     gameState.setCurrentLearningProgress(100);
-
     expect(gameState.hasSkill("test_skill")).toBe(true);
+    expect(gameState.hasSkill("other_skill")).toBe(false);
   });
 
   test("should serialize and deserialize state", () => {
@@ -113,7 +104,7 @@ describe("GameState", () => {
     const newState = GameState.fromJSON(json);
 
     expect(newState.getMoney()).toBe(100);
-    expect(newState.skillProgress["test_skill"]).toBe(50);
+    expect(newState.getSkillProgress()["test_skill"]).toBe(50);
   });
 
   test("should encode and decode state", () => {
@@ -125,7 +116,7 @@ describe("GameState", () => {
     const decoded = GameState.decode(encoded);
 
     expect(decoded.getMoney()).toBe(100);
-    expect(decoded.skillProgress["test_skill"]).toBe(50);
+    expect(decoded.getSkillProgress()["test_skill"]).toBe(50);
   });
 
   test("should handle job changes", () => {

@@ -5,35 +5,35 @@ import { items } from "@data/items";
 export default class GameState {
   constructor() {
     // Character basic info
-    this.money = 0;
+    this._money = 0;
 
     // Job related
-    this.currentJob = null;
-    this.jobProgress = 0;
+    this._currentJob = null;
+    this._jobProgress = 0;
 
     // Skills and Learning progress
-    this.currentLearning = null;
-    this.skillProgress = {};
+    this._currentLearning = null;
+    this._skillProgress = {};
 
     // Shop items
-    this.ownedItems = new Set();
+    this._ownedItems = new Set();
 
     // AI Path state
-    this.aiPathUnlocked = false;
+    this._aiPathUnlocked = false;
   }
 
   // Money management
   getMoney() {
-    return this.money;
+    return this._money;
   }
 
   addMoney(amount) {
-    this.money += amount;
+    this._money += amount;
   }
 
   spendMoney(amount) {
-    if (this.money >= amount) {
-      this.money -= amount;
+    if (this._money >= amount) {
+      this._money -= amount;
       return true;
     }
     return false;
@@ -41,18 +41,18 @@ export default class GameState {
 
   // Job management
   getCurrentJob() {
-    return this.currentJob;
+    return this._currentJob;
   }
 
   setCurrentJob(jobId) {
     if (this.isJobUnlocked(jobId)) {
-      this.currentJob = jobId;
-      this.jobProgress = 0; // Reset progress when changing jobs
+      this._currentJob = jobId;
+      this._jobProgress = 0; // Reset progress when changing jobs
 
       // Apply initial job progress from effects
       const effects = this.getItemEffects();
       if (effects.initialJobProgress > 0) {
-        this.jobProgress = effects.initialJobProgress;
+        this._jobProgress = effects.initialJobProgress;
       }
 
       return true;
@@ -61,13 +61,13 @@ export default class GameState {
   }
 
   getCurrentJobProgress() {
-    if (!this.currentJob) return 0;
-    return this.jobProgress;
+    if (!this._currentJob) return 0;
+    return this._jobProgress;
   }
 
   setCurrentJobProgress(progress) {
-    if (this.currentJob) {
-      this.jobProgress = Math.min(Math.max(progress, 0), 100);
+    if (this._currentJob) {
+      this._jobProgress = Math.min(Math.max(progress, 0), 100);
 
       // Check for AI path unlock when job is completed
       if (progress >= 100) {
@@ -82,7 +82,7 @@ export default class GameState {
 
     // Check if required skills are met
     const hasRequiredSkills = job.requiredSkills.every(
-      (skill) => this.skillProgress[skill] >= 100
+      (skill) => this._skillProgress[skill] >= 100
     );
 
     // Check if required jobs are met
@@ -113,8 +113,8 @@ export default class GameState {
   }
 
   getCurrentJobInfo() {
-    if (!this.currentJob) return null;
-    return jobs[this.currentJob];
+    if (!this._currentJob) return null;
+    return jobs[this._currentJob];
   }
 
   getJobsByCategory() {
@@ -130,31 +130,31 @@ export default class GameState {
 
   // Skills management
   getCurrentLearning() {
-    return this.currentLearning;
+    return this._currentLearning;
   }
 
   setCurrentLearning(learningId) {
-    this.currentLearning = learningId;
+    this._currentLearning = learningId;
     // Only initialize progress if it doesn't exist
-    if (this.skillProgress[learningId] === undefined) {
-      this.skillProgress[learningId] = 0;
+    if (this._skillProgress[learningId] === undefined) {
+      this._skillProgress[learningId] = 0;
     }
   }
 
   getCurrentLearningProgress() {
-    if (!this.currentLearning) return 0;
-    return this.skillProgress[this.currentLearning] || 0;
+    if (!this._currentLearning) return 0;
+    return this._skillProgress[this._currentLearning] || 0;
   }
 
   setCurrentLearningProgress(progress) {
-    if (this.currentLearning) {
-      this.skillProgress[this.currentLearning] = Math.min(
+    if (this._currentLearning) {
+      this._skillProgress[this._currentLearning] = Math.min(
         Math.max(progress, 0),
         100
       );
       // When learning is complete, mark as learned
       if (progress >= 100) {
-        this.currentLearning = null;
+        this._currentLearning = null;
         // Check for AI path unlock when completing a skill
         this.checkAIPathUnlock();
       }
@@ -162,7 +162,11 @@ export default class GameState {
   }
 
   hasSkill(skillId) {
-    return this.skillProgress[skillId] >= 100;
+    return this._skillProgress[skillId] >= 100;
+  }
+
+  getSkillProgress() {
+    return { ...this._skillProgress };
   }
 
   isSkillAvailable(skillId) {
@@ -183,8 +187,8 @@ export default class GameState {
   }
 
   getCurrentSkillInfo() {
-    if (!this.currentLearning) return null;
-    return skills[this.currentLearning];
+    if (!this._currentLearning) return null;
+    return skills[this._currentLearning];
   }
 
   getSkillsByCategory() {
@@ -200,7 +204,11 @@ export default class GameState {
 
   // Shop management
   hasItem(itemId) {
-    return this.ownedItems.has(itemId);
+    return this._ownedItems.has(itemId);
+  }
+
+  getOwnedItems() {
+    return new Set(this._ownedItems);
   }
 
   isItemAvailable(itemId) {
@@ -230,7 +238,7 @@ export default class GameState {
     }
 
     // Purchase successful
-    this.ownedItems.add(itemId);
+    this._ownedItems.add(itemId);
     return true;
   }
 
@@ -245,7 +253,7 @@ export default class GameState {
     };
 
     // Track the highest value for each effect
-    this.ownedItems.forEach((itemId) => {
+    this._ownedItems.forEach((itemId) => {
       const item = items[itemId];
       if (!item) return;
 
@@ -290,12 +298,12 @@ export default class GameState {
 
   // AI Path management
   getAIPathUnlocked() {
-    return this.aiPathUnlocked;
+    return this._aiPathUnlocked;
   }
 
   checkAIPathUnlock() {
     // If already unlocked, return true
-    if (this.aiPathUnlocked) {
+    if (this._aiPathUnlocked) {
       return true;
     }
 
@@ -375,7 +383,7 @@ export default class GameState {
     // Money bonus points (up to 5 points)
     const moneyThreshold = 100000;
     const moneyPoints = Math.min(
-      Math.floor(this.money / moneyThreshold) * 5,
+      Math.floor(this._money / moneyThreshold) * 5,
       5
     );
     totalPoints += moneyPoints;
@@ -389,7 +397,7 @@ export default class GameState {
 
     // Unlock if chance succeeds
     if (randomChance < unlockChance) {
-      this.aiPathUnlocked = true;
+      this._aiPathUnlocked = true;
       return true;
     }
 
@@ -397,32 +405,32 @@ export default class GameState {
   }
 
   isAIPathUnlocked() {
-    return this.aiPathUnlocked;
+    return this._aiPathUnlocked;
   }
 
   // State serialization
   toJSON() {
     return {
-      money: this.money,
-      currentJob: this.currentJob,
-      jobProgress: this.jobProgress,
-      currentLearning: this.currentLearning,
-      skillProgress: this.skillProgress,
-      ownedItems: Array.from(this.ownedItems),
-      aiPathUnlocked: this.aiPathUnlocked,
+      money: this._money,
+      currentJob: this._currentJob,
+      jobProgress: this._jobProgress,
+      currentLearning: this._currentLearning,
+      skillProgress: this._skillProgress,
+      ownedItems: Array.from(this._ownedItems),
+      aiPathUnlocked: this._aiPathUnlocked,
     };
   }
 
   // State deserialization
   static fromJSON(json) {
     const state = new GameState();
-    state.money = json.money;
-    state.currentJob = json.currentJob;
-    state.jobProgress = json.jobProgress;
-    state.currentLearning = json.currentLearning;
-    state.skillProgress = json.skillProgress || {};
-    state.ownedItems = new Set(json.ownedItems || []);
-    state.aiPathUnlocked = json.aiPathUnlocked || false;
+    state._money = json.money;
+    state._currentJob = json.currentJob;
+    state._jobProgress = json.jobProgress;
+    state._currentLearning = json.currentLearning;
+    state._skillProgress = json.skillProgress || {};
+    state._ownedItems = new Set(json.ownedItems || []);
+    state._aiPathUnlocked = json.aiPathUnlocked || false;
     return state;
   }
 

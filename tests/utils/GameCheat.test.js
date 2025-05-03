@@ -70,7 +70,7 @@ describe("GameCheat", () => {
     // Try to execute a command without enabling cheats
     const result = mockWindow.addMoney(1000);
     expect(result).toBe("Cheats are not enabled!");
-    expect(gameState.money).toBe(0);
+    expect(gameState.getMoney()).toBe(0);
   });
 
   it("should execute commands when cheats are enabled", () => {
@@ -79,7 +79,7 @@ describe("GameCheat", () => {
 
     // Execute a command
     mockWindow.addMoney(1000);
-    expect(gameState.money).toBe(1000);
+    expect(gameState.getMoney()).toBe(1000);
   });
 
   it("should show help message when cheats are enabled", () => {
