@@ -11,6 +11,7 @@
         :currentView="currentView"
         :gameState="gameState"
         @update-game-state="handleGameStateUpdate"
+        @reset-game="resetGameState"
       />
     </main>
   </div>
@@ -61,6 +62,16 @@ export default {
 
       // Reinitialize theme manager
       this.themeManager = new ThemeManager(this.gameState);
+    },
+    resetGameState() {
+      // Deactivate current theme and cleanup before reset
+      if (this.themeManager) {
+        this.themeManager.deactivateTheme();
+      }
+
+      // Create a new game state
+      const newState = new GameState();
+      this.handleGameStateUpdate(newState);
     },
   },
   created() {

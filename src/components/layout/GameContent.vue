@@ -9,6 +9,7 @@
       v-if="currentView === 'save'"
       :gameState="gameState"
       @load-game="$emit('update-game-state', $event)"
+      @reset-game="$emit('reset-game')"
     />
   </div>
 </template>

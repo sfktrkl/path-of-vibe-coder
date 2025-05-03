@@ -1,10 +1,10 @@
-import { ref, watch } from "vue";
+import { watch } from "vue";
 import "../styles/themes/ai.css";
 import ParticleSystem from "./particle-system.js";
 
 class ThemeManager {
   constructor(gameState) {
-    this.currentTheme = ref("normal");
+    this.currentTheme = "normal";
     this.gameState = gameState;
     this.matrixBg = null;
     this.particleSystem = null;
@@ -28,7 +28,7 @@ class ThemeManager {
   }
 
   activateAITheme() {
-    this.currentTheme.value = "ai";
+    this.currentTheme = "ai";
     document.body.classList.add("theme-ai");
     this.addMatrixBackground();
 
@@ -44,7 +44,7 @@ class ThemeManager {
   }
 
   deactivateAITheme() {
-    this.currentTheme.value = "normal";
+    this.currentTheme = "normal";
     document.body.classList.remove("theme-ai");
     this.removeMatrixBackground();
 
@@ -52,6 +52,25 @@ class ThemeManager {
     if (this.particleSystem) {
       this.particleSystem.stop();
     }
+  }
+
+  deactivateTheme() {
+    const currentTheme = this.currentTheme;
+
+    // Handle different theme deactivations
+    switch (currentTheme) {
+      case "ai":
+        document.body.classList.remove("theme-ai");
+        this.removeMatrixBackground();
+        if (this.particleSystem) {
+          this.particleSystem.stop();
+        }
+        break;
+      // Add cases for other themes here if needed
+    }
+
+    // Reset to normal theme
+    this.currentTheme = "normal";
   }
 
   waitForContainer(callback) {
@@ -80,7 +99,7 @@ class ThemeManager {
   }
 
   getCurrentTheme() {
-    return this.currentTheme.value;
+    return this.currentTheme;
   }
 }
 

@@ -217,4 +217,89 @@ describe("SaveLoadView", () => {
       );
     });
   });
+
+  describe("Reset Game", () => {
+    it("should show confirmation state on first click", async () => {
+      const resetButton = wrapper.find(".reset-button");
+      expect(resetButton.text()).toBe("Reset Game");
+
+      await resetButton.trigger("click");
+
+      expect(resetButton.text()).toBe("Click again to confirm reset");
+      expect(resetButton.classes()).toContain("confirm-reset");
+    });
+
+    it("should reset game on second click within timeout", async () => {
+      const resetButton = wrapper.find(".reset-button");
+
+      // First click
+      await resetButton.trigger("click");
+      expect(resetButton.text()).toBe("Click again to confirm reset");
+
+      // Second click
+      await resetButton.trigger("click");
+
+      // Verify reset event was emitted
+      expect(wrapper.emitted("reset-game")).toBeTruthy();
+      expect(wrapper.find(".message").text()).toContain("Game has been reset!");
+    });
+
+    it("should return to normal state after timeout without second click", async () => {
+      jest.useFakeTimers();
+      const resetButton = wrapper.find(".reset-button");
+
+      // First click
+      await resetButton.trigger("click");
+      expect(resetButton.text()).toBe("Click again to confirm reset");
+
+      // Fast-forward time
+      jest.advanceTimersByTime(3000);
+      await wrapper.vm.$nextTick();
+
+      // Verify button returned to normal state
+      expect(resetButton.text()).toBe("Reset Game");
+      expect(resetButton.classes()).not.toContain("confirm-reset");
+
+      // Verify reset was not emitted
+      expect(wrapper.emitted("reset-game")).toBeFalsy();
+
+      jest.useRealTimers();
+    });
+
+    it("should reset confirmation state after timeout", async () => {
+      jest.useFakeTimers();
+      const resetButton = wrapper.find(".reset-button");
+
+      // First click
+      await resetButton.trigger("click");
+      expect(wrapper.vm.isConfirmingReset).toBe(true);
+
+      // Fast forward 3 seconds
+      jest.advanceTimersByTime(3000);
+      await wrapper.vm.$nextTick();
+
+      // Check that confirmation state is reset
+      expect(wrapper.vm.isConfirmingReset).toBe(false);
+
+      jest.useRealTimers();
+    });
+
+    it("should cleanup properly when unmounted", async () => {
+      jest.useFakeTimers();
+      const resetButton = wrapper.find(".reset-button");
+
+      // First click to enter confirmation state
+      await resetButton.trigger("click");
+      expect(wrapper.vm.isConfirmingReset).toBe(true);
+
+      // Unmount component
+      wrapper.unmount();
+
+      // Fast forward time
+      jest.advanceTimersByTime(3000);
+
+      // No errors should occur
+      jest.useRealTimers();
+    });
+  });
 });

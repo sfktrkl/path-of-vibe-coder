@@ -2,8 +2,8 @@
   <div class="save-load-view">
     <div class="save-load-container">
       <div class="save-load-section">
-        <h2>Save Game</h2>
-        <button class="save-button" @click="saveGame">Save Current Game</button>
+        <h2>Save</h2>
+        <button class="save-button" @click="saveGame">Save Game</button>
         <div
           v-if="saveMessage"
           class="message"
@@ -19,7 +19,7 @@
       </div>
 
       <div class="save-load-section">
-        <h2>Load Game</h2>
+        <h2>Load</h2>
         <div class="load-input">
           <input
             type="text"
@@ -35,6 +35,26 @@
           :class="{ success: loadSuccess }"
         >
           {{ loadMessage }}
+        </div>
+      </div>
+
+      <div class="save-load-section">
+        <h2>Reset</h2>
+        <button
+          class="reset-button"
+          :class="{ 'confirm-reset': isConfirmingReset }"
+          @click="handleResetClick"
+        >
+          {{
+            isConfirmingReset ? "Click again to confirm reset" : "Reset Game"
+          }}
+        </button>
+        <div
+          v-if="resetMessage"
+          class="message"
+          :class="{ success: resetSuccess }"
+        >
+          {{ resetMessage }}
         </div>
       </div>
     </div>
@@ -60,6 +80,10 @@ export default {
       loadSuccess: false,
       saveCode: "",
       loadCode: "",
+      resetMessage: "",
+      resetSuccess: false,
+      isConfirmingReset: false,
+      resetTimeout: null,
     };
   },
   methods: {
@@ -115,6 +139,29 @@ export default {
         setTimeout(() => {
           this.saveMessage = "";
         }, 3000);
+      }
+    },
+    resetGame() {
+      this.$emit("reset-game");
+      this.resetMessage = "Game has been reset!";
+      this.resetSuccess = true;
+      setTimeout(() => {
+        this.resetMessage = "";
+      }, 3000);
+    },
+    handleResetClick() {
+      if (!this.isConfirmingReset) {
+        // First click - enter confirmation state
+        this.isConfirmingReset = true;
+        // Reset confirmation after 3 seconds
+        this.resetTimeout = setTimeout(() => {
+          this.isConfirmingReset = false;
+        }, 3000);
+      } else {
+        // Second click - actually reset
+        clearTimeout(this.resetTimeout);
+        this.isConfirmingReset = false;
+        this.resetGame();
       }
     },
   },
@@ -176,6 +223,41 @@ h2 {
 .save-button:hover,
 .load-button:hover {
   background-color: #27ae60;
+  transform: scale(0.98);
+}
+
+.reset-button {
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: all 0.2s;
+  transform-origin: center;
+}
+
+.reset-button.confirm-reset {
+  background-color: #c0392b;
+  animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.reset-button:hover {
+  background-color: #c0392b;
   transform: scale(0.98);
 }
 
@@ -247,6 +329,12 @@ h2 {
 
 .code-input::placeholder {
   color: rgba(255, 255, 255, 0.5);
+}
+
+.warning-text {
+  color: #e74c3c;
+  margin: 0 0 1rem 0;
+  font-size: 0.9rem;
 }
 
 @media (max-width: 480px) {
