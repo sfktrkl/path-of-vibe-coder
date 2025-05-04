@@ -90,7 +90,7 @@ describe("ShopView.vue", () => {
 
     const unknownCategory = "unknown_category";
     const formattedName = newWrapper.vm.formatCategoryName(unknownCategory);
-    expect(formattedName).toBe(unknownCategory);
+    expect(formattedName).toBe("Unknown Category");
   });
 
   it("updates when gameState changes", async () => {

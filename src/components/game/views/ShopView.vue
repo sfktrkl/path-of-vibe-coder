@@ -50,15 +50,10 @@ export default {
   },
   methods: {
     formatCategoryName(category) {
-      const names = {
-        salary: "Salary Boosts",
-        learning: "Learning Speed",
-        work: "Work Speed",
-        skill: "Skill Time Reduction",
-        job: "Job Progress",
-        premium: "Premium Packs",
-      };
-      return names[category] || category;
+      return category
+        .split("_")
+        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(" ");
     },
   },
 };
