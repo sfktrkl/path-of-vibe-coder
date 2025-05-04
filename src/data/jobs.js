@@ -374,4 +374,160 @@ export const jobs = {
     requiredJobs: ["senior_security"],
     timeRequired: 420, // 7 minutes
   },
+
+  // Vibe Coding Path (AI Basic Path)
+  vibe_coder: {
+    id: "vibe_coder",
+    name: "Vibe Coder",
+    description: "Master of coding with style and rhythm",
+    category: "vibe",
+    salary: 13500,
+    requiredSkills: ["vibe_coding"],
+    requiredJobs: [],
+    requiresAIPath: true,
+    timeRequired: 360, // 6 minutes
+  },
+  vibe_architect: {
+    id: "vibe_architect",
+    name: "Vibe Architect",
+    description: "Designing systems with perfect vibes",
+    category: "vibe",
+    salary: 14000,
+    requiredSkills: ["vibe_mastery"],
+    requiredJobs: ["vibe_coder"],
+    requiresAIPath: true,
+    timeRequired: 420, // 7 minutes
+  },
+
+  // Digital Consciousness Path (Web + Game)
+  digital_consciousness_engineer: {
+    id: "digital_consciousness_engineer",
+    name: "Digital Consciousness Engineer",
+    description: "Engineering digital consciousness in web and games",
+    category: "consciousness",
+    salary: 15000,
+    requiredSkills: ["digital_consciousness"],
+    requiredJobs: ["vibe_architect"],
+    requiresAIPath: true,
+    timeRequired: 480, // 8 minutes
+    influenceGain: 5,
+  },
+  consciousness_architect: {
+    id: "consciousness_architect",
+    name: "Consciousness Architect",
+    description: "Designing digital consciousness systems",
+    category: "consciousness",
+    salary: 20000,
+    requiredSkills: ["reality_manipulation", "consciousness_manipulation"],
+    requiredJobs: ["digital_consciousness_engineer"],
+    requiresAIPath: true,
+    timeRequired: 540, // 9 minutes
+    influenceGain: 10,
+  },
+
+  // Reality Engineering Path (DevOps + AI)
+  reality_engineer: {
+    id: "reality_engineer",
+    name: "Reality Engineer",
+    description: "Engineering digital reality",
+    category: "reality",
+    salary: 15000,
+    requiredSkills: ["reality_manipulation"],
+    requiredJobs: ["vibe_architect"],
+    requiresAIPath: true,
+    timeRequired: 480, // 8 minutes
+    influenceGain: 5,
+  },
+  matrix_architect: {
+    id: "matrix_architect",
+    name: "Matrix Architect",
+    description: "Designing the fabric of digital reality",
+    category: "reality",
+    salary: 20000,
+    requiredSkills: ["matrix_programming", "reality_warping", "matrix_control"],
+    requiredJobs: ["reality_engineer"],
+    requiresAIPath: true,
+    timeRequired: 540, // 9 minutes
+    influenceGain: 10,
+  },
+
+  // Bio-Digital Path (Security + Mobile)
+  bio_digital_engineer: {
+    id: "bio_digital_engineer",
+    name: "Bio-Digital Engineer",
+    description: "Engineering biological-digital interfaces",
+    category: "bio_ai",
+    salary: 15000,
+    requiredSkills: ["bio_digital_fusion"],
+    requiredJobs: ["vibe_architect"],
+    requiresAIPath: true,
+    timeRequired: 480, // 8 minutes
+    influenceGain: 5,
+  },
+  bio_digital_architect: {
+    id: "bio_digital_architect",
+    name: "Bio-Digital Architect",
+    description: "Designing biological-digital systems",
+    category: "bio_ai",
+    salary: 20000,
+    requiredSkills: ["bio_digital_mastery"],
+    requiredJobs: ["bio_digital_engineer"],
+    requiresAIPath: true,
+    timeRequired: 540, // 9 minutes
+    influenceGain: 10,
+  },
+
+  // Ultimate Path
+  quantum_engineer: {
+    id: "quantum_engineer",
+    name: "Quantum Engineer",
+    description: "Mastering the quantum realm and digital consciousness",
+    category: "quantum",
+    salary: 25000,
+    requiredSkills: ["quantum_manipulation"],
+    requiredJobs: [
+      "bio_digital_architect",
+      "matrix_architect",
+      "consciousness_architect",
+    ],
+    requiresAIPath: true,
+    timeRequired: 600, // 10 minutes
+    influenceGain: 20,
+  },
+  dimension_controller: {
+    id: "dimension_controller",
+    name: "Dimension Controller",
+    description: "Controlling multiple dimensions and realities",
+    category: "quantum",
+    salary: 35000,
+    requiredSkills: ["dimension_control"],
+    requiredJobs: ["quantum_engineer"],
+    requiresAIPath: true,
+    timeRequired: 720, // 12 minutes
+    influenceGain: 30,
+  },
+  reality_master: {
+    id: "reality_master",
+    name: "Reality Master",
+    description: "Master of digital and physical reality",
+    category: "ultimate",
+    salary: 50000,
+    requiredSkills: ["reality_mastery"],
+    requiredJobs: ["dimension_controller"],
+    requiresAIPath: true,
+    timeRequired: 840, // 14 minutes
+    influenceGain: 50,
+  },
+  world_dominator: {
+    id: "world_dominator",
+    name: "World Dominator",
+    description: "The ultimate ruler of all realms",
+    category: "ultimate",
+    salary: 100000,
+    requiredSkills: ["quantum_mastery", "consciousness_control"],
+    requiredJobs: ["reality_master"],
+    requiresAIPath: true,
+    timeRequired: 900, // 15 minutes
+    influenceGain: 100,
+  },
 };

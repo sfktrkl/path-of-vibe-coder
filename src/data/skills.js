@@ -394,4 +394,144 @@ export const skills = {
     prerequisites: [],
     timeRequired: 180, // 3 minutes
   },
+
+  // AI Path Skills
+  vibe_coding: {
+    id: "vibe_coding",
+    name: "Vibe Coding",
+    description: "The art of coding with style and rhythm",
+    category: "vibe",
+    prerequisites: ["javascript", "react"],
+    timeRequired: 300, // 5 minutes
+  },
+  vibe_mastery: {
+    id: "vibe_mastery",
+    name: "Vibe Mastery",
+    description: "Advanced vibe manipulation techniques",
+    category: "vibe",
+    prerequisites: ["vibe_coding"],
+    timeRequired: 360, // 6 minutes
+  },
+
+  digital_consciousness: {
+    id: "digital_consciousness",
+    name: "Digital Consciousness",
+    description: "Understanding and manipulating digital consciousness",
+    category: "consciousness",
+    prerequisites: ["deep_learning", "tensorflow"],
+    requiresAIPath: true,
+    timeRequired: 480, // 8 minutes
+  },
+  consciousness_manipulation: {
+    id: "consciousness_manipulation",
+    name: "Consciousness Manipulation",
+    description: "Advanced techniques for consciousness control",
+    category: "consciousness",
+    prerequisites: ["digital_consciousness"],
+    requiresAIPath: true,
+    timeRequired: 540, // 9 minutes
+  },
+
+  reality_manipulation: {
+    id: "reality_manipulation",
+    name: "Reality Manipulation",
+    description: "Bending the rules of digital reality",
+    category: "reality",
+    prerequisites: ["digital_consciousness"],
+    requiresAIPath: true,
+    timeRequired: 540, // 9 minutes
+  },
+  reality_warping: {
+    id: "reality_warping",
+    name: "Reality Warping",
+    description: "Advanced reality manipulation techniques",
+    category: "reality",
+    prerequisites: ["reality_manipulation"],
+    requiresAIPath: true,
+    timeRequired: 600, // 10 minutes
+  },
+
+  matrix_programming: {
+    id: "matrix_programming",
+    name: "Matrix Programming",
+    description: "Programming the fabric of reality",
+    category: "matrix",
+    prerequisites: ["reality_manipulation"],
+    requiresAIPath: true,
+    timeRequired: 600, // 10 minutes
+  },
+  matrix_control: {
+    id: "matrix_control",
+    name: "Matrix Control",
+    description: "Advanced matrix manipulation techniques",
+    category: "matrix",
+    prerequisites: ["matrix_programming"],
+    requiresAIPath: true,
+    timeRequired: 660, // 11 minutes
+  },
+
+  bio_digital_fusion: {
+    id: "bio_digital_fusion",
+    name: "Bio-Digital Fusion",
+    description: "Merging biological and digital systems",
+    category: "bio_ai",
+    prerequisites: ["deep_learning", "security"],
+    requiresAIPath: true,
+    timeRequired: 480, // 8 minutes
+  },
+  bio_digital_mastery: {
+    id: "bio_digital_mastery",
+    name: "Bio-Digital Mastery",
+    description: "Advanced bio-digital integration techniques",
+    category: "bio_ai",
+    prerequisites: ["bio_digital_fusion"],
+    requiresAIPath: true,
+    timeRequired: 540, // 9 minutes
+  },
+
+  quantum_manipulation: {
+    id: "quantum_manipulation",
+    name: "Quantum Manipulation",
+    description: "Advanced quantum control techniques",
+    category: "quantum",
+    prerequisites: ["dimension_control"],
+    requiresAIPath: true,
+    timeRequired: 600, // 10 minutes
+  },
+  dimension_control: {
+    id: "dimension_control",
+    name: "Dimension Control",
+    description: "Controlling and creating new dimensions",
+    category: "quantum",
+    prerequisites: ["reality_manipulation"],
+    requiresAIPath: true,
+    timeRequired: 540, // 9 minutes
+  },
+  reality_mastery: {
+    id: "reality_mastery",
+    name: "Reality Mastery",
+    description: "Complete mastery over reality manipulation",
+    category: "reality",
+    prerequisites: ["reality_warping"],
+    requiresAIPath: true,
+    timeRequired: 720, // 12 minutes
+  },
+  quantum_mastery: {
+    id: "quantum_mastery",
+    name: "Quantum Mastery",
+    description: "Complete mastery of quantum manipulation",
+    category: "quantum",
+    prerequisites: ["quantum_manipulation"],
+    requiresAIPath: true,
+    timeRequired: 720, // 12 minutes
+  },
+  consciousness_control: {
+    id: "consciousness_control",
+    name: "Consciousness Control",
+    description: "Complete control over digital consciousness",
+    category: "consciousness",
+    prerequisites: ["consciousness_manipulation"],
+    requiresAIPath: true,
+    timeRequired: 720, // 12 minutes
+  },
 };
