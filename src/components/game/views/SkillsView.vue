@@ -13,41 +13,19 @@
 </template>
 
 <script>
-import { skills } from "@data/skills";
 import SkillItem from "@items/SkillItem.vue";
+import dataMixin from "@mixins/dataMixin";
 
 export default {
   name: "SkillsView",
   components: {
     SkillItem,
   },
+  mixins: [dataMixin],
   props: {
     gameState: {
       type: Object,
       required: true,
-    },
-  },
-  computed: {
-    sortedSkills() {
-      const allSkills = Object.values(skills);
-      const filteredSkills = allSkills.filter(
-        (skill) =>
-          this.gameState.hasSkill(skill.id) ||
-          this.gameState.isSkillAvailable(skill.id) ||
-          this.gameState.getCurrentLearning() === skill.id
-      );
-
-      // Sort skills: learned at the bottom, maintain original order for others
-      return filteredSkills.sort((a, b) => {
-        // If one is learned and the other isn't, put learned at the bottom
-        if (this.gameState.hasSkill(a.id) && !this.gameState.hasSkill(b.id))
-          return 1;
-        if (!this.gameState.hasSkill(a.id) && this.gameState.hasSkill(b.id))
-          return -1;
-
-        // For remaining skills, sort by prerequisites length
-        return a.prerequisites.length - b.prerequisites.length;
-      });
     },
   },
 };

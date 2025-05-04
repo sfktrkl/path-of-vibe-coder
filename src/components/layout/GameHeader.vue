@@ -55,17 +55,17 @@
 </template>
 
 <script>
-import { skills } from "@data/skills";
 import { jobs } from "@data/jobs";
+import { skills } from "@data/skills";
+import dataMixin from "@mixins/dataMixin";
 import ProgressBar from "@items/ProgressBar.vue";
-import itemEffectMixin from "@mixins/itemEffectMixin";
 
 export default {
   name: "GameHeader",
   components: {
     ProgressBar,
   },
-  mixins: [itemEffectMixin],
+  mixins: [dataMixin],
   props: {
     currentView: {
       type: String,

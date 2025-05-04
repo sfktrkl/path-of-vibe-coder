@@ -15,42 +15,19 @@
 </template>
 
 <script>
-import { jobs } from "@data/jobs";
 import JobItem from "@items/JobItem.vue";
+import dataMixin from "@mixins/dataMixin";
 
 export default {
   name: "JobsView",
   components: {
     JobItem,
   },
+  mixins: [dataMixin],
   props: {
     gameState: {
       type: Object,
       required: true,
-    },
-  },
-  computed: {
-    jobsByCategory() {
-      const categories = {};
-      Object.values(jobs).forEach((job) => {
-        // Always show the starting job
-        if (job.id === "everyday_normal_guy") {
-          if (!categories[job.category]) {
-            categories[job.category] = [];
-          }
-          categories[job.category].push(job);
-          return;
-        }
-
-        // For other jobs, check if they're available
-        if (this.gameState.isJobUnlocked(job.id)) {
-          if (!categories[job.category]) {
-            categories[job.category] = [];
-          }
-          categories[job.category].push(job);
-        }
-      });
-      return categories;
     },
   },
 };

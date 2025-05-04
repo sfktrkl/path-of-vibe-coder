@@ -15,45 +15,19 @@
 </template>
 
 <script>
-import { items } from "@data/items";
 import ShopItem from "@items/ShopItem.vue";
+import dataMixin from "@mixins/dataMixin";
 
 export default {
   name: "ShopView",
   components: {
     ShopItem,
   },
+  mixins: [dataMixin],
   props: {
     gameState: {
       type: Object,
       required: true,
-    },
-  },
-  computed: {
-    itemsByCategory() {
-      const categories = {};
-      Object.values(items).forEach((item) => {
-        // Check if item is available using GameState method
-        if (this.gameState.isItemAvailable(item.id)) {
-          if (!categories[item.category]) {
-            categories[item.category] = [];
-          }
-          categories[item.category].push(item);
-        }
-      });
-
-      // Filter out empty categories
-      return Object.fromEntries(
-        Object.entries(categories).filter(([, items]) => items.length > 0)
-      );
-    },
-  },
-  methods: {
-    formatCategoryName(category) {
-      return category
-        .split("_")
-        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-        .join(" ");
     },
   },
 };

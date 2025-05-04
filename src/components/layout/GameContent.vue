@@ -19,7 +19,6 @@ import SaveLoadView from "@views/SaveLoadView.vue";
 import SkillsView from "@views/SkillsView.vue";
 import JobsView from "@views/JobsView.vue";
 import ShopView from "@views/ShopView.vue";
-import viewMixin from "@mixins/viewMixin";
 
 export default {
   name: "GameContent",
@@ -29,7 +28,6 @@ export default {
     ShopView,
     SaveLoadView,
   },
-  mixins: [viewMixin],
   props: {
     currentView: {
       type: String,
@@ -38,6 +36,16 @@ export default {
     gameState: {
       type: Object,
       required: true,
+    },
+  },
+  computed: {
+    viewTitle() {
+      return {
+        job: "Career Path",
+        skills: "Skills",
+        shop: "Shop",
+        save: "Save & Load",
+      }[this.currentView];
     },
   },
 };

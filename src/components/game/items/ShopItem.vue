@@ -37,11 +37,11 @@
 
 <script>
 import "@styles/item-styles.css";
-import itemEffectMixin from "@mixins/itemEffectMixin";
+import dataMixin from "@mixins/dataMixin";
 
 export default {
   name: "ShopItem",
-  mixins: [itemEffectMixin],
+  mixins: [dataMixin],
   props: {
     item: {
       type: Object,
