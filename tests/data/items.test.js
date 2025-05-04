@@ -128,7 +128,7 @@ describe("Items Data Validation", () => {
         if (stat.includes("Multiplier")) {
           expect(value).toBeGreaterThan(0);
         }
-        if (stat === "skillTimeMultiplier") {
+        if (stat === "skillTimeReduction") {
           expect(value).toBeLessThanOrEqual(1);
         }
       });

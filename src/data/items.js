@@ -8,7 +8,7 @@ export const items = {
     price: 1000,
     requiredItems: [],
     stats: {
-      salaryMultiplier: 1.05,
+      salaryBoost: 1.05,
     },
   },
   advanced_salary_boost: {
@@ -19,7 +19,7 @@ export const items = {
     price: 2500,
     requiredItems: ["basic_salary_boost"],
     stats: {
-      salaryMultiplier: 1.1,
+      salaryBoost: 1.1,
     },
   },
   expert_salary_boost: {
@@ -30,7 +30,7 @@ export const items = {
     price: 5000,
     requiredItems: ["advanced_salary_boost"],
     stats: {
-      salaryMultiplier: 1.25,
+      salaryBoost: 1.25,
     },
   },
 
@@ -43,7 +43,7 @@ export const items = {
     price: 1500,
     requiredItems: [],
     stats: {
-      learningSpeedMultiplier: 1.05,
+      learningSpeed: 1.05,
     },
   },
   advanced_learning_boost: {
@@ -54,7 +54,7 @@ export const items = {
     price: 3500,
     requiredItems: ["basic_learning_boost"],
     stats: {
-      learningSpeedMultiplier: 1.1,
+      learningSpeed: 1.1,
     },
   },
   expert_learning_boost: {
@@ -65,7 +65,7 @@ export const items = {
     price: 7000,
     requiredItems: ["advanced_learning_boost"],
     stats: {
-      learningSpeedMultiplier: 1.25,
+      learningSpeed: 1.25,
     },
   },
 
@@ -78,7 +78,7 @@ export const items = {
     price: 2000,
     requiredItems: [],
     stats: {
-      workSpeedMultiplier: 1.05,
+      workSpeed: 1.05,
     },
   },
   advanced_work_boost: {
@@ -89,7 +89,7 @@ export const items = {
     price: 4500,
     requiredItems: ["basic_work_boost"],
     stats: {
-      workSpeedMultiplier: 1.1,
+      workSpeed: 1.1,
     },
   },
   expert_work_boost: {
@@ -100,7 +100,7 @@ export const items = {
     price: 9000,
     requiredItems: ["advanced_work_boost"],
     stats: {
-      workSpeedMultiplier: 1.25,
+      workSpeed: 1.25,
     },
   },
 
@@ -113,7 +113,7 @@ export const items = {
     price: 1800,
     requiredItems: [],
     stats: {
-      skillTimeMultiplier: 0.95,
+      skillTimeReduction: 0.95,
     },
   },
   advanced_skill_time_reducer: {
@@ -124,7 +124,7 @@ export const items = {
     price: 4000,
     requiredItems: ["basic_skill_time_reducer"],
     stats: {
-      skillTimeMultiplier: 0.9,
+      skillTimeReduction: 0.9,
     },
   },
   expert_skill_time_reducer: {
@@ -135,7 +135,7 @@ export const items = {
     price: 8000,
     requiredItems: ["advanced_skill_time_reducer"],
     stats: {
-      skillTimeMultiplier: 0.75,
+      skillTimeReduction: 0.75,
     },
   },
 
@@ -148,7 +148,7 @@ export const items = {
     price: 2200,
     requiredItems: [],
     stats: {
-      initialJobProgress: 5,
+      jobInitialProgress: 5,
     },
   },
   advanced_job_boost: {
@@ -159,7 +159,7 @@ export const items = {
     price: 5000,
     requiredItems: ["basic_job_boost"],
     stats: {
-      initialJobProgress: 10,
+      jobInitialProgress: 10,
     },
   },
   expert_job_boost: {
@@ -170,7 +170,7 @@ export const items = {
     price: 10000,
     requiredItems: ["advanced_job_boost"],
     stats: {
-      initialJobProgress: 25,
+      jobInitialProgress: 25,
     },
   },
 
@@ -189,11 +189,11 @@ export const items = {
       "expert_job_boost",
     ],
     stats: {
-      salaryMultiplier: 1.3,
-      learningSpeedMultiplier: 1.3,
-      workSpeedMultiplier: 1.3,
-      skillTimeMultiplier: 0.7,
-      initialJobProgress: 30,
+      salaryBoost: 1.3,
+      learningSpeed: 1.3,
+      workSpeed: 1.3,
+      skillTimeReduction: 0.7,
+      jobInitialProgress: 30,
     },
   },
   ultimate_boost_pack: {
@@ -204,11 +204,11 @@ export const items = {
     price: 30000,
     requiredItems: ["premium_boost_pack"],
     stats: {
-      salaryMultiplier: 1.5,
-      learningSpeedMultiplier: 1.5,
-      workSpeedMultiplier: 1.5,
-      skillTimeMultiplier: 0.5,
-      initialJobProgress: 50,
+      salaryBoost: 1.5,
+      learningSpeed: 1.5,
+      workSpeed: 1.5,
+      skillTimeReduction: 0.5,
+      jobInitialProgress: 50,
     },
   },
 };

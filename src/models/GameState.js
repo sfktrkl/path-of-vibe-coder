@@ -51,8 +51,8 @@ export default class GameState {
 
       // Apply initial job progress from effects
       const effects = this.getItemEffects();
-      if (effects.initialJobProgress > 0) {
-        this._jobProgress = effects.initialJobProgress;
+      if (effects.jobInitialProgress > 0) {
+        this._jobProgress = effects.jobInitialProgress;
       }
 
       return true;
@@ -265,11 +265,11 @@ export default class GameState {
   // Get item effects
   getItemEffects() {
     const effects = {
-      salaryMultiplier: 1,
-      learningSpeedMultiplier: 1,
-      workSpeedMultiplier: 1,
-      skillTimeMultiplier: 1,
-      initialJobProgress: 0,
+      salaryBoost: 1,
+      learningSpeed: 1,
+      workSpeed: 1,
+      skillTimeReduction: 1,
+      jobInitialProgress: 0,
     };
 
     // Track the highest value for each effect
@@ -279,33 +279,24 @@ export default class GameState {
 
       Object.entries(item.stats).forEach(([stat, value]) => {
         switch (stat) {
-          case "salaryMultiplier":
-            effects.salaryMultiplier = Math.max(
-              effects.salaryMultiplier,
+          case "salaryBoost":
+            effects.salaryBoost = Math.max(effects.salaryBoost, value);
+            break;
+          case "learningSpeed":
+            effects.learningSpeed = Math.max(effects.learningSpeed, value);
+            break;
+          case "workSpeed":
+            effects.workSpeed = Math.max(effects.workSpeed, value);
+            break;
+          case "skillTimeReduction":
+            effects.skillTimeReduction = Math.min(
+              effects.skillTimeReduction,
               value
             );
             break;
-          case "learningSpeedMultiplier":
-            effects.learningSpeedMultiplier = Math.max(
-              effects.learningSpeedMultiplier,
-              value
-            );
-            break;
-          case "workSpeedMultiplier":
-            effects.workSpeedMultiplier = Math.max(
-              effects.workSpeedMultiplier,
-              value
-            );
-            break;
-          case "skillTimeMultiplier":
-            effects.skillTimeMultiplier = Math.min(
-              effects.skillTimeMultiplier,
-              value
-            );
-            break;
-          case "initialJobProgress":
-            effects.initialJobProgress = Math.max(
-              effects.initialJobProgress,
+          case "jobInitialProgress":
+            effects.jobInitialProgress = Math.max(
+              effects.jobInitialProgress,
               value
             );
             break;

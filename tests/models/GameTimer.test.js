@@ -42,19 +42,19 @@ describe("GameTimer", () => {
       getCurrentJobInfo: jest.fn().mockReturnValue(null),
       setCurrentJobProgress: jest.fn(),
       getItemEffects: () => ({
-        salaryMultiplier: 1,
-        learningSpeedMultiplier: 1,
-        workSpeedMultiplier: 1,
-        skillTimeMultiplier: 1,
-        initialJobProgress: 0,
+        salaryBoost: 1,
+        learningSpeed: 1,
+        workSpeed: 1,
+        skillTimeReduction: 1,
+        jobInitialProgress: 0,
       }),
       setCurrentJob: jest.fn().mockImplementation(function (jobId) {
         this.getCurrentJob.mockReturnValue(jobId);
         this.getCurrentJobProgress.mockReturnValue(0);
         const effects = this.getItemEffects();
-        if (effects.initialJobProgress > 0) {
+        if (effects.jobInitialProgress > 0) {
           this.getCurrentJobProgress.mockReturnValue(
-            effects.initialJobProgress
+            effects.jobInitialProgress
           );
         }
         return true;
@@ -250,11 +250,11 @@ describe("GameTimer", () => {
 
       // Set 2x salary multiplier
       mockGameState.getItemEffects = () => ({
-        salaryMultiplier: 2,
-        learningSpeedMultiplier: 1,
-        workSpeedMultiplier: 1,
-        skillTimeMultiplier: 1,
-        initialJobProgress: 0,
+        salaryBoost: 2,
+        learningSpeed: 1,
+        workSpeed: 1,
+        skillTimeReduction: 1,
+        jobInitialProgress: 0,
       });
 
       timer.start();
@@ -272,11 +272,11 @@ describe("GameTimer", () => {
 
       // Set 2x learning speed
       mockGameState.getItemEffects = () => ({
-        salaryMultiplier: 1,
-        learningSpeedMultiplier: 2,
-        workSpeedMultiplier: 1,
-        skillTimeMultiplier: 1,
-        initialJobProgress: 0,
+        salaryBoost: 1,
+        learningSpeed: 2,
+        workSpeed: 1,
+        skillTimeReduction: 1,
+        jobInitialProgress: 0,
       });
 
       timer.start();
@@ -295,11 +295,11 @@ describe("GameTimer", () => {
 
       // Set 2x work speed
       mockGameState.getItemEffects = () => ({
-        salaryMultiplier: 1,
-        learningSpeedMultiplier: 1,
-        workSpeedMultiplier: 2,
-        skillTimeMultiplier: 1,
-        initialJobProgress: 0,
+        salaryBoost: 1,
+        learningSpeed: 1,
+        workSpeed: 2,
+        skillTimeReduction: 1,
+        jobInitialProgress: 0,
       });
 
       timer.start();
@@ -317,11 +317,11 @@ describe("GameTimer", () => {
 
       // Set 0.5x skill time (2x faster)
       mockGameState.getItemEffects = () => ({
-        salaryMultiplier: 1,
-        learningSpeedMultiplier: 1,
-        workSpeedMultiplier: 1,
-        skillTimeMultiplier: 0.5,
-        initialJobProgress: 0,
+        salaryBoost: 1,
+        learningSpeed: 1,
+        workSpeed: 1,
+        skillTimeReduction: 0.5,
+        jobInitialProgress: 0,
       });
 
       timer.start();
@@ -340,11 +340,11 @@ describe("GameTimer", () => {
 
       // Set 50% initial progress
       mockGameState.getItemEffects = () => ({
-        salaryMultiplier: 1,
-        learningSpeedMultiplier: 1,
-        workSpeedMultiplier: 1,
-        skillTimeMultiplier: 1,
-        initialJobProgress: 50,
+        salaryBoost: 1,
+        learningSpeed: 1,
+        workSpeed: 1,
+        skillTimeReduction: 1,
+        jobInitialProgress: 50,
       });
 
       mockGameState.getCurrentJobProgress.mockReturnValue(50); // Initial progress
@@ -370,11 +370,11 @@ describe("GameTimer", () => {
 
       // Set all effects
       mockGameState.getItemEffects = () => ({
-        salaryMultiplier: 2,
-        learningSpeedMultiplier: 2,
-        workSpeedMultiplier: 2,
-        skillTimeMultiplier: 0.5,
-        initialJobProgress: 20,
+        salaryBoost: 2,
+        learningSpeed: 2,
+        workSpeed: 2,
+        skillTimeReduction: 0.5,
+        jobInitialProgress: 20,
       });
 
       mockGameState.getCurrentJobProgress.mockReturnValue(20); // Initial progress
@@ -399,11 +399,11 @@ describe("GameTimer", () => {
 
       // Set 30% initial progress
       mockGameState.getItemEffects = () => ({
-        salaryMultiplier: 1,
-        learningSpeedMultiplier: 1,
-        workSpeedMultiplier: 1,
-        skillTimeMultiplier: 1,
-        initialJobProgress: 30,
+        salaryBoost: 1,
+        learningSpeed: 1,
+        workSpeed: 1,
+        skillTimeReduction: 1,
+        jobInitialProgress: 30,
       });
 
       mockGameState.getCurrentJobProgress.mockReturnValue(90);

@@ -23,11 +23,11 @@ describe("GameHeader.vue", () => {
     getCurrentJobProgress: () => 0,
     getCurrentLearningProgress: () => 0,
     getItemEffects: () => ({
-      salaryMultiplier: 1,
-      learningSpeedMultiplier: 1,
-      workSpeedMultiplier: 1,
-      skillTimeMultiplier: 1,
-      initialJobProgress: 0,
+      salaryBoost: 1,
+      learningSpeed: 1,
+      workSpeed: 1,
+      skillTimeReduction: 1,
+      jobInitialProgress: 0,
     }),
   };
 
@@ -121,11 +121,11 @@ describe("GameHeader.vue", () => {
       ...mockGameState,
       getCurrentJob: () => "test_job",
       getItemEffects: () => ({
-        salaryMultiplier: 1.5,
-        learningSpeedMultiplier: 1.25,
-        workSpeedMultiplier: 1.1,
-        skillTimeMultiplier: 0.8,
-        initialJobProgress: 15,
+        salaryBoost: 1.5,
+        learningSpeed: 1.25,
+        workSpeed: 1.1,
+        skillTimeReduction: 0.8,
+        jobInitialProgress: 15,
       }),
     };
     await wrapper.setProps({
@@ -162,8 +162,8 @@ describe("GameHeader.vue", () => {
       ...mockGameState,
       getCurrentJob: () => null,
       getItemEffects: () => ({
-        salaryMultiplier: 1.5,
-        learningSpeedMultiplier: 1.25,
+        salaryBoost: 1.5,
+        learningSpeed: 1.25,
       }),
     };
     await wrapper.setProps({

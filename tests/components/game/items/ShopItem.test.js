@@ -12,10 +12,10 @@ describe("ShopItem", () => {
     description: "A test item description",
     price: 100,
     stats: {
-      salaryMultiplier: 1.5,
-      learningSpeedMultiplier: 1.2,
-      skillTimeMultiplier: 0.8,
-      initialJobProgress: 10,
+      salaryBoost: 1.5,
+      learningSpeed: 1.2,
+      skillTimeReduction: 0.8,
+      jobInitialProgress: 10,
     },
     requiredItems: [],
   };
@@ -62,18 +62,18 @@ describe("ShopItem", () => {
     expect(learningStat.find(".stat-value").text()).toBe("+20%");
 
     // Check skill time stat
-    const skillTimeStat = stats.at(2);
-    expect(skillTimeStat.find(".stat-name").text()).toBe(
+    const skillTimeReductionStat = stats.at(2);
+    expect(skillTimeReductionStat.find(".stat-name").text()).toBe(
       "Skill Time Reduction:"
     );
-    expect(skillTimeStat.find(".stat-value").text()).toBe("+20%");
+    expect(skillTimeReductionStat.find(".stat-value").text()).toBe("+20%");
 
     // Check job progress stat
-    const jobProgressStat = stats.at(3);
-    expect(jobProgressStat.find(".stat-name").text()).toBe(
+    const jobInitialProgressStat = stats.at(3);
+    expect(jobInitialProgressStat.find(".stat-name").text()).toBe(
       "Job Initial Progress:"
     );
-    expect(jobProgressStat.find(".stat-value").text()).toBe("+10%");
+    expect(jobInitialProgressStat.find(".stat-value").text()).toBe("+10%");
   });
 
   it("shows owned badge when item is owned", async () => {
