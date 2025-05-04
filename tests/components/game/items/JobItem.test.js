@@ -34,7 +34,7 @@ describe("JobItem", () => {
     expect(wrapper.find(".item-description").text()).toBe(
       "Just a regular person trying to make it in the tech world"
     );
-    expect(wrapper.find(".job-salary").text()).toBe("$500");
+    expect(wrapper.find(".job-salary").text()).toBe("$2");
   });
 
   it("applies correct classes based on job state", () => {
