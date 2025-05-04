@@ -83,7 +83,7 @@ export const jobs = {
     name: "Web Development Intern",
     description: "Entry-level web development position",
     category: "web",
-    salary: 2000,
+    salary: 3500,
     requiredSkills: ["html", "css", "javascript", "computer_basics", "typing"],
     requiredJobs: ["junior_tech"],
     timeRequired: 180, // 3 minutes
@@ -93,7 +93,7 @@ export const jobs = {
     name: "Junior Web Developer",
     description: "Beginner web developer position",
     category: "web",
-    salary: 3500,
+    salary: 4000,
     requiredSkills: ["html", "css", "javascript", "react"],
     requiredJobs: ["web_intern"],
     timeRequired: 240, // 4 minutes
@@ -152,7 +152,7 @@ export const jobs = {
     name: "DevOps Intern",
     description: "Entry-level DevOps position",
     category: "devops",
-    salary: 2500,
+    salary: 3500,
     requiredSkills: ["git", "linux", "computer_basics", "typing"],
     requiredJobs: ["junior_tech"],
     timeRequired: 180, // 3 minutes
@@ -212,7 +212,7 @@ export const jobs = {
     name: "Game Development Intern",
     description: "Entry-level game development position",
     category: "game",
-    salary: 2000,
+    salary: 3500,
     requiredSkills: ["cpp", "algorithms", "computer_basics", "typing"],
     requiredJobs: ["junior_tech"],
     timeRequired: 180, // 3 minutes
@@ -222,7 +222,7 @@ export const jobs = {
     name: "Junior Game Developer",
     description: "Beginner game development position",
     category: "game",
-    salary: 3500,
+    salary: 4000,
     requiredSkills: ["cpp", "algorithms", "unity"],
     requiredJobs: ["game_intern"],
     timeRequired: 240, // 4 minutes
@@ -271,7 +271,7 @@ export const jobs = {
     name: "Mobile Development Intern",
     description: "Entry-level mobile development position",
     category: "mobile",
-    salary: 2000,
+    salary: 3500,
     requiredSkills: ["java", "html", "computer_basics", "typing"],
     requiredJobs: ["junior_tech"],
     timeRequired: 180, // 3 minutes
@@ -281,7 +281,7 @@ export const jobs = {
     name: "Junior Mobile Developer",
     description: "Beginner mobile development position",
     category: "mobile",
-    salary: 3500,
+    salary: 4000,
     requiredSkills: ["java", "html", "android"],
     requiredJobs: ["mobile_intern"],
     timeRequired: 240, // 4 minutes
@@ -330,7 +330,7 @@ export const jobs = {
     name: "AI/ML Intern",
     description: "Entry-level AI/ML position",
     category: "ai",
-    salary: 2500,
+    salary: 3500,
     requiredSkills: ["python", "algorithms", "computer_basics", "typing"],
     requiredJobs: ["junior_tech"],
     timeRequired: 180, // 3 minutes
@@ -395,7 +395,7 @@ export const jobs = {
     name: "Security Intern",
     description: "Entry-level security position",
     category: "security",
-    salary: 2500,
+    salary: 3500,
     requiredSkills: ["security", "networking", "computer_basics", "typing"],
     requiredJobs: ["junior_tech"],
     timeRequired: 180, // 3 minutes
