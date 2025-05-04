@@ -44,6 +44,21 @@ export default {
     // From JobsView.vue
     jobsByCategory() {
       const categories = {};
+      const isAIPathUnlocked = this.gameState.getAIPathUnlocked();
+      const currentJob = this.gameState.getCurrentJob();
+
+      // First pass: collect all available architect jobs and their categories
+      const availableArchitectJobs = new Map();
+      Object.values(jobs).forEach((job) => {
+        if (
+          !job.requiresAIPath &&
+          job.id.includes("_architect") &&
+          this.gameState.isJobUnlocked(job.id)
+        ) {
+          availableArchitectJobs.set(job.category, job);
+        }
+      });
+
       Object.values(jobs).forEach((job) => {
         // Always show the starting job
         if (job.id === "everyday_normal_guy") {
@@ -56,13 +71,52 @@ export default {
 
         // For other jobs, check if they're available
         if (this.gameState.isJobUnlocked(job.id)) {
-          if (!categories[job.category]) {
-            categories[job.category] = [];
+          // If AI path is unlocked
+          if (isAIPathUnlocked) {
+            // Show jobs that require AI path in their original categories
+            if (job.requiresAIPath) {
+              if (!categories[job.category]) {
+                categories[job.category] = [];
+              }
+              categories[job.category].push(job);
+            } else {
+              // Handle architect jobs for non-AI path
+              if (job.id.includes("_architect")) {
+                if (!categories["vibe"]) {
+                  categories["vibe"] = [];
+                }
+                categories["vibe"].push(job);
+              }
+              // Handle senior jobs non-AI path only
+              else if (job.id.includes("senior_")) {
+                // Show senior job if there's no architect job in its category
+                // OR if this senior job is currently selected
+                if (
+                  job.id === currentJob ||
+                  !availableArchitectJobs.has(job.category)
+                ) {
+                  if (!categories["vibe"]) {
+                    categories["vibe"] = [];
+                  }
+                  categories["vibe"].push(job);
+                }
+              }
+            }
           }
-          categories[job.category].push(job);
+          // If AI path is not unlocked, show all available jobs in their original categories
+          else {
+            if (!categories[job.category]) {
+              categories[job.category] = [];
+            }
+            categories[job.category].push(job);
+          }
         }
       });
-      return categories;
+
+      // Filter out empty categories
+      return Object.fromEntries(
+        Object.entries(categories).filter(([, jobs]) => jobs.length > 0)
+      );
     },
 
     // From ShopView.vue

@@ -13,6 +13,7 @@ describe("JobsView.vue", () => {
     getCurrentJob: jest.fn().mockReturnValue(null),
     setCurrentJob: jest.fn(),
     getCurrentJobProgress: jest.fn().mockReturnValue(0),
+    getAIPathUnlocked: jest.fn().mockReturnValue(false),
   };
 
   beforeEach(() => {
@@ -20,6 +21,7 @@ describe("JobsView.vue", () => {
     gameStateMock.isJobUnlocked.mockReturnValue(false);
     gameStateMock.getCurrentJob.mockReturnValue(null);
     gameStateMock.getCurrentJobProgress.mockReturnValue(0);
+    gameStateMock.getAIPathUnlocked.mockReturnValue(false);
 
     wrapper = mount(JobsView, {
       propsData: { gameState: gameStateMock },
@@ -154,5 +156,95 @@ describe("JobsView.vue", () => {
         });
       }
     );
+  });
+
+  it("shows only AI path jobs and senior/architect jobs in vibe category when AI path is unlocked", () => {
+    // Mock AI path as unlocked
+    gameStateMock.getAIPathUnlocked.mockReturnValue(true);
+
+    // Mock specific jobs as unlocked
+    const webArchitect = Object.values(jobs).find(
+      (job) => job.id === "web_architect"
+    );
+    const seniorWebDev = Object.values(jobs).find(
+      (job) => job.id === "senior_web_dev"
+    );
+    const vibeArchitect = Object.values(jobs).find(
+      (job) => job.id === "vibe_architect"
+    );
+    const startingJob = Object.values(jobs).find(
+      (job) => job.id === "everyday_normal_guy"
+    );
+
+    // Set senior job as current to test the case where both senior and architect jobs are shown
+    gameStateMock.getCurrentJob.mockReturnValue(seniorWebDev.id);
+
+    gameStateMock.isJobUnlocked.mockImplementation((jobId) =>
+      [
+        webArchitect.id,
+        seniorWebDev.id,
+        vibeArchitect.id,
+        startingJob.id,
+      ].includes(jobId)
+    );
+
+    const newWrapper = mount(JobsView, {
+      propsData: { gameState: gameStateMock },
+    });
+
+    // Get all displayed jobs
+    const displayedJobs = Object.values(newWrapper.vm.jobsByCategory).flat();
+
+    // Verify each displayed job is in the correct category
+    displayedJobs.forEach((job) => {
+      if (job.id === "everyday_normal_guy") {
+        expect(newWrapper.vm.jobsByCategory["basic"]).toContainEqual(job);
+      } else if (job.requiresAIPath) {
+        // AI path jobs should stay in their original categories
+        expect(newWrapper.vm.jobsByCategory[job.category]).toContainEqual(job);
+      } else if (job.id.includes("_architect") || job.id.includes("senior_")) {
+        // Non-AI path architect and senior jobs should be in vibe category
+        expect(newWrapper.vm.jobsByCategory["vibe"]).toContainEqual(job);
+      }
+    });
+
+    // Verify vibe category contains both senior and architect jobs when senior is selected
+    const vibeJobs = newWrapper.vm.jobsByCategory["vibe"] || [];
+    expect(vibeJobs).toContainEqual(webArchitect);
+    expect(vibeJobs).toContainEqual(seniorWebDev);
+
+    // Verify vibe_architect is in its original category (vibe)
+    expect(newWrapper.vm.jobsByCategory["vibe"]).toContainEqual(vibeArchitect);
+  });
+
+  it("shows both senior and architect jobs when senior job is selected when AI path is unlocked", () => {
+    // Mock AI path as unlocked
+    gameStateMock.getAIPathUnlocked.mockReturnValue(true);
+
+    // Get specific jobs from the data
+    const seniorWebDev = Object.values(jobs).find(
+      (job) => job.id === "senior_web_dev"
+    );
+    const webArchitect = Object.values(jobs).find(
+      (job) => job.id === "web_architect"
+    );
+    const startingJob = Object.values(jobs).find(
+      (job) => job.id === "everyday_normal_guy"
+    );
+
+    // Mock these jobs as unlocked and set senior job as current
+    gameStateMock.isJobUnlocked.mockImplementation((jobId) =>
+      [seniorWebDev.id, webArchitect.id, startingJob.id].includes(jobId)
+    );
+    gameStateMock.getCurrentJob.mockReturnValue(seniorWebDev.id);
+
+    const newWrapper = mount(JobsView, {
+      propsData: { gameState: gameStateMock },
+    });
+
+    // Verify both jobs are in vibe category
+    const vibeJobs = newWrapper.vm.jobsByCategory["vibe"] || [];
+    expect(vibeJobs).toContainEqual(seniorWebDev);
+    expect(vibeJobs).toContainEqual(webArchitect);
   });
 });
