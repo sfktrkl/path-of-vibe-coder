@@ -32,7 +32,7 @@ export default {
       }
     },
 
-    // From ShopView.vue
+    // From JobsView.vue and ShopView.vue
     formatCategoryName(category) {
       return category
         .split("_")

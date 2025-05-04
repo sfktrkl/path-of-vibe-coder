@@ -1,7 +1,7 @@
 <template>
   <div class="jobs-view">
     <div v-for="(jobs, category) in jobsByCategory" :key="category">
-      <h4>{{ category.charAt(0).toUpperCase() + category.slice(1) }}</h4>
+      <h4>{{ formatCategoryName(category) }}</h4>
       <div class="jobs-list">
         <JobItem
           v-for="job in jobs"

@@ -79,12 +79,16 @@ describe("JobsView.vue", () => {
       propsData: { gameState: gameStateMock },
     });
 
-    const categories = Object.keys(newWrapper.vm.jobsByCategory);
-    categories.forEach((category) => {
-      const capitalizedCategory =
-        category.charAt(0).toUpperCase() + category.slice(1);
-      const displayedCategory = newWrapper.text().includes(capitalizedCategory);
-      expect(displayedCategory).toBe(true);
+    // Test with some known category names
+    const testCases = [
+      { input: "web_development", expected: "Web Development" },
+      { input: "basic", expected: "Basic" },
+      { input: "vibe", expected: "Vibe" },
+    ];
+
+    testCases.forEach(({ input, expected }) => {
+      const formattedName = newWrapper.vm.formatCategoryName(input);
+      expect(formattedName).toBe(expected);
     });
   });
 
