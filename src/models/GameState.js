@@ -80,6 +80,11 @@ export default class GameState {
     const job = jobs[jobId];
     if (!job) return false;
 
+    // Check if job requires AI path and if AI path is not unlocked
+    if (job.requiresAIPath === true && !this._aiPathUnlocked) {
+      return false;
+    }
+
     // Check if required skills are met
     const hasRequiredSkills = job.requiredSkills.every(
       (skill) => this._skillProgress[skill] >= 100
@@ -173,6 +178,11 @@ export default class GameState {
     const skill = skills[skillId];
     if (!skill) return false;
 
+    // Check if skill requires AI path and if AI path is not unlocked
+    if (skill.requiresAIPath === true && !this._aiPathUnlocked) {
+      return false;
+    }
+
     return skill.prerequisites.every((prereq) => this.hasSkill(prereq));
   }
 
@@ -215,6 +225,11 @@ export default class GameState {
     const item = items[itemId];
     if (!item) return false;
 
+    // Check if item requires AI path and if AI path is not unlocked
+    if (item.requiresAIPath === true && !this._aiPathUnlocked) {
+      return false;
+    }
+
     return item.requiredItems.every((requiredItem) =>
       this.hasItem(requiredItem)
     );
@@ -226,6 +241,11 @@ export default class GameState {
 
     // Check if already owned
     if (this.hasItem(itemId)) return false;
+
+    // Check if item requires AI path and if AI path is not unlocked
+    if (item.requiresAIPath === true && !this._aiPathUnlocked) {
+      return false;
+    }
 
     // Check if requirements are met using isItemAvailable
     if (!this.isItemAvailable(itemId)) {
