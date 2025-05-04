@@ -109,13 +109,56 @@ describe("Jobs Data Validation", () => {
     expect(reachable.size).toBe(Object.keys(jobs).length);
   });
 
-  // Test that job progression makes sense (salary increases)
+  // Test that job progression has increasing salaries
   test("job progression has increasing salaries", () => {
     Object.values(jobs).forEach((job) => {
       job.requiredJobs.forEach((reqJobId) => {
         const reqJob = jobs[reqJobId];
         expect(job.salary).toBeGreaterThan(reqJob.salary);
       });
+    });
+  });
+
+  // Test that no job duplicates skills from its prerequisite jobs
+  test("no duplicate skills in job requirements", () => {
+    // Helper function to get all skills from a job and its prerequisites
+    function getAllPrerequisiteSkills(jobId, visited = new Set()) {
+      if (visited.has(jobId)) return new Set();
+      visited.add(jobId);
+
+      const job = jobs[jobId];
+      const allSkills = new Set(job.requiredSkills);
+
+      // Add skills from prerequisite jobs
+      job.requiredJobs.forEach((reqJobId) => {
+        const prereqSkills = getAllPrerequisiteSkills(reqJobId, visited);
+        prereqSkills.forEach((skill) => allSkills.add(skill));
+      });
+
+      return allSkills;
+    }
+
+    // Check each job
+    Object.values(jobs).forEach((job) => {
+      // Get all skills from prerequisite jobs
+      const prereqSkills = new Set();
+      job.requiredJobs.forEach((reqJobId) => {
+        const skills = getAllPrerequisiteSkills(reqJobId);
+        skills.forEach((skill) => prereqSkills.add(skill));
+      });
+
+      // Check if any required skill is already in prerequisites
+      const duplicateSkills = job.requiredSkills.filter((skill) =>
+        prereqSkills.has(skill)
+      );
+
+      if (duplicateSkills.length > 0) {
+        console.log(
+          `Job ${job.id} has duplicate skills: ${duplicateSkills.join(", ")}`
+        );
+      }
+
+      expect(duplicateSkills.length).toBe(0);
     });
   });
 });

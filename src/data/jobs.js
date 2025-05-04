@@ -28,7 +28,7 @@ export const jobs = {
     description: "Basic data entry work",
     category: "basic",
     salary: 1500,
-    requiredSkills: ["computer_basics", "typing"],
+    requiredSkills: ["typing"],
     requiredJobs: ["computer_trainee"],
     timeRequired: 90, // 1.5 minutes
   },
@@ -38,7 +38,7 @@ export const jobs = {
     description: "Basic office work with computers",
     category: "basic",
     salary: 2000,
-    requiredSkills: ["computer_basics", "typing", "internet_basics"],
+    requiredSkills: ["internet_basics"],
     requiredJobs: ["data_entry"],
     timeRequired: 120, // 2 minutes
   },
@@ -48,13 +48,7 @@ export const jobs = {
     description: "Basic IT support work",
     category: "basic",
     salary: 2500,
-    requiredSkills: [
-      "computer_basics",
-      "typing",
-      "internet_basics",
-      "problem_solving",
-      "linux",
-    ],
+    requiredSkills: ["problem_solving", "linux"],
     requiredJobs: ["office_assistant"],
     timeRequired: 180, // 3 minutes
   },
@@ -64,15 +58,7 @@ export const jobs = {
     description: "Entry-level technical work",
     category: "basic",
     salary: 3000,
-    requiredSkills: [
-      "computer_basics",
-      "typing",
-      "internet_basics",
-      "problem_solving",
-      "logic",
-      "git",
-      "html",
-    ],
+    requiredSkills: ["logic", "git", "html"],
     requiredJobs: ["it_support"],
     timeRequired: 240, // 4 minutes
   },
@@ -84,7 +70,7 @@ export const jobs = {
     description: "Entry-level web development position",
     category: "web",
     salary: 3500,
-    requiredSkills: ["html", "css", "javascript", "computer_basics", "typing"],
+    requiredSkills: ["css", "javascript"],
     requiredJobs: ["junior_tech"],
     timeRequired: 180, // 3 minutes
   },
@@ -94,7 +80,7 @@ export const jobs = {
     description: "Beginner web developer position",
     category: "web",
     salary: 4000,
-    requiredSkills: ["html", "css", "javascript", "react", "vue"],
+    requiredSkills: ["react", "vue"],
     requiredJobs: ["web_intern"],
     timeRequired: 240, // 4 minutes
   },
@@ -104,15 +90,7 @@ export const jobs = {
     description: "Mid-level web developer position",
     category: "web",
     salary: 5000,
-    requiredSkills: [
-      "html",
-      "css",
-      "javascript",
-      "react",
-      "nodejs",
-      "express",
-      "vue",
-    ],
+    requiredSkills: ["nodejs", "express"],
     requiredJobs: ["junior_web_dev"],
     timeRequired: 300, // 5 minutes
   },
@@ -122,15 +100,7 @@ export const jobs = {
     description: "Senior web developer position",
     category: "web",
     salary: 8000,
-    requiredSkills: [
-      "html",
-      "css",
-      "javascript",
-      "react",
-      "nodejs",
-      "express",
-      "typescript",
-    ],
+    requiredSkills: ["typescript"],
     requiredJobs: ["web_dev"],
     timeRequired: 360, // 6 minutes
   },
@@ -140,16 +110,7 @@ export const jobs = {
     description: "Lead web development position",
     category: "web",
     salary: 12000,
-    requiredSkills: [
-      "html",
-      "css",
-      "javascript",
-      "react",
-      "nodejs",
-      "express",
-      "typescript",
-      "ci_cd",
-    ],
+    requiredSkills: ["ci_cd"],
     requiredJobs: ["senior_web_dev"],
     timeRequired: 420, // 7 minutes
   },
@@ -161,7 +122,7 @@ export const jobs = {
     description: "Entry-level DevOps position",
     category: "devops",
     salary: 3500,
-    requiredSkills: ["git", "linux", "computer_basics", "typing", "sql"],
+    requiredSkills: ["sql"],
     requiredJobs: ["junior_tech"],
     timeRequired: 180, // 3 minutes
   },
@@ -171,7 +132,7 @@ export const jobs = {
     description: "Beginner DevOps position",
     category: "devops",
     salary: 4000,
-    requiredSkills: ["git", "linux", "docker"],
+    requiredSkills: ["docker"],
     requiredJobs: ["devops_intern"],
     timeRequired: 240, // 4 minutes
   },
@@ -181,15 +142,7 @@ export const jobs = {
     description: "Mid-level DevOps position",
     category: "devops",
     salary: 6000,
-    requiredSkills: [
-      "git",
-      "linux",
-      "docker",
-      "kubernetes",
-      "aws",
-      "sql",
-      "ci_cd",
-    ],
+    requiredSkills: ["kubernetes", "aws", "ci_cd"],
     requiredJobs: ["junior_devops"],
     timeRequired: 300, // 5 minutes
   },
@@ -199,16 +152,7 @@ export const jobs = {
     description: "Senior DevOps position",
     category: "devops",
     salary: 9000,
-    requiredSkills: [
-      "git",
-      "linux",
-      "docker",
-      "kubernetes",
-      "aws",
-      "sql",
-      "mongodb",
-      "postgresql",
-    ],
+    requiredSkills: ["mongodb", "postgresql"],
     requiredJobs: ["devops_engineer"],
     timeRequired: 360, // 6 minutes
   },
@@ -218,16 +162,7 @@ export const jobs = {
     description: "Lead DevOps position",
     category: "devops",
     salary: 13000,
-    requiredSkills: [
-      "git",
-      "linux",
-      "docker",
-      "kubernetes",
-      "aws",
-      "ci_cd",
-      "security",
-      "redis",
-    ],
+    requiredSkills: ["security", "redis"],
     requiredJobs: ["senior_devops"],
     timeRequired: 420, // 7 minutes
   },
@@ -239,7 +174,7 @@ export const jobs = {
     description: "Entry-level game development position",
     category: "game",
     salary: 3500,
-    requiredSkills: ["cpp", "algorithms", "computer_basics", "typing", "math"],
+    requiredSkills: ["cpp", "algorithms", "math"],
     requiredJobs: ["junior_tech"],
     timeRequired: 180, // 3 minutes
   },
@@ -249,7 +184,7 @@ export const jobs = {
     description: "Beginner game development position",
     category: "game",
     salary: 4000,
-    requiredSkills: ["cpp", "algorithms", "unity", "csharp"],
+    requiredSkills: ["unity", "csharp"],
     requiredJobs: ["game_intern"],
     timeRequired: 240, // 4 minutes
   },
@@ -259,7 +194,7 @@ export const jobs = {
     description: "Mid-level game development position",
     category: "game",
     salary: 5000,
-    requiredSkills: ["cpp", "algorithms", "unity", "csharp", "opengl"],
+    requiredSkills: ["opengl"],
     requiredJobs: ["junior_game_dev"],
     timeRequired: 300, // 5 minutes
   },
@@ -269,14 +204,7 @@ export const jobs = {
     description: "Senior game development position",
     category: "game",
     salary: 8000,
-    requiredSkills: [
-      "cpp",
-      "algorithms",
-      "unity",
-      "opengl",
-      "vulkan",
-      "unreal",
-    ],
+    requiredSkills: ["vulkan", "unreal"],
     requiredJobs: ["game_dev"],
     timeRequired: 360, // 6 minutes
   },
@@ -286,14 +214,7 @@ export const jobs = {
     description: "Lead game development position",
     category: "game",
     salary: 12000,
-    requiredSkills: [
-      "cpp",
-      "algorithms",
-      "unity",
-      "opengl",
-      "vulkan",
-      "networking",
-    ],
+    requiredSkills: ["networking"],
     requiredJobs: ["senior_game_dev"],
     timeRequired: 420, // 7 minutes
   },
@@ -305,7 +226,7 @@ export const jobs = {
     description: "Entry-level mobile development position",
     category: "mobile",
     salary: 3500,
-    requiredSkills: ["java", "html", "computer_basics", "typing"],
+    requiredSkills: ["java"],
     requiredJobs: ["junior_tech"],
     timeRequired: 180, // 3 minutes
   },
@@ -315,7 +236,7 @@ export const jobs = {
     description: "Beginner mobile development position",
     category: "mobile",
     salary: 4000,
-    requiredSkills: ["java", "html", "android"],
+    requiredSkills: ["android"],
     requiredJobs: ["mobile_intern"],
     timeRequired: 240, // 4 minutes
   },
@@ -325,7 +246,7 @@ export const jobs = {
     description: "Mid-level mobile development position",
     category: "mobile",
     salary: 5000,
-    requiredSkills: ["java", "html", "android", "react_native", "swift"],
+    requiredSkills: ["react_native", "swift"],
     requiredJobs: ["junior_mobile_dev"],
     timeRequired: 300, // 5 minutes
   },
@@ -335,7 +256,7 @@ export const jobs = {
     description: "Senior mobile development position",
     category: "mobile",
     salary: 8000,
-    requiredSkills: ["java", "html", "android", "react_native", "ios"],
+    requiredSkills: ["ios"],
     requiredJobs: ["mobile_dev"],
     timeRequired: 360, // 6 minutes
   },
@@ -345,14 +266,7 @@ export const jobs = {
     description: "Lead mobile development position",
     category: "mobile",
     salary: 12000,
-    requiredSkills: [
-      "java",
-      "html",
-      "android",
-      "react_native",
-      "ios",
-      "security",
-    ],
+    requiredSkills: ["security"],
     requiredJobs: ["senior_mobile_dev"],
     timeRequired: 420, // 7 minutes
   },
@@ -364,13 +278,7 @@ export const jobs = {
     description: "Entry-level AI/ML position",
     category: "ai",
     salary: 3500,
-    requiredSkills: [
-      "python",
-      "algorithms",
-      "computer_basics",
-      "typing",
-      "data_structures",
-    ],
+    requiredSkills: ["python", "algorithms", "data_structures"],
     requiredJobs: ["junior_tech"],
     timeRequired: 180, // 3 minutes
   },
@@ -380,7 +288,7 @@ export const jobs = {
     description: "Beginner AI/ML position",
     category: "ai",
     salary: 4000,
-    requiredSkills: ["python", "algorithms", "machine_learning"],
+    requiredSkills: ["machine_learning"],
     requiredJobs: ["ai_intern"],
     timeRequired: 240, // 4 minutes
   },
@@ -390,7 +298,7 @@ export const jobs = {
     description: "Mid-level AI/ML position",
     category: "ai",
     salary: 6000,
-    requiredSkills: ["python", "algorithms", "machine_learning", "tensorflow"],
+    requiredSkills: ["tensorflow"],
     requiredJobs: ["junior_ai_engineer"],
     timeRequired: 300, // 5 minutes
   },
@@ -400,13 +308,7 @@ export const jobs = {
     description: "Senior AI/ML position",
     category: "ai",
     salary: 9000,
-    requiredSkills: [
-      "python",
-      "algorithms",
-      "machine_learning",
-      "tensorflow",
-      "deep_learning",
-    ],
+    requiredSkills: ["deep_learning"],
     requiredJobs: ["ai_engineer"],
     timeRequired: 360, // 6 minutes
   },
@@ -416,14 +318,7 @@ export const jobs = {
     description: "Lead AI/ML position",
     category: "ai",
     salary: 13000,
-    requiredSkills: [
-      "python",
-      "algorithms",
-      "machine_learning",
-      "tensorflow",
-      "deep_learning",
-      "security",
-    ],
+    requiredSkills: ["security"],
     requiredJobs: ["senior_ai_engineer"],
     timeRequired: 420, // 7 minutes
   },
@@ -435,7 +330,7 @@ export const jobs = {
     description: "Entry-level security position",
     category: "security",
     salary: 3500,
-    requiredSkills: ["security", "networking", "computer_basics", "typing"],
+    requiredSkills: ["security", "networking"],
     requiredJobs: ["junior_tech"],
     timeRequired: 180, // 3 minutes
   },
@@ -445,7 +340,7 @@ export const jobs = {
     description: "Beginner security position",
     category: "security",
     salary: 4000,
-    requiredSkills: ["security", "networking", "cryptography"],
+    requiredSkills: ["cryptography"],
     requiredJobs: ["security_intern"],
     timeRequired: 240, // 4 minutes
   },
@@ -455,12 +350,7 @@ export const jobs = {
     description: "Mid-level security position",
     category: "security",
     salary: 6000,
-    requiredSkills: [
-      "security",
-      "networking",
-      "cryptography",
-      "penetration_testing",
-    ],
+    requiredSkills: ["penetration_testing"],
     requiredJobs: ["junior_security"],
     timeRequired: 300, // 5 minutes
   },
@@ -470,13 +360,7 @@ export const jobs = {
     description: "Senior security position",
     category: "security",
     salary: 9000,
-    requiredSkills: [
-      "security",
-      "networking",
-      "cryptography",
-      "penetration_testing",
-      "linux",
-    ],
+    requiredSkills: ["rust"],
     requiredJobs: ["security_engineer"],
     timeRequired: 360, // 6 minutes
   },
@@ -486,14 +370,7 @@ export const jobs = {
     description: "Lead security position",
     category: "security",
     salary: 13000,
-    requiredSkills: [
-      "security",
-      "networking",
-      "cryptography",
-      "penetration_testing",
-      "linux",
-      "ci_cd",
-    ],
+    requiredSkills: ["ci_cd"],
     requiredJobs: ["senior_security"],
     timeRequired: 420, // 7 minutes
   },
