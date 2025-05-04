@@ -401,7 +401,8 @@ export const skills = {
     name: "Vibe Coding",
     description: "The art of coding with style and rhythm",
     category: "vibe",
-    prerequisites: ["javascript", "react"],
+    prerequisites: [],
+    requiresAIPath: true,
     timeRequired: 300, // 5 minutes
   },
   vibe_mastery: {
@@ -410,6 +411,7 @@ export const skills = {
     description: "Advanced vibe manipulation techniques",
     category: "vibe",
     prerequisites: ["vibe_coding"],
+    requiresAIPath: true,
     timeRequired: 360, // 6 minutes
   },
 

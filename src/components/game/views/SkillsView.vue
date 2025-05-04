@@ -2,7 +2,12 @@
   <div class="skills-view">
     <div class="skills-list">
       <SkillItem
-        v-for="skill in sortedSkills"
+        v-for="skill in sortedSkills.filter(
+          (s) =>
+            gameState.isSkillAvailable(s.id) ||
+            gameState.hasSkill(s.id) ||
+            gameState.getCurrentLearning() === s.id
+        )"
         :key="skill.id"
         :skill="skill"
         :game-state="gameState"

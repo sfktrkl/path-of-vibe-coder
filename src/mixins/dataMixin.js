@@ -87,12 +87,16 @@ export default {
     // From SkillsView.vue
     sortedSkills() {
       const allSkills = Object.values(skills);
-      const filteredSkills = allSkills.filter(
-        (skill) =>
-          this.gameState.hasSkill(skill.id) ||
-          this.gameState.isSkillAvailable(skill.id) ||
-          this.gameState.getCurrentLearning() === skill.id
-      );
+      const filteredSkills = allSkills.filter((skill) => {
+        // If AI path is unlocked, hide learned non-AI path skills
+        if (this.gameState.getAIPathUnlocked()) {
+          return (
+            skill.requiresAIPath === true || !this.gameState.hasSkill(skill.id)
+          );
+        }
+        // If AI path is not unlocked, show all skills
+        return true;
+      });
 
       // Sort skills: learned at the bottom, maintain original order for others
       return filteredSkills.sort((a, b) => {

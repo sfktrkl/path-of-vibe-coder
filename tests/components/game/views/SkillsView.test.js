@@ -13,6 +13,7 @@ describe("SkillsView.vue", () => {
     getCurrentLearning: jest.fn().mockReturnValue(null),
     getCurrentLearningProgress: jest.fn().mockReturnValue(0),
     isSkillAvailable: jest.fn().mockReturnValue(false),
+    getAIPathUnlocked: jest.fn().mockReturnValue(false),
   };
 
   beforeEach(() => {
@@ -20,6 +21,7 @@ describe("SkillsView.vue", () => {
     gameStateMock.hasSkill.mockReturnValue(false);
     gameStateMock.getCurrentLearningProgress.mockReturnValue(0);
     gameStateMock.isSkillAvailable.mockReturnValue(false);
+    gameStateMock.getAIPathUnlocked.mockReturnValue(false);
 
     wrapper = mount(SkillsView, {
       propsData: { gameState: gameStateMock },
@@ -30,7 +32,7 @@ describe("SkillsView.vue", () => {
     expect(wrapper.exists()).toBe(true);
   });
 
-  it("displays basic skills without prerequisites", () => {
+  it("displays basic skills without prerequisites when AI path is not unlocked", () => {
     const basicSkills = Object.values(skills).filter(
       (skill) => skill.prerequisites.length === 0
     );
@@ -47,12 +49,41 @@ describe("SkillsView.vue", () => {
 
     const skillItems = newWrapper.findAllComponents(SkillItem);
 
-    // Should only show skills without prerequisites when nothing is learned
+    // Should only show available skills without prerequisites
     expect(skillItems.length).toBe(basicSkills.length);
     basicSkills.forEach((skill) => {
-      expect(newWrapper.vm.sortedSkills).toContainEqual(
-        expect.objectContaining({ id: skill.id })
-      );
+      expect(
+        skillItems.some((item) => item.props("skill").id === skill.id)
+      ).toBe(true);
+    });
+  });
+
+  it("only displays available AI path skills when AI path is unlocked", () => {
+    // Mock AI path as unlocked
+    gameStateMock.getAIPathUnlocked.mockReturnValue(true);
+
+    // Mock some AI path skills as available
+    const aiPathSkills = Object.values(skills).filter(
+      (skill) => skill.requiresAIPath === true
+    );
+    const availableAiSkills = aiPathSkills.slice(0, 2);
+
+    gameStateMock.isSkillAvailable.mockImplementation((skillId) => {
+      return availableAiSkills.some((skill) => skill.id === skillId);
+    });
+
+    const newWrapper = mount(SkillsView, {
+      propsData: { gameState: gameStateMock },
+    });
+
+    const skillItems = newWrapper.findAllComponents(SkillItem);
+
+    // Should only show available AI path skills
+    expect(skillItems.length).toBe(availableAiSkills.length);
+    availableAiSkills.forEach((skill) => {
+      expect(
+        skillItems.some((item) => item.props("skill").id === skill.id)
+      ).toBe(true);
     });
   });
 
@@ -138,8 +169,9 @@ describe("SkillsView.vue", () => {
     );
 
     // Initially the skill should not be available
+    let skillItems = wrapper.findAllComponents(SkillItem);
     expect(
-      wrapper.vm.sortedSkills.some((skill) => skill.id === skillWithPrereqs.id)
+      skillItems.some((item) => item.props("skill").id === skillWithPrereqs.id)
     ).toBe(false);
 
     // Mock prerequisites as learned
@@ -150,8 +182,9 @@ describe("SkillsView.vue", () => {
     await wrapper.setProps({ gameState: { ...gameStateMock } });
 
     // Now the skill should be available
+    skillItems = wrapper.findAllComponents(SkillItem);
     expect(
-      wrapper.vm.sortedSkills.some((skill) => skill.id === skillWithPrereqs.id)
+      skillItems.some((item) => item.props("skill").id === skillWithPrereqs.id)
     ).toBe(true);
   });
 
@@ -172,9 +205,10 @@ describe("SkillsView.vue", () => {
     });
 
     // Skill should not be available with only one prerequisite
+    let skillItems = firstWrapper.findAllComponents(SkillItem);
     expect(
-      firstWrapper.vm.sortedSkills.some(
-        (skill) => skill.id === skillWithMultiplePrereqs.id
+      skillItems.some(
+        (item) => item.props("skill").id === skillWithMultiplePrereqs.id
       )
     ).toBe(false);
 
@@ -189,9 +223,10 @@ describe("SkillsView.vue", () => {
     });
 
     // Skill should be available with all prerequisites
+    skillItems = secondWrapper.findAllComponents(SkillItem);
     expect(
-      secondWrapper.vm.sortedSkills.some(
-        (skill) => skill.id === skillWithMultiplePrereqs.id
+      skillItems.some(
+        (item) => item.props("skill").id === skillWithMultiplePrereqs.id
       )
     ).toBe(true);
   });
