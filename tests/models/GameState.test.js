@@ -21,10 +21,13 @@ describe("GameState", () => {
 
   // Helper function to unlock senior web dev prerequisites
   const unlockSeniorWebDev = (state) => {
+    // Basic path
     state.setCurrentJob("everyday_normal_guy");
     state.setCurrentLearning("computer_basics");
     state.setCurrentLearningProgress(100);
     state.setCurrentJob("computer_trainee");
+    state.setCurrentLearning("math_basics");
+    state.setCurrentLearningProgress(100);
     state.setCurrentLearning("typing");
     state.setCurrentLearningProgress(100);
     state.setCurrentJob("data_entry");
@@ -57,6 +60,8 @@ describe("GameState", () => {
     state.setCurrentLearningProgress(100);
     state.setCurrentJob("web_dev");
     state.setCurrentLearning("typescript");
+    state.setCurrentLearningProgress(100);
+    state.setCurrentLearning("vue");
     state.setCurrentLearningProgress(100);
   };
 

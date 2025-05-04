@@ -1,4 +1,5 @@
 import { skills } from "@data/skills";
+import { jobs } from "@data/jobs";
 
 describe("Skills Data Validation", () => {
   // Test that all skills have required fields
@@ -92,5 +93,31 @@ describe("Skills Data Validation", () => {
 
     Object.keys(skills).forEach(markReachable);
     expect(reachable.size).toBe(Object.keys(skills).length);
+  });
+
+  // Test that all skills are used by at least one job
+  test("all skills are used by at least one job", () => {
+    // Get all required skills from all jobs
+    const usedSkills = new Set();
+    Object.values(jobs).forEach((job) => {
+      job.requiredSkills.forEach((skillId) => {
+        usedSkills.add(skillId);
+      });
+    });
+
+    // Find unused skills
+    const unusedSkills = Object.keys(skills).filter(
+      (skillId) => !usedSkills.has(skillId)
+    );
+
+    // If there are unused skills, show them in the error message
+    if (unusedSkills.length > 0) {
+      console.log("Unused skills:", unusedSkills);
+    }
+
+    // Check that every skill is used
+    Object.keys(skills).forEach((skillId) => {
+      expect(usedSkills.has(skillId)).toBe(true);
+    });
   });
 });
