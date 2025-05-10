@@ -6,6 +6,7 @@ export default class GameState {
   constructor() {
     // Character basic info
     this._money = 0;
+    this._influence = 0; // New influence stat
 
     // Job related
     this._currentJob = null;
@@ -34,6 +35,23 @@ export default class GameState {
   spendMoney(amount) {
     if (this._money >= amount) {
       this._money -= amount;
+      return true;
+    }
+    return false;
+  }
+
+  // Influence management
+  getInfluence() {
+    return this._influence;
+  }
+
+  addInfluence(amount) {
+    this._influence += amount;
+  }
+
+  spendInfluence(amount) {
+    if (this._influence >= amount) {
+      this._influence -= amount;
       return true;
     }
     return false;
@@ -423,6 +441,7 @@ export default class GameState {
   toJSON() {
     return {
       money: this._money,
+      influence: this._influence,
       currentJob: this._currentJob,
       jobProgress: this._jobProgress,
       currentLearning: this._currentLearning,
@@ -436,6 +455,7 @@ export default class GameState {
   static fromJSON(json) {
     const state = new GameState();
     state._money = json.money;
+    state._influence = json.influence || 0;
     state._currentJob = json.currentJob;
     state._jobProgress = json.jobProgress;
     state._currentLearning = json.currentLearning;
