@@ -20,6 +20,7 @@ export default {
         case "salaryBoost":
         case "learningSpeed":
         case "workSpeed":
+        case "influenceBoost":
           percentage = ((value - 1) * 100).toFixed(0);
           return percentage > 0 ? `+${percentage}%` : `${percentage}%`;
         case "skillTimeReduction":
