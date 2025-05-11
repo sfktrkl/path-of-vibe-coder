@@ -17,6 +17,17 @@ export default class GameCheatCommands {
     };
   }
 
+  addInfluence() {
+    return {
+      description:
+        "addInfluence(amount: number) - Add influence to your balance",
+      execute: (amount) => {
+        this.gameState.addInfluence(amount);
+        console.log(`Added ${amount} influence!`);
+      },
+    };
+  }
+
   setMoney() {
     return {
       description:
@@ -26,6 +37,19 @@ export default class GameCheatCommands {
         this.gameState.spendMoney(this.gameState.getMoney());
         this.gameState.addMoney(amount);
         console.log(`Set money to ${amount}!`);
+      },
+    };
+  }
+
+  setInfluence() {
+    return {
+      description:
+        "setInfluence(amount: number) - Set your influence balance to a specific amount",
+      execute: (amount) => {
+        // First spend all influence, then add the new amount
+        this.gameState.spendInfluence(this.gameState.getInfluence());
+        this.gameState.addInfluence(amount);
+        console.log(`Set influence to ${amount}!`);
       },
     };
   }

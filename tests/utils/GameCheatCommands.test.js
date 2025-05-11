@@ -27,6 +27,19 @@ describe("GameCheatCommands", () => {
     });
   });
 
+  describe("addInfluence", () => {
+    it("should add influence to game state", () => {
+      commands.addInfluence().execute(100);
+      expect(gameState.getInfluence()).toBe(100);
+    });
+
+    it("should accumulate influence when called multiple times", () => {
+      commands.addInfluence().execute(50);
+      commands.addInfluence().execute(75);
+      expect(gameState.getInfluence()).toBe(125);
+    });
+  });
+
   describe("setMoney", () => {
     it("should set money to specific amount", () => {
       commands.setMoney().execute(5000);
@@ -36,6 +49,26 @@ describe("GameCheatCommands", () => {
     it("should handle zero amount", () => {
       commands.setMoney().execute(0);
       expect(gameState.getMoney()).toBe(0);
+    });
+  });
+
+  describe("setInfluence", () => {
+    it("should set influence to specific amount", () => {
+      commands.setInfluence().execute(500);
+      expect(gameState.getInfluence()).toBe(500);
+    });
+
+    it("should handle zero amount", () => {
+      commands.setInfluence().execute(0);
+      expect(gameState.getInfluence()).toBe(0);
+    });
+
+    it("should override existing influence", () => {
+      // First add some influence
+      commands.addInfluence().execute(100);
+      // Then set to a different amount
+      commands.setInfluence().execute(200);
+      expect(gameState.getInfluence()).toBe(200);
     });
   });
 
