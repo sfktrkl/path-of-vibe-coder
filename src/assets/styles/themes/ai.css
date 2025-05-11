@@ -165,7 +165,7 @@
 
 .theme-ai .job-salary {
   color: var(--primary);
-  text-shadow: 0 0 5px var(--primary);
+  text-shadow: 0 0 10px var(--primary);
 }
 
 /* Status badges */
@@ -356,6 +356,17 @@
   text-shadow: 0 0 10px var(--primary);
 }
 
+.theme-ai .game-header .influence {
+  color: #f1c40f;
+  text-shadow: 0 0 10px rgba(241, 196, 15, 0.7);
+}
+
+.theme-ai .game-header .influence-icon {
+  color: #f1c40f;
+  text-shadow: 0 0 10px rgba(241, 196, 15, 0.7);
+  filter: drop-shadow(0 0 5px rgba(241, 196, 15, 0.7));
+}
+
 .theme-ai .game-header .effect-name {
   color: var(--text-light);
 }
@@ -409,4 +420,16 @@
 .theme-ai .game-header .progress-label {
   color: var(--text);
   text-shadow: 0 0 5px var(--primary);
+}
+
+/* Job item influence styles */
+.theme-ai .job-influence {
+  color: #f1c40f;
+  text-shadow: 0 0 10px rgba(241, 196, 15, 0.7);
+}
+
+.theme-ai .job-influence-icon {
+  color: #f1c40f;
+  text-shadow: 0 0 10px rgba(241, 196, 15, 0.7);
+  filter: drop-shadow(0 0 5px rgba(241, 196, 15, 0.7));
 } 

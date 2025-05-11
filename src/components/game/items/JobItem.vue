@@ -19,9 +19,9 @@
     </div>
     <div class="item-status">
       <span class="job-salary">${{ job.salary }}</span>
-      <span v-if="job.influenceGain" class="job-influence"
-        >⚡{{ job.influenceGain }}</span
-      >
+      <span v-if="job.influenceGain" class="job-influence">
+        <span class="job-influence-icon">⚡</span>{{ job.influenceGain }}
+      </span>
     </div>
   </div>
 </template>
@@ -52,13 +52,21 @@ export default {
 }
 
 .job-salary {
-  color: #2ecc71;
   font-weight: bold;
 }
 
 .job-influence {
-  color: #f1c40f;
   font-weight: bold;
   font-size: 0.9em;
+  display: flex;
+  align-items: baseline;
+}
+
+.job-influence-icon {
+  font-size: 0.7em;
+  line-height: 1;
+  display: inline-block;
+  transform: translateY(-0.1em);
+  margin-right: 0.1em;
 }
 </style>
