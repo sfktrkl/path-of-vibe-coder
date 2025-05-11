@@ -222,9 +222,9 @@ export const items = {
     requiredItems: ["ultimate_boost_pack"],
     requiresAIPath: true,
     stats: {
-      influence: 5,
-      learning: 1.1,
-      work: 1.1,
+      influenceBoost: 1.5,
+      learningSpeed: 1.1,
+      workSpeed: 1.1,
     },
   },
   neural_implant: {
@@ -236,9 +236,9 @@ export const items = {
     requiredItems: ["ai_processor"],
     requiresAIPath: true,
     stats: {
-      influence: 8,
-      learning: 1.15,
-      work: 1.15,
+      influenceBoost: 1.8,
+      learningSpeed: 1.15,
+      workSpeed: 1.15,
     },
   },
 
@@ -252,9 +252,9 @@ export const items = {
     requiredItems: ["neural_implant"],
     requiresAIPath: true,
     stats: {
-      influence: 10,
-      learning: 1.2,
-      work: 1.2,
+      influenceBoost: 2.0,
+      learningSpeed: 1.2,
+      workSpeed: 1.2,
     },
   },
   dna_processor: {
@@ -266,9 +266,9 @@ export const items = {
     requiredItems: ["bio_neural_implant"],
     requiresAIPath: true,
     stats: {
-      influence: 15,
-      learning: 1.3,
-      work: 1.3,
+      influenceBoost: 2.3,
+      learningSpeed: 1.3,
+      workSpeed: 1.3,
     },
   },
   synthetic_bio_core: {
@@ -280,9 +280,9 @@ export const items = {
     requiredItems: ["dna_processor"],
     requiresAIPath: true,
     stats: {
-      influence: 20,
-      learning: 1.4,
-      work: 1.4,
+      influenceBoost: 2.6,
+      learningSpeed: 1.4,
+      workSpeed: 1.4,
     },
   },
 
@@ -296,9 +296,9 @@ export const items = {
     requiredItems: ["neural_implant"],
     requiresAIPath: true,
     stats: {
-      influence: 12,
-      learning: 1.25,
-      work: 1.25,
+      influenceBoost: 2.2,
+      learningSpeed: 1.25,
+      workSpeed: 1.25,
     },
   },
   entanglement_network: {
@@ -310,9 +310,9 @@ export const items = {
     requiredItems: ["quantum_processor"],
     requiresAIPath: true,
     stats: {
-      influence: 18,
-      learning: 1.35,
-      work: 1.35,
+      influenceBoost: 2.5,
+      learningSpeed: 1.35,
+      workSpeed: 1.35,
     },
   },
   quantum_core: {
@@ -324,9 +324,9 @@ export const items = {
     requiredItems: ["entanglement_network"],
     requiresAIPath: true,
     stats: {
-      influence: 25,
-      learning: 1.45,
-      work: 1.45,
+      influenceBoost: 2.8,
+      learningSpeed: 1.45,
+      workSpeed: 1.45,
     },
   },
 
@@ -340,9 +340,9 @@ export const items = {
     requiredItems: ["quantum_core"],
     requiresAIPath: true,
     stats: {
-      influence: 20,
-      learning: 1.4,
-      work: 1.4,
+      influenceBoost: 2.6,
+      learningSpeed: 1.4,
+      workSpeed: 1.4,
     },
   },
   dimension_controller: {
@@ -354,9 +354,9 @@ export const items = {
     requiredItems: ["digital_physics_engine"],
     requiresAIPath: true,
     stats: {
-      influence: 30,
-      learning: 1.5,
-      work: 1.5,
+      influenceBoost: 3.0,
+      learningSpeed: 1.5,
+      workSpeed: 1.5,
     },
   },
   reality_engine: {
@@ -368,9 +368,9 @@ export const items = {
     requiredItems: ["dimension_controller"],
     requiresAIPath: true,
     stats: {
-      influence: 40,
-      learning: 1.6,
-      work: 1.6,
+      influenceBoost: 3.5,
+      learningSpeed: 1.6,
+      workSpeed: 1.6,
     },
   },
 
@@ -384,9 +384,9 @@ export const items = {
     requiredItems: ["neural_implant"],
     requiresAIPath: true,
     stats: {
-      influence: 12,
-      learning: 1.25,
-      work: 1.25,
+      influenceBoost: 2.2,
+      learningSpeed: 1.25,
+      workSpeed: 1.25,
     },
   },
   collective_network: {
@@ -398,9 +398,9 @@ export const items = {
     requiredItems: ["mind_mapper"],
     requiresAIPath: true,
     stats: {
-      influence: 18,
-      learning: 1.35,
-      work: 1.35,
+      influenceBoost: 2.5,
+      learningSpeed: 1.35,
+      workSpeed: 1.35,
     },
   },
   consciousness_engine: {
@@ -412,9 +412,9 @@ export const items = {
     requiredItems: ["collective_network"],
     requiresAIPath: true,
     stats: {
-      influence: 25,
-      learning: 1.45,
-      work: 1.45,
+      influenceBoost: 2.8,
+      learningSpeed: 1.45,
+      workSpeed: 1.45,
     },
   },
 
@@ -428,9 +428,9 @@ export const items = {
     requiredItems: ["reality_engine", "consciousness_engine"],
     requiresAIPath: true,
     stats: {
-      influence: 35,
-      learning: 1.55,
-      work: 1.55,
+      influenceBoost: 3.2,
+      learningSpeed: 1.55,
+      workSpeed: 1.55,
     },
   },
   reality_control_unit: {
@@ -442,9 +442,9 @@ export const items = {
     requiredItems: ["matrix_programming_kit"],
     requiresAIPath: true,
     stats: {
-      influence: 45,
-      learning: 1.65,
-      work: 1.65,
+      influenceBoost: 3.8,
+      learningSpeed: 1.65,
+      workSpeed: 1.65,
     },
   },
   matrix_control_system: {
@@ -456,9 +456,9 @@ export const items = {
     requiredItems: ["reality_control_unit"],
     requiresAIPath: true,
     stats: {
-      influence: 60,
-      learning: 1.8,
-      work: 1.8,
+      influenceBoost: 4.5,
+      learningSpeed: 1.8,
+      workSpeed: 1.8,
     },
   },
 };
