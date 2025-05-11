@@ -38,10 +38,7 @@
         class="status-badge learned-badge"
         >Learned</span
       >
-      <span v-else-if="isAvailable" class="status-badge available-badge"
-        >Available</span
-      >
-      <span v-else class="status-badge locked-badge">Locked</span>
+      <span v-else class="status-badge available-badge">Available</span>
     </div>
   </div>
 </template>

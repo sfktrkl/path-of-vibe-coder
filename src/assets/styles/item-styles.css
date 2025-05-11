@@ -111,11 +111,6 @@
   color: white;
 }
 
-.locked-badge {
-  background-color: rgba(149, 165, 166, 0.2);
-  color: #95a5a6;
-}
-
 /* Progress bar for skill learning */
 .progress-container {
   width: 100px;

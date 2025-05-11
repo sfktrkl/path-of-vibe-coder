@@ -55,11 +55,6 @@ describe("SkillItem", () => {
     expect(wrapper.find(".available-badge").text()).toBe("Available");
   });
 
-  it("shows locked badge when skill is not available", () => {
-    const wrapper = createWrapper("computer_basics", false, false);
-    expect(wrapper.find(".locked-badge").text()).toBe("Locked");
-  });
-
   it("shows progress bar when skill is being learned", () => {
     const wrapper = createWrapper("computer_basics", false, true, true);
     expect(wrapper.find(".progress-bar").exists()).toBe(true);
