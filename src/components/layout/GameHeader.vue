@@ -6,7 +6,12 @@
         :class="{ 'default-title': !gameState.getCurrentJob() }"
       >
         <h1>{{ currentJob ? currentJob.name : "Path of Vibe Coder" }}</h1>
-        <div class="money">${{ gameState.getMoney() }}</div>
+        <div class="stats">
+          <div class="money">${{ gameState.getMoney() }}</div>
+          <div v-if="hasInfluenceGainJobs" class="influence">
+            <span class="influence-icon">⚡</span>{{ gameState.getInfluence() }}
+          </div>
+        </div>
         <div
           class="item-effects"
           v-if="totalItemEffects && gameState.getCurrentJob()"
@@ -98,6 +103,12 @@ export default {
     totalItemEffects() {
       return this.gameState.getItemEffects();
     },
+    hasInfluenceGainJobs() {
+      // Check if any unlocked jobs have influenceGain
+      return Object.values(jobs).some(
+        (job) => job.influenceGain && this.gameState.isJobUnlocked(job.id)
+      );
+    },
   },
 };
 </script>
@@ -158,10 +169,32 @@ h1 {
   color: #ffffff;
 }
 
+.stats {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
 .money {
   font-size: 1.1rem;
   color: #2ecc71;
   font-weight: bold;
+}
+
+.influence {
+  font-size: 1.1rem;
+  color: #f1c40f;
+  font-weight: bold;
+  display: flex;
+  align-items: baseline;
+}
+
+.influence-icon {
+  font-size: 0.7em;
+  line-height: 1;
+  display: inline-block;
+  transform: translateY(-0.1em);
+  margin-right: 0.1em;
 }
 
 .progress-bars {
@@ -278,8 +311,13 @@ h1 {
     padding: 12px;
   }
 
+  .stats {
+    gap: 0.5rem;
+  }
+
   h1,
-  .money {
+  .money,
+  .influence {
     font-size: 1rem;
   }
 
