@@ -8,7 +8,10 @@
         <h1>{{ currentJob ? currentJob.name : "Path of Vibe Coder" }}</h1>
         <div class="stats">
           <div class="money">${{ gameState.getMoney() }}</div>
-          <div v-if="hasInfluenceGainJobs" class="influence">
+          <div
+            v-if="hasInfluenceGainJobs || gameState.getInfluence() > 0"
+            class="influence"
+          >
             <span class="influence-icon">⚡</span>{{ gameState.getInfluence() }}
           </div>
         </div>

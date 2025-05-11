@@ -209,6 +209,7 @@ describe("GameHeader.vue", () => {
     test("hides influence when no influence-gaining jobs are unlocked", async () => {
       const noInfluenceGameState = {
         ...mockGameState,
+        getInfluence: () => 0,
         isJobUnlocked: () => false,
       };
       await wrapper.setProps({
@@ -233,6 +234,7 @@ describe("GameHeader.vue", () => {
     test("hides influence when only non-influence-gaining jobs are unlocked", async () => {
       const noInfluenceJobsGameState = {
         ...mockGameState,
+        getInfluence: () => 0,
         isJobUnlocked: (jobId) => jobId === "no_influence_job",
       };
       await wrapper.setProps({
@@ -252,6 +254,32 @@ describe("GameHeader.vue", () => {
       });
       expect(wrapper.find(".influence").exists()).toBe(true);
       expect(wrapper.find(".influence").text()).toBe("⚡1000");
+    });
+
+    test("shows influence if either condition is met (influence-gaining jobs OR influence > 0)", async () => {
+      // Case 1: Has influence-gaining job but zero influence
+      const case1GameState = {
+        ...mockGameState,
+        getInfluence: () => 0,
+        isJobUnlocked: (jobId) => jobId === "influence_job",
+      };
+      await wrapper.setProps({
+        gameState: case1GameState,
+      });
+      expect(wrapper.find(".influence").exists()).toBe(true);
+      expect(wrapper.find(".influence").text()).toBe("⚡0");
+
+      // Case 2: No influence-gaining jobs but has influence
+      const case2GameState = {
+        ...mockGameState,
+        getInfluence: () => 50,
+        isJobUnlocked: () => false,
+      };
+      await wrapper.setProps({
+        gameState: case2GameState,
+      });
+      expect(wrapper.find(".influence").exists()).toBe(true);
+      expect(wrapper.find(".influence").text()).toBe("⚡50");
     });
   });
 });
