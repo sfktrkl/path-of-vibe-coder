@@ -11,6 +11,15 @@ jest.mock("@data/skills", () => ({
 jest.mock("@data/jobs", () => ({
   jobs: {
     test_job: { name: "Test Job" },
+    influence_job: {
+      name: "Influence Job",
+      influenceGain: 5,
+      id: "influence_job",
+    },
+    no_influence_job: {
+      name: "No Influence Job",
+      id: "no_influence_job",
+    },
   },
 }));
 
@@ -18,10 +27,12 @@ describe("GameHeader.vue", () => {
   let wrapper;
   const mockGameState = {
     getMoney: () => 1000,
+    getInfluence: () => 50,
     getCurrentLearning: () => null,
     getCurrentJob: () => null,
     getCurrentJobProgress: () => 0,
     getCurrentLearningProgress: () => 0,
+    isJobUnlocked: (jobId) => jobId === "influence_job",
     getItemEffects: () => ({
       salaryBoost: 1,
       learningSpeed: 1,
@@ -172,5 +183,75 @@ describe("GameHeader.vue", () => {
 
     const effectsDiv = wrapper.find(".item-effects");
     expect(effectsDiv.exists()).toBe(false);
+  });
+
+  describe("Money and Influence Display", () => {
+    test("displays money correctly", () => {
+      expect(wrapper.find(".money").text()).toBe("$1000");
+    });
+
+    test("displays money with different amounts", async () => {
+      const richGameState = {
+        ...mockGameState,
+        getMoney: () => 1000000,
+      };
+      await wrapper.setProps({
+        gameState: richGameState,
+      });
+      expect(wrapper.find(".money").text()).toBe("$1000000");
+    });
+
+    test("shows influence when influence-gaining job is unlocked", () => {
+      expect(wrapper.find(".influence").exists()).toBe(true);
+      expect(wrapper.find(".influence").text()).toBe("⚡50");
+    });
+
+    test("hides influence when no influence-gaining jobs are unlocked", async () => {
+      const noInfluenceGameState = {
+        ...mockGameState,
+        isJobUnlocked: () => false,
+      };
+      await wrapper.setProps({
+        gameState: noInfluenceGameState,
+      });
+      expect(wrapper.find(".influence").exists()).toBe(false);
+    });
+
+    test("shows influence even when value is 0 if influence-gaining job is unlocked", async () => {
+      const zeroInfluenceGameState = {
+        ...mockGameState,
+        getInfluence: () => 0,
+        isJobUnlocked: (jobId) => jobId === "influence_job",
+      };
+      await wrapper.setProps({
+        gameState: zeroInfluenceGameState,
+      });
+      expect(wrapper.find(".influence").exists()).toBe(true);
+      expect(wrapper.find(".influence").text()).toBe("⚡0");
+    });
+
+    test("hides influence when only non-influence-gaining jobs are unlocked", async () => {
+      const noInfluenceJobsGameState = {
+        ...mockGameState,
+        isJobUnlocked: (jobId) => jobId === "no_influence_job",
+      };
+      await wrapper.setProps({
+        gameState: noInfluenceJobsGameState,
+      });
+      expect(wrapper.find(".influence").exists()).toBe(false);
+    });
+
+    test("displays influence with different amounts when influence-gaining job is unlocked", async () => {
+      const highInfluenceGameState = {
+        ...mockGameState,
+        getInfluence: () => 1000,
+        isJobUnlocked: (jobId) => jobId === "influence_job",
+      };
+      await wrapper.setProps({
+        gameState: highInfluenceGameState,
+      });
+      expect(wrapper.find(".influence").exists()).toBe(true);
+      expect(wrapper.find(".influence").text()).toBe("⚡1000");
+    });
   });
 });
