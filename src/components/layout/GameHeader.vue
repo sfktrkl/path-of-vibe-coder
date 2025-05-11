@@ -20,7 +20,7 @@
           v-if="totalItemEffects && gameState.getCurrentJob()"
         >
           <div
-            v-for="(value, effect) in totalItemEffects"
+            v-for="(value, effect) in filteredItemEffects"
             :key="effect"
             class="effect"
           >
@@ -106,10 +106,24 @@ export default {
     totalItemEffects() {
       return this.gameState.getItemEffects();
     },
+    filteredItemEffects() {
+      const effects = { ...this.totalItemEffects };
+      // Only remove influenceBoost if it's not active (value <= 1)
+      if (!this.hasInfluenceBoost) {
+        delete effects.influenceBoost;
+      }
+      return effects;
+    },
     hasInfluenceGainJobs() {
       // Check if any unlocked jobs have influenceGain
       return Object.values(jobs).some(
         (job) => job.influenceGain && this.gameState.isJobUnlocked(job.id)
+      );
+    },
+    hasInfluenceBoost() {
+      return (
+        this.totalItemEffects.influenceBoost &&
+        this.totalItemEffects.influenceBoost > 1
       );
     },
   },

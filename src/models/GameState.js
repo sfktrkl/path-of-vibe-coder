@@ -288,6 +288,7 @@ export default class GameState {
       workSpeed: 1,
       skillTimeReduction: 1,
       jobInitialProgress: 0,
+      influenceBoost: 1,
     };
 
     // Track the highest value for each effect
@@ -317,6 +318,9 @@ export default class GameState {
               effects.jobInitialProgress,
               value
             );
+            break;
+          case "influenceBoost":
+            effects.influenceBoost = Math.max(effects.influenceBoost, value);
             break;
         }
       });

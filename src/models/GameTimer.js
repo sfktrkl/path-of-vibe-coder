@@ -64,6 +64,13 @@ export default class GameTimer {
       if (totalProgress >= 100) {
         const salaryWithMultiplier = job.salary * effects.salaryBoost;
         this.gameState.addMoney(salaryWithMultiplier);
+
+        // Apply influence gain with boost if the job has influence gain
+        if (job.influenceGain) {
+          const influenceWithBoost = job.influenceGain * effects.influenceBoost;
+          this.gameState.addInfluence(influenceWithBoost);
+        }
+
         this.gameState.setCurrentJobProgress(effects.jobInitialProgress);
       }
     }
