@@ -195,6 +195,13 @@
   color: var(--accent);
 }
 
+.theme-ai .unaffordable-badge {
+  background: rgba(255, 51, 51, 0.1);
+  border-color: #ff3333;
+  color: #ff3333;
+  text-shadow: 0 0 5px rgba(255, 51, 51, 0.5);
+}
+
 /* Progress bar styles */
 .theme-ai .progress-container {
   background: var(--card-bg);
