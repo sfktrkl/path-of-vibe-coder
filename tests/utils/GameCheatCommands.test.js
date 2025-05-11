@@ -152,6 +152,22 @@ describe("GameCheatCommands", () => {
         "Job non_existent_job not found!"
       );
     });
+
+    it("should unlock AI path if setting a job that requires it", () => {
+      // Find a job that requires AI path
+      const aiJob = Object.values(jobs).find(
+        (job) => job.requiresAIPath === true
+      );
+      expect(aiJob).toBeDefined();
+      // Ensure AI path is locked
+      expect(gameState.getAIPathUnlocked()).toBe(false);
+      // Set the job using the cheat command
+      commands.setCurrentJob().execute(aiJob.id);
+      // AI path should now be unlocked
+      expect(gameState.getAIPathUnlocked()).toBe(true);
+      // The job should be set
+      expect(gameState.getCurrentJob()).toBe(aiJob.id);
+    });
   });
 
   describe("completeSkill", () => {

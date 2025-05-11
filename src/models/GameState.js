@@ -330,6 +330,10 @@ export default class GameState {
     return this._aiPathUnlocked;
   }
 
+  unlockAIPath() {
+    this._aiPathUnlocked = true;
+  }
+
   checkAIPathUnlock() {
     // If already unlocked, return true
     if (this._aiPathUnlocked) {

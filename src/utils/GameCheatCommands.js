@@ -138,6 +138,16 @@ export default class GameCheatCommands {
           this.completeSkill().execute(requiredSkillId);
         }
 
+        // Unlock AI path if the job requires it
+        if (
+          job.requiresAIPath === true &&
+          !this.gameState.getAIPathUnlocked()
+        ) {
+          if (typeof this.gameState.unlockAIPath === "function") {
+            this.gameState.unlockAIPath();
+          }
+        }
+
         const success = this.gameState.setCurrentJob(jobId);
         if (success) {
           console.log(`Set job to ${jobId}!`);
