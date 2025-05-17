@@ -1,5 +1,10 @@
 <template>
-  <div class="progress-container">
+  <div
+    class="progress-container"
+    :class="{ glowing: type === 'story' && isComplete }"
+    @click="handleClick"
+    :title="tooltip"
+  >
     <div class="progress-info">
       <span>{{ label }}</span>
     </div>
@@ -33,6 +38,21 @@ export default {
       default: "learning",
       validator: (value) => ["learning", "job", "story"].includes(value),
     },
+    isComplete: {
+      type: Boolean,
+      default: false,
+    },
+    tooltip: {
+      type: String,
+      default: "",
+    },
+  },
+  methods: {
+    handleClick() {
+      if (this.type === "story" && this.isComplete) {
+        this.$emit("story-complete-click");
+      }
+    },
   },
 };
 </script>
@@ -46,6 +66,30 @@ export default {
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
+  transition: all 0.3s ease;
+  cursor: default;
+}
+
+.progress-container.glowing {
+  cursor: pointer;
+  animation: glow 2s infinite;
+}
+
+.progress-container.glowing:hover {
+  transform: scale(1.02);
+  filter: brightness(1.2);
+}
+
+@keyframes glow {
+  0% {
+    box-shadow: 0 0 5px rgba(241, 196, 15, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(241, 196, 15, 0.8);
+  }
+  100% {
+    box-shadow: 0 0 5px rgba(241, 196, 15, 0.5);
+  }
 }
 
 .progress-info {

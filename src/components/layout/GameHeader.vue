@@ -40,6 +40,9 @@
           :label="currentStoryStage.message"
           :progress="storyProgressPercentage"
           type="story"
+          :isComplete="isStoryComplete && canUnlockExistence"
+          :tooltip="storyProgressTitle"
+          @story-complete-click="handleStoryProgressClick"
         />
       </div>
 
@@ -164,6 +167,33 @@ export default {
 
       // Calculate percentage based on current influence vs max influence
       return Math.min(100, (influence / maxInfluence) * 100);
+    },
+    isStoryComplete() {
+      return this.storyProgressPercentage >= 100;
+    },
+    canUnlockExistence() {
+      return (
+        this.isStoryComplete &&
+        this.gameState.getAIPathUnlocked() &&
+        !this.gameState.getExistencePathUnlocked()
+      );
+    },
+    storyProgressTitle() {
+      if (this.isStoryComplete) {
+        if (this.canUnlockExistence) {
+          return "Click to transcend into existence";
+        } else if (this.gameState.getExistencePathUnlocked()) {
+          return "You have transcended into existence";
+        }
+      }
+      return this.currentStoryStage.message;
+    },
+  },
+  methods: {
+    handleStoryProgressClick() {
+      if (this.canUnlockExistence) {
+        this.gameState.unlockExistencePath();
+      }
     },
   },
 };
@@ -425,5 +455,63 @@ h1 {
   flex: 1;
   min-width: 150px;
   box-sizing: border-box;
+}
+
+.story-progress {
+  position: relative;
+  cursor: default;
+  transition: all 0.3s ease;
+}
+
+.story-progress.glowing {
+  cursor: pointer;
+  animation: glow 2s infinite;
+}
+
+.story-progress.glowing:hover {
+  transform: scale(1.02);
+  filter: brightness(1.2);
+}
+
+@keyframes glow {
+  0% {
+    box-shadow: 0 0 5px rgba(241, 196, 15, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(241, 196, 15, 0.8);
+  }
+  100% {
+    box-shadow: 0 0 5px rgba(241, 196, 15, 0.5);
+  }
+}
+
+.story-progress-wrapper {
+  position: relative;
+  flex: 1;
+  min-width: 150px;
+  cursor: default;
+  transition: all 0.3s ease;
+}
+
+.story-progress-wrapper.glowing {
+  cursor: pointer;
+  animation: glow 2s infinite;
+}
+
+.story-progress-wrapper.glowing:hover {
+  transform: scale(1.02);
+  filter: brightness(1.2);
+}
+
+@keyframes glow {
+  0% {
+    box-shadow: 0 0 5px rgba(241, 196, 15, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(241, 196, 15, 0.8);
+  }
+  100% {
+    box-shadow: 0 0 5px rgba(241, 196, 15, 0.5);
+  }
 }
 </style>
