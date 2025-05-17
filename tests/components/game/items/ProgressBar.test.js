@@ -40,4 +40,73 @@ describe("ProgressBar", () => {
     expect(wrapper.vm.$options.props.type.validator("learning")).toBe(true);
     expect(wrapper.vm.$options.props.type.validator("job")).toBe(true);
   });
+
+  it("applies glowing class when story type is complete", () => {
+    const wrapper = createWrapper({
+      type: "story",
+      isComplete: true,
+    });
+    expect(wrapper.find(".progress-container").classes()).toContain("glowing");
+  });
+
+  it("does not apply glowing class when story type is not complete", () => {
+    const wrapper = createWrapper({
+      type: "story",
+      isComplete: false,
+    });
+    expect(wrapper.find(".progress-container").classes()).not.toContain(
+      "glowing"
+    );
+  });
+
+  it("does not apply glowing class for non-story types even when complete", () => {
+    const wrapper = createWrapper({
+      type: "learning",
+      isComplete: true,
+    });
+    expect(wrapper.find(".progress-container").classes()).not.toContain(
+      "glowing"
+    );
+  });
+
+  it("emits story-complete-click when story progress is clicked and complete", async () => {
+    const wrapper = createWrapper({
+      type: "story",
+      isComplete: true,
+    });
+    await wrapper.find(".progress-container").trigger("click");
+    expect(wrapper.emitted("story-complete-click")).toBeTruthy();
+  });
+
+  it("does not emit story-complete-click when story progress is clicked but not complete", async () => {
+    const wrapper = createWrapper({
+      type: "story",
+      isComplete: false,
+    });
+    await wrapper.find(".progress-container").trigger("click");
+    expect(wrapper.emitted("story-complete-click")).toBeFalsy();
+  });
+
+  it("displays tooltip when provided", () => {
+    const tooltip = "Test tooltip";
+    const wrapper = createWrapper({ tooltip });
+    expect(wrapper.find(".progress-container").attributes("title")).toBe(
+      tooltip
+    );
+  });
+
+  it("applies story-progress class for story type", () => {
+    const wrapper = createWrapper({ type: "story" });
+    expect(wrapper.find(".progress").classes()).toContain("story-progress");
+  });
+
+  it("validates isComplete prop type", () => {
+    const wrapper = createWrapper({});
+    expect(wrapper.vm.$options.props.isComplete.type).toBe(Boolean);
+  });
+
+  it("validates tooltip prop type", () => {
+    const wrapper = createWrapper({});
+    expect(wrapper.vm.$options.props.tooltip.type).toBe(String);
+  });
 });

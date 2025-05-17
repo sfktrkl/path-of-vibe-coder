@@ -1,6 +1,7 @@
 import { jobs } from "@data/jobs";
 import { skills } from "@data/skills";
 import { items } from "@data/items";
+import { story } from "@data/story";
 
 export default class GameState {
   constructor() {
@@ -50,11 +51,15 @@ export default class GameState {
 
   addInfluence(amount) {
     this._influence += amount;
+    // Check for existence path unlock when influence changes
+    this.checkExistencePathUnlock();
   }
 
   spendInfluence(amount) {
     if (this._influence >= amount) {
       this._influence -= amount;
+      // Check for existence path unlock when influence changes
+      this.checkExistencePathUnlock();
       return true;
     }
     return false;
@@ -448,6 +453,34 @@ export default class GameState {
     return this._aiPathUnlocked;
   }
 
+  // Story progress management
+  getCurrentStoryStage() {
+    const stages = Object.values(story);
+    // Find the highest stage that the player has reached
+    return stages.reduce((highest, stage) => {
+      if (
+        this._influence >= stage.influenceRequired &&
+        (!highest || stage.influenceRequired > highest.influenceRequired)
+      ) {
+        return stage;
+      }
+      return highest;
+    }, null);
+  }
+
+  getStoryProgressPercentage() {
+    const currentStage = this.getCurrentStoryStage();
+    if (!currentStage) return 0;
+
+    const stages = Object.values(story);
+    const maxInfluence = Math.max(
+      ...stages.map((stage) => stage.influenceRequired)
+    );
+
+    // Calculate percentage based on current influence vs max influence
+    return Math.min(100, (this._influence / maxInfluence) * 100);
+  }
+
   // Existence Path management
   getExistencePathUnlocked() {
     return this._existencePathUnlocked;
@@ -455,6 +488,27 @@ export default class GameState {
 
   unlockExistencePath() {
     this._existencePathUnlocked = true;
+  }
+
+  checkExistencePathUnlock() {
+    // Return early if already unlocked
+    if (this._existencePathUnlocked) {
+      return true;
+    }
+
+    // Check if AI path is unlocked
+    if (!this._aiPathUnlocked) {
+      return false;
+    }
+
+    // Check if story progress is complete (100%)
+    if (this.getStoryProgressPercentage() < 100) {
+      return false;
+    }
+
+    // All conditions met, unlock the path
+    this._existencePathUnlocked = true;
+    return true;
   }
 
   // State serialization

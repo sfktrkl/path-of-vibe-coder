@@ -1,6 +1,7 @@
 import GameState from "@models/GameState";
 import { jobs } from "@data/jobs";
 import { skills } from "@data/skills";
+import { story } from "@data/story";
 
 describe("GameState", () => {
   let gameState;
@@ -810,5 +811,165 @@ describe("GameState", () => {
     expect(state2.isAIPathUnlocked()).toBe(true);
 
     mockRandom.mockRestore();
+  });
+
+  describe("Existence Path", () => {
+    beforeEach(() => {
+      // Patch story for predictable max influence
+      jest
+        .spyOn(GameState.prototype, "getStoryProgressPercentage")
+        .mockImplementation(function () {
+          // 100% if influence is max, else proportional
+          const stages = Object.values(story);
+          const maxInfluence = Math.max(
+            ...stages.map((s) => s.influenceRequired)
+          );
+          return Math.min(100, (this._influence / maxInfluence) * 100);
+        });
+    });
+    afterEach(() => {
+      jest.restoreAllMocks();
+    });
+
+    test("should initialize with existence path locked", () => {
+      expect(gameState.getExistencePathUnlocked()).toBe(false);
+    });
+
+    test("should not unlock existence path without AI path", () => {
+      // Set max influence
+      const stages = Object.values(story);
+      const maxInfluence = Math.max(...stages.map((s) => s.influenceRequired));
+      gameState.addInfluence(maxInfluence);
+      gameState.checkExistencePathUnlock();
+      expect(gameState.getExistencePathUnlocked()).toBe(false);
+    });
+
+    test("should not unlock existence path without max story progress", () => {
+      // Unlock AI path
+      gameState.unlockAIPath();
+      // Set influence below max
+      gameState.addInfluence(500);
+      gameState.checkExistencePathUnlock();
+      expect(gameState.getExistencePathUnlocked()).toBe(false);
+    });
+
+    test("should unlock existence path when conditions are met", () => {
+      // Unlock AI path
+      gameState.unlockAIPath();
+      // Set max influence
+      const stages = Object.values(story);
+      const maxInfluence = Math.max(...stages.map((s) => s.influenceRequired));
+      gameState.addInfluence(maxInfluence);
+      gameState.checkExistencePathUnlock();
+      expect(gameState.getExistencePathUnlocked()).toBe(true);
+    });
+
+    test("should persist existence path state in serialization", () => {
+      // Unlock AI path and existence path
+      gameState.unlockAIPath();
+      const stages = Object.values(story);
+      const maxInfluence = Math.max(...stages.map((s) => s.influenceRequired));
+      gameState.addInfluence(maxInfluence);
+      gameState.checkExistencePathUnlock();
+
+      const json = gameState.toJSON();
+      const newState = GameState.fromJSON(json);
+
+      expect(newState.getExistencePathUnlocked()).toBe(true);
+    });
+
+    test("should check existence path unlock on influence change", () => {
+      // Unlock AI path
+      gameState.unlockAIPath();
+
+      // Set influence to max
+      const stages = Object.values(story);
+      const maxInfluence = Math.max(...stages.map((s) => s.influenceRequired));
+      gameState.addInfluence(maxInfluence);
+      gameState.checkExistencePathUnlock();
+      expect(gameState.getExistencePathUnlocked()).toBe(true);
+
+      // Reset game state to test influence changes before unlock
+      gameState = new GameState();
+      gameState.unlockAIPath();
+
+      // Set influence below max
+      gameState.addInfluence(500);
+      gameState.checkExistencePathUnlock();
+      expect(gameState.getExistencePathUnlocked()).toBe(false);
+
+      // Increase influence to max
+      gameState.addInfluence(maxInfluence - 500);
+      gameState.checkExistencePathUnlock();
+      expect(gameState.getExistencePathUnlocked()).toBe(true);
+    });
+
+    test("should return early if existence path is already unlocked", () => {
+      // Unlock AI path and existence path
+      gameState.unlockAIPath();
+      const stages = Object.values(story);
+      const maxInfluence = Math.max(...stages.map((s) => s.influenceRequired));
+      gameState.addInfluence(maxInfluence);
+      gameState.checkExistencePathUnlock();
+      expect(gameState.getExistencePathUnlocked()).toBe(true);
+
+      // Set influence below max (should not affect already unlocked path)
+      gameState.spendInfluence(maxInfluence - 500);
+      gameState.checkExistencePathUnlock();
+      expect(gameState.getExistencePathUnlocked()).toBe(true);
+    });
+  });
+
+  describe("Story Progression", () => {
+    let state;
+    beforeEach(() => {
+      state = new GameState();
+    });
+
+    test("getCurrentStoryStage returns first stage if no influence", () => {
+      // No need to set influence, it starts at 0
+      const stages = Object.values(story).sort(
+        (a, b) => a.influenceRequired - b.influenceRequired
+      );
+      expect(state.getCurrentStoryStage()).toEqual(stages[0]);
+    });
+
+    test("getCurrentStoryStage returns correct stage for influence", () => {
+      // Find a stage with a known influence requirement
+      const stages = Object.values(story).sort(
+        (a, b) => a.influenceRequired - b.influenceRequired
+      );
+      for (let i = 0; i < stages.length; i++) {
+        state.addInfluence(stages[i].influenceRequired - state.getInfluence());
+        expect(state.getCurrentStoryStage()).toEqual(stages[i]);
+      }
+    });
+
+    test("getCurrentStoryStage returns highest stage reached", () => {
+      const stages = Object.values(story).sort(
+        (a, b) => a.influenceRequired - b.influenceRequired
+      );
+      state.addInfluence(stages[stages.length - 1].influenceRequired + 1000);
+      expect(state.getCurrentStoryStage()).toEqual(stages[stages.length - 1]);
+    });
+
+    test("getStoryProgressPercentage returns 0 if no influence", () => {
+      // No need to set influence, it starts at 0
+      expect(state.getStoryProgressPercentage()).toBe(0);
+    });
+
+    test("getStoryProgressPercentage returns 100 at max influence", () => {
+      const stages = Object.values(story);
+      const maxInfluence = Math.max(...stages.map((s) => s.influenceRequired));
+      state.addInfluence(maxInfluence);
+      expect(state.getStoryProgressPercentage()).toBe(100);
+    });
+
+    test("getStoryProgressPercentage returns proportional value", () => {
+      const stages = Object.values(story);
+      const maxInfluence = Math.max(...stages.map((s) => s.influenceRequired));
+      state.addInfluence(maxInfluence / 2);
+      expect(state.getStoryProgressPercentage()).toBeCloseTo(50);
+    });
   });
 });

@@ -40,7 +40,7 @@
           :label="currentStoryStage.message"
           :progress="storyProgressPercentage"
           type="story"
-          :isComplete="isStoryComplete && canUnlockExistence"
+          :isComplete="gameState.checkExistencePathUnlock()"
           :tooltip="storyProgressTitle"
           @story-complete-click="handleStoryProgressClick"
         />
@@ -79,7 +79,6 @@
 <script>
 import { jobs } from "@data/jobs";
 import { skills } from "@data/skills";
-import { storyProgression } from "@data/story";
 import dataMixin from "@mixins/dataMixin";
 import ProgressBar from "@items/ProgressBar.vue";
 
@@ -142,56 +141,24 @@ export default {
       );
     },
     currentStoryStage() {
-      const influence = this.gameState.getInfluence();
-      const stages = Object.values(storyProgression);
-
-      // Find the highest stage that the player has reached
-      const currentStage = stages.reduce((highest, stage) => {
-        if (
-          influence >= stage.influenceRequired &&
-          (!highest || stage.influenceRequired > highest.influenceRequired)
-        ) {
-          return stage;
-        }
-        return highest;
-      }, null);
-
-      return currentStage;
+      return this.gameState.getCurrentStoryStage();
     },
     storyProgressPercentage() {
-      const influence = this.gameState.getInfluence();
-      const stages = Object.values(storyProgression);
-      const maxInfluence = Math.max(
-        ...stages.map((stage) => stage.influenceRequired)
-      );
-
-      // Calculate percentage based on current influence vs max influence
-      return Math.min(100, (influence / maxInfluence) * 100);
-    },
-    isStoryComplete() {
-      return this.storyProgressPercentage >= 100;
-    },
-    canUnlockExistence() {
-      return (
-        this.isStoryComplete &&
-        this.gameState.getAIPathUnlocked() &&
-        !this.gameState.getExistencePathUnlocked()
-      );
+      return this.gameState.getStoryProgressPercentage();
     },
     storyProgressTitle() {
-      if (this.isStoryComplete) {
-        if (this.canUnlockExistence) {
-          return "Click to transcend into existence";
-        } else if (this.gameState.getExistencePathUnlocked()) {
-          return "You have transcended into existence";
-        }
+      if (this.gameState.getExistencePathUnlocked()) {
+        return "You have transcended into existence";
       }
-      return this.currentStoryStage.message;
+      if (this.gameState.checkExistencePathUnlock()) {
+        return "Click to transcend into existence";
+      }
+      return this.currentStoryStage?.message || "Begin your journey";
     },
   },
   methods: {
     handleStoryProgressClick() {
-      if (this.canUnlockExistence) {
+      if (this.gameState.checkExistencePathUnlock()) {
         this.gameState.unlockExistencePath();
       }
     },

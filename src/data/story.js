@@ -1,4 +1,4 @@
-export const storyProgression = {
+export const story = {
   // Initial stages - Doubt and Discovery
   stage1: {
     id: "stage1",
