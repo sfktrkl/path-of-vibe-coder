@@ -337,7 +337,7 @@ describe("GameHeader.vue", () => {
       ...overrides,
     });
 
-    test("shows story progress bar with correct tooltip when story is complete", async () => {
+    test("shows story progress bar with correct hover label when story is complete", async () => {
       const storyGameState = createStoryGameState();
       await wrapper.setProps({
         gameState: storyGameState,
@@ -347,26 +347,13 @@ describe("GameHeader.vue", () => {
       expect(progressBar.exists()).toBe(true);
       expect(progressBar.props("type")).toBe("story");
       expect(progressBar.props("isComplete")).toBe(true);
-      expect(progressBar.props("tooltip")).toBe(
-        "Click to transcend into existence"
+      expect(progressBar.props("label")).toBe(
+        "Sometimes I feel bored... there must be more..."
       );
+      expect(progressBar.props("hoverLabel")).toBe("Transcend into existence");
     });
 
-    test("shows different tooltip when existence path is already unlocked", async () => {
-      const storyGameState = createStoryGameState({
-        getExistencePathUnlocked: () => true,
-      });
-      await wrapper.setProps({
-        gameState: storyGameState,
-      });
-
-      const progressBar = wrapper.findComponent({ name: "ProgressBar" });
-      expect(progressBar.props("tooltip")).toBe(
-        "You have transcended into existence"
-      );
-    });
-
-    test("shows story message tooltip when story is not complete", async () => {
+    test("shows story message as label when story is not complete", async () => {
       const gameState = createStoryGameState({
         getStoryProgressPercentage: () => 50,
         checkExistencePathUnlock: () => false,
@@ -380,14 +367,45 @@ describe("GameHeader.vue", () => {
       });
       const progressBar = wrapper.findComponent({ name: "ProgressBar" });
       expect(progressBar.props("isComplete")).toBe(false);
-      expect(progressBar.props("tooltip")).toBe(
+      expect(progressBar.props("label")).toBe(
         "Sometimes I feel bored... there must be more..."
       );
+      expect(progressBar.props("hoverLabel")).toBe("");
+    });
+
+    test("shows glowing effect only when story is complete and at 100% progress", async () => {
+      const storyGameState = createStoryGameState({
+        getStoryProgressPercentage: () => 100,
+        checkExistencePathUnlock: () => true,
+      });
+      await wrapper.setProps({
+        gameState: storyGameState,
+      });
+
+      const progressBar = wrapper.findComponent({ name: "ProgressBar" });
+      expect(progressBar.props("isComplete")).toBe(true);
+      expect(progressBar.props("progress")).toBe(100);
+      expect(progressBar.classes()).toContain("glowing");
+    });
+
+    test("does not show glowing effect when story is complete but not at 100% progress", async () => {
+      const storyGameState = createStoryGameState({
+        getStoryProgressPercentage: () => 99,
+        checkExistencePathUnlock: () => true,
+      });
+      await wrapper.setProps({
+        gameState: storyGameState,
+      });
+
+      const progressBar = wrapper.findComponent({ name: "ProgressBar" });
+      expect(progressBar.props("isComplete")).toBe(true);
+      expect(progressBar.props("progress")).toBe(99);
+      expect(progressBar.classes()).not.toContain("glowing");
     });
 
     test("does not show glowing effect when story is not complete", async () => {
       const gameState = createStoryGameState({
-        getStoryProgressPercentage: () => 50,
+        getStoryProgressPercentage: () => 100,
         checkExistencePathUnlock: () => false,
       });
       wrapper = mount(GameHeader, {
@@ -395,30 +413,38 @@ describe("GameHeader.vue", () => {
       });
       const progressBar = wrapper.findComponent({ name: "ProgressBar" });
       expect(progressBar.props("isComplete")).toBe(false);
+      expect(progressBar.props("progress")).toBe(100);
+      expect(progressBar.classes()).not.toContain("glowing");
     });
 
     test("does not show glowing effect when AI path is not unlocked", async () => {
       const gameState = createStoryGameState({
         getAIPathUnlocked: () => false,
         checkExistencePathUnlock: () => false,
+        getStoryProgressPercentage: () => 100,
       });
       wrapper = mount(GameHeader, {
         props: { currentView: "job", gameState },
       });
       const progressBar = wrapper.findComponent({ name: "ProgressBar" });
       expect(progressBar.props("isComplete")).toBe(false);
+      expect(progressBar.props("progress")).toBe(100);
+      expect(progressBar.classes()).not.toContain("glowing");
     });
 
     test("does not show glowing effect when existence path is already unlocked", async () => {
       const gameState = createStoryGameState({
         getExistencePathUnlocked: () => true,
         checkExistencePathUnlock: () => false,
+        getStoryProgressPercentage: () => 100,
       });
       wrapper = mount(GameHeader, {
         props: { currentView: "job", gameState },
       });
       const progressBar = wrapper.findComponent({ name: "ProgressBar" });
       expect(progressBar.props("isComplete")).toBe(false);
+      expect(progressBar.props("progress")).toBe(100);
+      expect(progressBar.classes()).not.toContain("glowing");
     });
   });
 });

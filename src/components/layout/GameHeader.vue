@@ -37,11 +37,13 @@
         v-if="hasInfluenceGainJobs || gameState.getInfluence() > 0"
       >
         <ProgressBar
-          :label="currentStoryStage.message"
+          :label="currentStoryStage?.message || 'Begin your journey'"
+          :hoverLabel="
+            storyProgressPercentage === 100 ? 'Transcend into existence' : ''
+          "
           :progress="storyProgressPercentage"
           type="story"
           :isComplete="gameState.checkExistencePathUnlock()"
-          :tooltip="storyProgressTitle"
           @story-complete-click="handleStoryProgressClick"
         />
       </div>
@@ -147,12 +149,6 @@ export default {
       return this.gameState.getStoryProgressPercentage();
     },
     storyProgressTitle() {
-      if (this.gameState.getExistencePathUnlocked()) {
-        return "You have transcended into existence";
-      }
-      if (this.gameState.checkExistencePathUnlock()) {
-        return "Click to transcend into existence";
-      }
       return this.currentStoryStage?.message || "Begin your journey";
     },
   },

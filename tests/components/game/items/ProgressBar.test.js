@@ -41,28 +41,42 @@ describe("ProgressBar", () => {
     expect(wrapper.vm.$options.props.type.validator("job")).toBe(true);
   });
 
-  it("applies glowing class when story type is complete", () => {
+  it("applies glowing class when story type is complete and at 100% progress", () => {
     const wrapper = createWrapper({
       type: "story",
       isComplete: true,
+      progress: 100,
     });
     expect(wrapper.find(".progress-container").classes()).toContain("glowing");
   });
 
-  it("does not apply glowing class when story type is not complete", () => {
+  it("does not apply glowing class when story type is complete but not at 100% progress", () => {
     const wrapper = createWrapper({
       type: "story",
-      isComplete: false,
+      isComplete: true,
+      progress: 99,
     });
     expect(wrapper.find(".progress-container").classes()).not.toContain(
       "glowing"
     );
   });
 
-  it("does not apply glowing class for non-story types even when complete", () => {
+  it("does not apply glowing class when story type is not complete", () => {
+    const wrapper = createWrapper({
+      type: "story",
+      isComplete: false,
+      progress: 100,
+    });
+    expect(wrapper.find(".progress-container").classes()).not.toContain(
+      "glowing"
+    );
+  });
+
+  it("does not apply glowing class for non-story types even when complete and at 100%", () => {
     const wrapper = createWrapper({
       type: "learning",
       isComplete: true,
+      progress: 100,
     });
     expect(wrapper.find(".progress-container").classes()).not.toContain(
       "glowing"
@@ -87,14 +101,6 @@ describe("ProgressBar", () => {
     expect(wrapper.emitted("story-complete-click")).toBeFalsy();
   });
 
-  it("displays tooltip when provided", () => {
-    const tooltip = "Test tooltip";
-    const wrapper = createWrapper({ tooltip });
-    expect(wrapper.find(".progress-container").attributes("title")).toBe(
-      tooltip
-    );
-  });
-
   it("applies story-progress class for story type", () => {
     const wrapper = createWrapper({ type: "story" });
     expect(wrapper.find(".progress").classes()).toContain("story-progress");
@@ -105,8 +111,70 @@ describe("ProgressBar", () => {
     expect(wrapper.vm.$options.props.isComplete.type).toBe(Boolean);
   });
 
-  it("validates tooltip prop type", () => {
-    const wrapper = createWrapper({});
-    expect(wrapper.vm.$options.props.tooltip.type).toBe(String);
+  describe("Hover behavior", () => {
+    it("shows hover label only for story type at 100% progress and complete", async () => {
+      const wrapper = createWrapper({
+        type: "story",
+        progress: 100,
+        isComplete: true,
+        label: "Normal Label",
+        hoverLabel: "Hover Label",
+      });
+
+      // Initially shows normal label
+      expect(wrapper.find(".label").text()).toBe("Normal Label");
+
+      // On hover, shows hover label
+      await wrapper.trigger("mouseenter");
+      expect(wrapper.find(".label").text()).toBe("Hover Label");
+
+      // On mouse leave, shows normal label again
+      await wrapper.trigger("mouseleave");
+      expect(wrapper.find(".label").text()).toBe("Normal Label");
+    });
+
+    it("does not show hover label for story type at 100% progress but not complete", async () => {
+      const wrapper = createWrapper({
+        type: "story",
+        progress: 100,
+        isComplete: false,
+        label: "Normal Label",
+        hoverLabel: "Hover Label",
+      });
+
+      await wrapper.trigger("mouseenter");
+      expect(wrapper.find(".label").text()).toBe("Normal Label");
+    });
+
+    it("does not show hover label for story type below 100% progress even when complete", async () => {
+      const wrapper = createWrapper({
+        type: "story",
+        progress: 99,
+        isComplete: true,
+        label: "Normal Label",
+        hoverLabel: "Hover Label",
+      });
+
+      await wrapper.trigger("mouseenter");
+      expect(wrapper.find(".label").text()).toBe("Normal Label");
+    });
+
+    it("does not show hover label for non-story types even at 100% progress and complete", async () => {
+      const wrapper = createWrapper({
+        type: "job",
+        progress: 100,
+        isComplete: true,
+        label: "Normal Label",
+        hoverLabel: "Hover Label",
+      });
+
+      await wrapper.trigger("mouseenter");
+      expect(wrapper.find(".label").text()).toBe("Normal Label");
+    });
+
+    it("validates hoverLabel prop type", () => {
+      const wrapper = createWrapper({});
+      expect(wrapper.vm.$options.props.hoverLabel.type).toBe(String);
+    });
   });
 });

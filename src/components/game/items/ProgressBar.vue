@@ -1,12 +1,14 @@
 <template>
   <div
     class="progress-container"
-    :class="{ glowing: type === 'story' && isComplete }"
+    :class="{ glowing: type === 'story' && isComplete && progress === 100 }"
+    :data-type="type"
     @click="handleClick"
-    :title="tooltip"
+    @mouseenter="handleMouseEnter"
+    @mouseleave="handleMouseLeave"
   >
     <div class="progress-info">
-      <span>{{ label }}</span>
+      <span class="label">{{ displayLabel }}</span>
     </div>
     <div class="progress-bar">
       <div
@@ -42,9 +44,28 @@ export default {
       type: Boolean,
       default: false,
     },
-    tooltip: {
+    hoverLabel: {
       type: String,
       default: "",
+    },
+  },
+  data() {
+    return {
+      isHovered: false,
+    };
+  },
+  computed: {
+    displayLabel() {
+      if (
+        this.type === "story" &&
+        this.progress === 100 &&
+        this.isHovered &&
+        this.hoverLabel &&
+        this.isComplete
+      ) {
+        return this.hoverLabel;
+      }
+      return this.label;
     },
   },
   methods: {
@@ -52,6 +73,12 @@ export default {
       if (this.type === "story" && this.isComplete) {
         this.$emit("story-complete-click");
       }
+    },
+    handleMouseEnter() {
+      this.isHovered = true;
+    },
+    handleMouseLeave() {
+      this.isHovered = false;
     },
   },
 };
@@ -94,12 +121,34 @@ export default {
 
 .progress-info {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   color: #ffffff;
   font-size: 0.9em;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  position: relative;
+  min-height: 1.2em;
+}
+
+.label {
+  display: inline-block;
+  width: 100%;
+  text-align: center;
+}
+
+/* Only apply hover effects to story type progress bars at 100% progress */
+.progress-container[data-type="story"]
+  .progress[style*="width: 100%"]
+  ~ .progress-info
+  .label:hover {
+  color: #ffd700;
+  transition: color 0.2s ease;
+}
+
+/* Remove the general hover transition */
+.progress-info {
+  transition: none;
 }
 
 .progress-bar {
