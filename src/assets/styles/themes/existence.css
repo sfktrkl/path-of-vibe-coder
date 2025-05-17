@@ -1,0 +1,255 @@
+ /* Existence Theme - A transcendent theme that builds upon the AI theme */
+:root {
+    --existence-primary: #9b4dca;
+    --existence-secondary: #00ff9d;
+    --existence-accent: #ff00ff;
+    --existence-bg: #0a0a1a;
+    --existence-text: #ffffff;
+    --existence-glow: 0 0 20px rgba(155, 77, 202, 0.5);
+    --existence-matrix-color: rgba(0, 255, 157, 0.15);
+  }
+  
+  .theme-existence {
+    --primary-color: var(--existence-primary);
+    --secondary-color: var(--existence-secondary);
+    --accent-color: var(--existence-accent);
+    --background-color: var(--existence-bg);
+    --text-color: var(--existence-text);
+  }
+  
+  .theme-existence body {
+    background-color: var(--existence-bg);
+    color: var(--existence-text);
+    position: relative;
+    overflow-x: hidden;
+  }
+  
+  .theme-existence #app {
+    background: linear-gradient(135deg, rgba(10, 10, 26, 0.95), rgba(20, 20, 40, 0.95));
+    position: relative;
+    z-index: 1;
+  }
+  
+  .theme-existence .app-container {
+    background: radial-gradient(circle at center, rgba(155, 77, 202, 0.1), transparent);
+  }
+  
+  .theme-existence .main-content {
+    background: linear-gradient(45deg, rgba(10, 10, 26, 0.8), rgba(20, 20, 40, 0.8));
+    box-shadow: var(--existence-glow);
+  }
+  
+  /* Header Styles */
+  .theme-existence .game-header {
+    background: linear-gradient(to right, rgba(155, 77, 202, 0.2), rgba(0, 255, 157, 0.2));
+    border-bottom: 2px solid var(--existence-primary);
+    box-shadow: var(--existence-glow);
+  }
+  
+  .theme-existence .header-content {
+    background: rgba(10, 10, 26, 0.8);
+  }
+  
+  .theme-existence .character-info {
+    background: rgba(155, 77, 202, 0.1);
+    border: 1px solid var(--existence-primary);
+    box-shadow: var(--existence-glow);
+  }
+  
+  .theme-existence .money {
+    color: var(--existence-secondary);
+    text-shadow: 0 0 10px var(--existence-secondary);
+  }
+  
+  .theme-existence .nav-button {
+    background: linear-gradient(45deg, rgba(155, 77, 202, 0.2), rgba(0, 255, 157, 0.2));
+    border: 1px solid var(--existence-primary);
+    box-shadow: var(--existence-glow);
+    transition: all 0.3s ease;
+  }
+  
+  .theme-existence .nav-button:hover {
+    background: linear-gradient(45deg, rgba(155, 77, 202, 0.3), rgba(0, 255, 157, 0.3));
+    transform: translateY(-2px);
+    box-shadow: 0 0 30px var(--existence-primary);
+  }
+  
+  .theme-existence .nav-button.active {
+    background: linear-gradient(45deg, var(--existence-primary), var(--existence-secondary));
+    box-shadow: 0 0 20px var(--existence-primary);
+  }
+  
+  /* Game Content Styles */
+  .theme-existence .game-content {
+    background: rgba(10, 10, 26, 0.8);
+    border: 1px solid var(--existence-primary);
+    box-shadow: var(--existence-glow);
+  }
+  
+  .theme-existence .game-content h2 {
+    color: var(--existence-secondary);
+    text-shadow: 0 0 10px var(--existence-secondary);
+  }
+  
+  .theme-existence .jobs-view,
+  .theme-existence .skills-view,
+  .theme-existence .shop-view {
+    background: rgba(10, 10, 26, 0.6);
+    border: 1px solid var(--existence-primary);
+    box-shadow: var(--existence-glow);
+  }
+  
+  /* Item Styles */
+  .theme-existence .item-base {
+    background: linear-gradient(45deg, rgba(155, 77, 202, 0.1), rgba(0, 255, 157, 0.1));
+    border: 1px solid var(--existence-primary);
+    box-shadow: var(--existence-glow);
+    transition: all 0.3s ease;
+  }
+  
+  .theme-existence .item-base:hover {
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 0 30px var(--existence-primary);
+  }
+  
+  .theme-existence .item-base.current {
+    background: linear-gradient(45deg, var(--existence-primary), var(--existence-secondary));
+    box-shadow: 0 0 20px var(--existence-primary);
+  }
+  
+  .theme-existence .item-base.available {
+    border-color: var(--existence-secondary);
+    box-shadow: 0 0 15px var(--existence-secondary);
+  }
+  
+  .theme-existence .item-base.learning {
+    background: linear-gradient(45deg, rgba(155, 77, 202, 0.2), rgba(0, 255, 157, 0.2));
+    animation: pulse 2s infinite;
+  }
+  
+  .theme-existence .item-base.learned,
+  .theme-existence .item-base.unlocked {
+    background: linear-gradient(45deg, rgba(0, 255, 157, 0.2), rgba(155, 77, 202, 0.2));
+    border-color: var(--existence-secondary);
+  }
+  
+  /* Progress Bar Styles */
+  .theme-existence .progress-container {
+    background: rgba(10, 10, 26, 0.8);
+    border: 1px solid var(--existence-primary);
+    box-shadow: var(--existence-glow);
+  }
+  
+  .theme-existence .progress-bar {
+    background: rgba(155, 77, 202, 0.2);
+  }
+  
+  .theme-existence .progress {
+    background: linear-gradient(90deg, var(--existence-primary), var(--existence-secondary));
+    box-shadow: 0 0 10px var(--existence-primary);
+  }
+  
+  /* Existence-specific Effects */
+  .existence-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.1;
+    background: 
+      radial-gradient(circle at 20% 20%, var(--existence-primary) 0%, transparent 50%),
+      radial-gradient(circle at 80% 80%, var(--existence-secondary) 0%, transparent 50%),
+      radial-gradient(circle at 50% 50%, var(--existence-accent) 0%, transparent 50%);
+    animation: existence-pulse 8s infinite alternate;
+  }
+  
+  .existence-particles {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+  }
+  
+  @keyframes existence-pulse {
+    0% {
+      opacity: 0.1;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.15;
+      transform: scale(1.1);
+    }
+    100% {
+      opacity: 0.1;
+      transform: scale(1);
+    }
+  }
+  
+  @keyframes existence-float {
+    0% {
+      transform: translateY(0) rotate(0deg);
+    }
+    50% {
+      transform: translateY(-20px) rotate(180deg);
+    }
+    100% {
+      transform: translateY(0) rotate(360deg);
+    }
+  }
+  
+  /* Matrix effect override for existence theme */
+  .theme-existence .matrix-bg {
+    opacity: 0.15;
+    color: var(--existence-matrix-color);
+  }
+  
+  /* Glowing text effects */
+  .theme-existence .influence {
+    color: var(--existence-accent);
+    text-shadow: 0 0 10px var(--existence-accent);
+  }
+  
+  .theme-existence .effect-value {
+    color: var(--existence-secondary);
+    text-shadow: 0 0 5px var(--existence-secondary);
+  }
+  
+  /* Save/Load section */
+  .theme-existence .save-load-section {
+    background: rgba(10, 10, 26, 0.8);
+    border: 1px solid var(--existence-primary);
+    box-shadow: var(--existence-glow);
+  }
+  
+  .theme-existence .save-button,
+  .theme-existence .load-button {
+    background: linear-gradient(45deg, rgba(155, 77, 202, 0.2), rgba(0, 255, 157, 0.2));
+    border: 1px solid var(--existence-primary);
+    box-shadow: var(--existence-glow);
+    transition: all 0.3s ease;
+  }
+  
+  .theme-existence .save-button:hover,
+  .theme-existence .load-button:hover {
+    background: linear-gradient(45deg, var(--existence-primary), var(--existence-secondary));
+    transform: translateY(-2px);
+    box-shadow: 0 0 20px var(--existence-primary);
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 480px) {
+    .theme-existence .game-header {
+      background: linear-gradient(to bottom, rgba(155, 77, 202, 0.2), rgba(0, 255, 157, 0.2));
+    }
+    
+    .theme-existence .nav-button {
+      font-size: 0.9rem;
+      padding: 8px;
+    }
+  }
