@@ -21,6 +21,9 @@ export default class GameState {
 
     // AI Path state
     this._aiPathUnlocked = false;
+
+    // Existence Path state
+    this._existencePathUnlocked = false;
   }
 
   // Money management
@@ -445,6 +448,15 @@ export default class GameState {
     return this._aiPathUnlocked;
   }
 
+  // Existence Path management
+  getExistencePathUnlocked() {
+    return this._existencePathUnlocked;
+  }
+
+  unlockExistencePath() {
+    this._existencePathUnlocked = true;
+  }
+
   // State serialization
   toJSON() {
     return {
@@ -456,6 +468,7 @@ export default class GameState {
       skillProgress: this._skillProgress,
       ownedItems: Array.from(this._ownedItems),
       aiPathUnlocked: this._aiPathUnlocked,
+      existencePathUnlocked: this._existencePathUnlocked, // Add existence path state
     };
   }
 
@@ -470,6 +483,7 @@ export default class GameState {
     state._skillProgress = json.skillProgress || {};
     state._ownedItems = new Set(json.ownedItems || []);
     state._aiPathUnlocked = json.aiPathUnlocked || false;
+    state._existencePathUnlocked = json.existencePathUnlocked || false; // Add existence path state
     return state;
   }
 
