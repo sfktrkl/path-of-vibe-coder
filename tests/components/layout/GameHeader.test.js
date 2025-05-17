@@ -442,9 +442,7 @@ describe("GameHeader.vue", () => {
         props: { currentView: "job", gameState },
       });
       const progressBar = wrapper.findComponent({ name: "ProgressBar" });
-      expect(progressBar.props("isComplete")).toBe(false);
-      expect(progressBar.props("progress")).toBe(100);
-      expect(progressBar.classes()).not.toContain("glowing");
+      expect(progressBar.exists()).toBe(false);
     });
   });
 });

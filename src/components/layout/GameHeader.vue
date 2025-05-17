@@ -34,7 +34,10 @@
 
       <div
         class="progress-bars"
-        v-if="hasInfluenceGainJobs || gameState.getInfluence() > 0"
+        v-if="
+          (hasInfluenceGainJobs || gameState.getInfluence() > 0) &&
+          !gameState.getExistencePathUnlocked()
+        "
       >
         <ProgressBar
           :label="currentStoryStage?.message || 'Begin your journey'"
