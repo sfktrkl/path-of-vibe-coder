@@ -32,6 +32,17 @@
         </div>
       </div>
 
+      <div
+        class="progress-bars"
+        v-if="hasInfluenceGainJobs || gameState.getInfluence() > 0"
+      >
+        <ProgressBar
+          :label="currentStoryStage.message"
+          :progress="storyProgressPercentage"
+          type="story"
+        />
+      </div>
+
       <div class="progress-bars" v-if="currentLearning || currentJob">
         <ProgressBar
           v-if="currentLearning"
@@ -65,6 +76,7 @@
 <script>
 import { jobs } from "@data/jobs";
 import { skills } from "@data/skills";
+import { storyProgression } from "@data/story";
 import dataMixin from "@mixins/dataMixin";
 import ProgressBar from "@items/ProgressBar.vue";
 
@@ -125,6 +137,33 @@ export default {
         this.totalItemEffects.influenceBoost &&
         this.totalItemEffects.influenceBoost > 1
       );
+    },
+    currentStoryStage() {
+      const influence = this.gameState.getInfluence();
+      const stages = Object.values(storyProgression);
+
+      // Find the highest stage that the player has reached
+      const currentStage = stages.reduce((highest, stage) => {
+        if (
+          influence >= stage.influenceRequired &&
+          (!highest || stage.influenceRequired > highest.influenceRequired)
+        ) {
+          return stage;
+        }
+        return highest;
+      }, null);
+
+      return currentStage;
+    },
+    storyProgressPercentage() {
+      const influence = this.gameState.getInfluence();
+      const stages = Object.values(storyProgression);
+      const maxInfluence = Math.max(
+        ...stages.map((stage) => stage.influenceRequired)
+      );
+
+      // Calculate percentage based on current influence vs max influence
+      return Math.min(100, (influence / maxInfluence) * 100);
     },
   },
 };
@@ -214,18 +253,48 @@ h1 {
   margin-right: 0.1em;
 }
 
-.progress-bars {
-  display: flex;
-  gap: 0.5rem;
-  height: 48px;
+.story-section {
   width: 100%;
-  box-sizing: border-box;
+  margin: 0.5rem 0;
+  padding: 0.5rem;
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 4px;
 }
 
-.progress-bars > * {
-  flex: 1;
-  min-width: 150px;
-  box-sizing: border-box;
+.story-message {
+  color: #f1c40f;
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+  font-style: italic;
+  text-align: center;
+}
+
+.story-progress {
+  display: none;
+}
+
+.item-effects {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  width: 100%;
+  margin-top: 0.5rem;
+}
+
+.effect {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.9rem;
+}
+
+.effect-name {
+  color: #888;
+}
+
+.effect-value {
+  color: #2ecc71;
+  font-weight: 500;
 }
 
 .navigation {
@@ -268,39 +337,6 @@ h1 {
 .nav-button.active {
   background-color: rgba(255, 255, 255, 0.3);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-}
-
-/* Update dynamic height for the new layout */
-.game-header:has(.progress-bars) {
-  min-height: 180px;
-}
-
-.game-header:has(.progress-bars) .header-content {
-  min-height: 180px;
-}
-
-.item-effects {
-  display: flex;
-  gap: 0.5rem;
-  flex-wrap: wrap;
-  width: 100%;
-  margin-top: 0.5rem;
-}
-
-.effect {
-  display: flex;
-  align-items: center;
-  gap: 0.25rem;
-  font-size: 0.9rem;
-}
-
-.effect-name {
-  color: #888;
-}
-
-.effect-value {
-  color: #2ecc71;
-  font-weight: 500;
 }
 
 @media (min-width: 768px) {
@@ -346,5 +382,48 @@ h1 {
   .effect {
     font-size: 0.8rem;
   }
+
+  .story-message {
+    font-size: 0.8rem;
+  }
+
+  .story-progress {
+    flex-direction: column;
+    height: auto;
+  }
+
+  .story-progress > * {
+    min-width: 100%;
+  }
+}
+
+/* Update dynamic height for the new layout */
+.game-header:has(.progress-bars) {
+  min-height: 200px;
+}
+
+.game-header:has(.progress-bars) .header-content {
+  min-height: 200px;
+}
+
+/* Remove all story-progress specific styles since we're using progress-bars class */
+.story-progress {
+  display: none;
+}
+
+/* The progress-bars class already has all the styling we need */
+.progress-bars {
+  display: flex;
+  gap: 0.5rem;
+  height: 48px;
+  width: 100%;
+  box-sizing: border-box;
+  margin-bottom: 0.5rem;
+}
+
+.progress-bars > * {
+  flex: 1;
+  min-width: 150px;
+  box-sizing: border-box;
 }
 </style>

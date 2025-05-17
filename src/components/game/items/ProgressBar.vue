@@ -7,7 +7,10 @@
       <div
         class="progress"
         :style="{ width: `${progress}%` }"
-        :class="{ 'job-progress': type === 'job' }"
+        :class="{
+          'job-progress': type === 'job',
+          'story-progress': type === 'story',
+        }"
       ></div>
     </div>
   </div>
@@ -28,7 +31,7 @@ export default {
     type: {
       type: String,
       default: "learning",
-      validator: (value) => ["learning", "job"].includes(value),
+      validator: (value) => ["learning", "job", "story"].includes(value),
     },
   },
 };
@@ -71,5 +74,10 @@ export default {
 
 .progress.job-progress {
   background-color: #e74c3c;
+}
+
+.progress.story-progress {
+  background-color: #f1c40f;
+  box-shadow: 0 0 8px rgba(241, 196, 15, 0.3);
 }
 </style>

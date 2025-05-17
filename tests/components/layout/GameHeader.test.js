@@ -92,8 +92,11 @@ describe("GameHeader.vue", () => {
       gameState: learningGameState,
     });
     const progressBars = wrapper.findAll(".progress-bars");
-    expect(progressBars).toHaveLength(1);
+    expect(progressBars).toHaveLength(2);
     expect(wrapper.text()).toContain("Learning: Test Skill");
+    expect(wrapper.text()).toContain(
+      "Sometimes I feel bored... there must be more..."
+    );
   });
 
   test("shows job progress bar when working", async () => {
@@ -106,8 +109,11 @@ describe("GameHeader.vue", () => {
       gameState: workingGameState,
     });
     const progressBars = wrapper.findAll(".progress-bars");
-    expect(progressBars).toHaveLength(1);
+    expect(progressBars).toHaveLength(2);
     expect(wrapper.text()).toContain("Working: Test Job");
+    expect(wrapper.text()).toContain(
+      "Sometimes I feel bored... there must be more..."
+    );
   });
 
   test("shows both progress bars when learning and working", async () => {
@@ -122,9 +128,33 @@ describe("GameHeader.vue", () => {
       gameState: bothGameState,
     });
     const progressBars = wrapper.findAll(".progress-bars");
-    expect(progressBars).toHaveLength(1);
+    expect(progressBars).toHaveLength(2);
     expect(wrapper.text()).toContain("Learning: Test Skill");
     expect(wrapper.text()).toContain("Working: Test Job");
+    expect(wrapper.text()).toContain(
+      "Sometimes I feel bored... there must be more..."
+    );
+  });
+
+  test("shows story progress bar when influence conditions are met", () => {
+    const progressBars = wrapper.findAll(".progress-bars");
+    expect(progressBars).toHaveLength(1);
+    expect(wrapper.text()).toContain(
+      "Sometimes I feel bored... there must be more..."
+    );
+  });
+
+  test("hides story progress bar when influence conditions are not met", async () => {
+    const noInfluenceGameState = {
+      ...mockGameState,
+      getInfluence: () => 0,
+      isJobUnlocked: () => false,
+    };
+    await wrapper.setProps({
+      gameState: noInfluenceGameState,
+    });
+    const progressBars = wrapper.findAll(".progress-bars");
+    expect(progressBars).toHaveLength(0);
   });
 
   test("displays item effects correctly when effects exist", async () => {
