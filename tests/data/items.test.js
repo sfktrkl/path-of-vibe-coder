@@ -134,4 +134,28 @@ describe("Items Data Validation", () => {
       });
     });
   });
+
+  // Test that each item has strictly better stat bonuses than its prerequisites
+  test("item progression has increasing stat bonuses", () => {
+    Object.values(items).forEach((item) => {
+      // For each required item (prerequisite)
+      item.requiredItems.forEach((reqItemId) => {
+        const reqItem = items[reqItemId];
+
+        // For each stat in the current item
+        Object.entries(item.stats).forEach(([stat, value]) => {
+          // If the prerequisite has the same stat
+          if (reqItem.stats[stat] !== undefined) {
+            // For skillTimeReduction, lower values are better (it's a reduction)
+            if (stat === "skillTimeReduction") {
+              expect(value).toBeLessThan(reqItem.stats[stat]);
+            } else {
+              // For all other stats, higher values are better
+              expect(value).toBeGreaterThan(reqItem.stats[stat]);
+            }
+          }
+        });
+      });
+    });
+  });
 });
