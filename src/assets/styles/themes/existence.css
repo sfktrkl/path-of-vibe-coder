@@ -350,6 +350,55 @@
     animation: spectrumFlow 4s linear infinite;
   }
   
+  /* Reset Button */
+  .theme-existence .reset-button {
+    position: relative;
+    background: transparent;
+    border: 1px solid var(--existence-accent);
+    box-shadow: 0 0 20px rgba(255, 0, 255, 0.5);
+    transition: all 0.3s ease;
+  }
+
+  .theme-existence .reset-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+      90deg,
+      var(--existence-accent),
+      var(--existence-primary),
+      var(--existence-accent),
+      var(--existence-primary),
+      var(--existence-accent)
+    );
+    background-size: 200% 100%;
+    animation: spectrumFlow 6s linear infinite;
+    opacity: 0.75;
+    z-index: -1;
+  }
+
+  .theme-existence .reset-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 30px var(--existence-accent);
+  }
+
+  .theme-existence .reset-button:hover::before {
+    opacity: 0.9;
+    animation: spectrumFlow 4s linear infinite;
+  }
+
+  .theme-existence .reset-button:active {
+    box-shadow: 0 0 40px var(--existence-accent);
+  }
+
+  .theme-existence .reset-button:active::before {
+    opacity: 1;
+    animation: spectrumFlow 3s linear infinite;
+  }
+  
   /* Responsive adjustments */
   @media (max-width: 480px) {
     .theme-existence .game-header {
