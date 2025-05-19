@@ -62,21 +62,51 @@
   }
   
   .theme-existence .nav-button {
-    background: linear-gradient(45deg, rgba(155, 77, 202, 0.2), rgba(0, 255, 157, 0.2));
+    position: relative;
+    background: transparent;
     border: 1px solid var(--existence-primary);
     box-shadow: var(--existence-glow);
     transition: all 0.3s ease;
   }
   
+  .theme-existence .nav-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+      90deg,
+      var(--existence-primary),
+      var(--existence-secondary),
+      var(--existence-accent),
+      var(--existence-secondary),
+      var(--existence-primary)
+    );
+    background-size: 200% 100%;
+    animation: spectrumFlow 6s linear infinite;
+    opacity: 0.4;
+    z-index: -1;
+  }
+  
   .theme-existence .nav-button:hover {
-    background: linear-gradient(45deg, rgba(155, 77, 202, 0.3), rgba(0, 255, 157, 0.3));
     transform: translateY(-2px);
     box-shadow: 0 0 30px var(--existence-primary);
   }
   
+  .theme-existence .nav-button:hover::before {
+    opacity: 0.6;
+    animation: spectrumFlow 4s linear infinite;
+  }
+  
   .theme-existence .nav-button.active {
-    background: linear-gradient(45deg, var(--existence-primary), var(--existence-secondary));
     box-shadow: 0 0 20px var(--existence-primary);
+  }
+  
+  .theme-existence .nav-button.active::before {
+    opacity: 0.8;
+    animation: spectrumFlow 5s linear infinite;
   }
   
   /* Game Content Styles */
