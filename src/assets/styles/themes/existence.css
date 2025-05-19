@@ -179,12 +179,15 @@
     text-shadow: 0 0 10px var(--existence-secondary);
   }
   
+  /* View styles */
   .theme-existence .jobs-view,
   .theme-existence .skills-view,
-  .theme-existence .shop-view {
+  .theme-existence .shop-view,
+  .theme-existence .skills-list,
+  .theme-existence .jobs-list {
     background: rgba(10, 10, 26, 0.6);
-    border: 1px solid var(--existence-primary);
-    box-shadow: var(--existence-glow);
+    background: transparent;
+    box-shadow: none;
   }
   
   /* Item Styles */
