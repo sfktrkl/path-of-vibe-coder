@@ -101,36 +101,86 @@
   
   /* Item Styles */
   .theme-existence .item-base {
-    background: linear-gradient(45deg, rgba(155, 77, 202, 0.1), rgba(0, 255, 157, 0.1));
+    position: relative;
     border: 1px solid var(--existence-primary);
     box-shadow: var(--existence-glow);
     transition: all 0.3s ease;
+    background: transparent;
   }
-  
+
+  .theme-existence .item-base::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+      90deg,
+      var(--existence-primary),
+      var(--existence-secondary),
+      var(--existence-accent),
+      var(--existence-secondary),
+      var(--existence-primary)
+    );
+    background-size: 200% 100%;
+    animation: spectrumFlow 6s linear infinite;
+    opacity: 0.4;
+    z-index: -1;
+  }
+
+  @keyframes spectrumFlow {
+    0% {
+      background-position: 0% 50%;
+    }
+    100% {
+      background-position: 200% 50%;
+    }
+  }
+
   .theme-existence .item-base:hover {
     transform: translateY(-2px) scale(1.02);
     box-shadow: 0 0 30px var(--existence-primary);
   }
-  
+
+  .theme-existence .item-base:hover::before {
+    opacity: 0.6;
+    animation: spectrumFlow 4s linear infinite;
+  }
+
   .theme-existence .item-base.current {
-    background: linear-gradient(45deg, var(--existence-primary), var(--existence-secondary));
     box-shadow: 0 0 20px var(--existence-primary);
   }
-  
+
+  .theme-existence .item-base.current::before {
+    opacity: 0.8;
+    animation: spectrumFlow 5s linear infinite;
+  }
+
   .theme-existence .item-base.available {
     border-color: var(--existence-secondary);
     box-shadow: 0 0 15px var(--existence-secondary);
   }
-  
-  .theme-existence .item-base.learning {
-    background: linear-gradient(45deg, rgba(155, 77, 202, 0.2), rgba(0, 255, 157, 0.2));
-    animation: pulse 2s infinite;
+
+  .theme-existence .item-base.available::before {
+    opacity: 0.5;
+    animation: spectrumFlow 7s linear infinite;
   }
-  
+
+  .theme-existence .item-base.learning::before {
+    opacity: 0.7;
+    animation: spectrumFlow 5s linear infinite, pulse 2s infinite;
+  }
+
   .theme-existence .item-base.learned,
   .theme-existence .item-base.unlocked {
-    background: linear-gradient(45deg, rgba(0, 255, 157, 0.2), rgba(155, 77, 202, 0.2));
     border-color: var(--existence-secondary);
+  }
+
+  .theme-existence .item-base.learned::before,
+  .theme-existence .item-base.unlocked::before {
+    opacity: 0.75;
+    animation: spectrumFlow 6s linear infinite;
   }
   
   /* Progress Bar Styles */
