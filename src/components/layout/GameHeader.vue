@@ -46,7 +46,6 @@
           "
           :progress="storyProgressPercentage"
           type="story"
-          :isComplete="gameState.checkExistencePathUnlock()"
           @story-complete-click="handleStoryProgressClick"
         />
       </div>

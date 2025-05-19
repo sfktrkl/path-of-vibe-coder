@@ -1,7 +1,7 @@
 <template>
   <div
     class="progress-container"
-    :class="{ glowing: type === 'story' && isComplete && progress === 100 }"
+    :class="{ glowing: type === 'story' && progress == 100 }"
     :data-type="type"
     @click="handleClick"
     @mouseenter="handleMouseEnter"
@@ -40,10 +40,6 @@ export default {
       default: "learning",
       validator: (value) => ["learning", "job", "story"].includes(value),
     },
-    isComplete: {
-      type: Boolean,
-      default: false,
-    },
     hoverLabel: {
       type: String,
       default: "",
@@ -60,8 +56,7 @@ export default {
         this.type === "story" &&
         this.progress === 100 &&
         this.isHovered &&
-        this.hoverLabel &&
-        this.isComplete
+        this.hoverLabel
       ) {
         return this.hoverLabel;
       }
@@ -70,7 +65,7 @@ export default {
   },
   methods: {
     handleClick() {
-      if (this.type === "story" && this.isComplete) {
+      if (this.type === "story") {
         this.$emit("story-complete-click");
       }
     },
