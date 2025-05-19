@@ -51,15 +51,11 @@ export default class GameState {
 
   addInfluence(amount) {
     this._influence += amount;
-    // Check for existence path unlock when influence changes
-    this.checkExistencePathUnlock();
   }
 
   spendInfluence(amount) {
     if (this._influence >= amount) {
       this._influence -= amount;
-      // Check for existence path unlock when influence changes
-      this.checkExistencePathUnlock();
       return true;
     }
     return false;
