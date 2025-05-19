@@ -61,15 +61,23 @@
     text-shadow: 0 0 10px var(--existence-secondary);
   }
   
-  .theme-existence .nav-button {
+  /* Common button styles */
+  .theme-existence .nav-button,
+  .theme-existence .save-button,
+  .theme-existence .load-button,
+  .theme-existence .reset-button {
     position: relative;
     background: transparent;
     border: 1px solid var(--existence-primary);
     box-shadow: var(--existence-glow);
     transition: all 0.3s ease;
+    transform-origin: center;
   }
-  
-  .theme-existence .nav-button::before {
+
+  .theme-existence .nav-button::before,
+  .theme-existence .save-button::before,
+  .theme-existence .load-button::before,
+  .theme-existence .reset-button::before {
     content: '';
     position: absolute;
     top: 0;
@@ -86,24 +94,74 @@
     );
     background-size: 200% 100%;
     animation: spectrumFlow 6s linear infinite;
-    opacity: 0.4;
+    opacity: 0.75;
     z-index: -1;
   }
-  
-  .theme-existence .nav-button:hover {
-    transform: translateY(-2px);
+
+  /* Reset button specific styles */
+  .theme-existence .reset-button {
+    border: 1px solid var(--existence-accent);
+    box-shadow: 0 0 20px rgba(255, 0, 255, 0.5);
+  }
+
+  .theme-existence .reset-button::before {
+    background: linear-gradient(
+      90deg,
+      var(--existence-accent),
+      var(--existence-primary),
+      var(--existence-accent),
+      var(--existence-primary),
+      var(--existence-accent)
+    );
+  }
+
+  /* Hover effects for all buttons */
+  .theme-existence .nav-button:hover,
+  .theme-existence .save-button:hover,
+  .theme-existence .load-button:hover,
+  .theme-existence .reset-button:hover {
+    transform: scale(0.98);
     box-shadow: 0 0 30px var(--existence-primary);
   }
-  
-  .theme-existence .nav-button:hover::before {
-    opacity: 0.6;
+
+  .theme-existence .reset-button:hover {
+    box-shadow: 0 0 30px var(--existence-accent);
+  }
+
+  .theme-existence .nav-button:hover::before,
+  .theme-existence .save-button:hover::before,
+  .theme-existence .load-button:hover::before,
+  .theme-existence .reset-button:hover::before {
+    opacity: 0.9;
     animation: spectrumFlow 4s linear infinite;
   }
-  
+
+  /* Active effects for all buttons */
+  .theme-existence .nav-button:active,
+  .theme-existence .save-button:active,
+  .theme-existence .load-button:active,
+  .theme-existence .reset-button:active {
+    transform: scale(0.95);
+    box-shadow: 0 0 40px var(--existence-primary);
+  }
+
+  .theme-existence .reset-button:active {
+    box-shadow: 0 0 40px var(--existence-accent);
+  }
+
+  .theme-existence .nav-button:active::before,
+  .theme-existence .save-button:active::before,
+  .theme-existence .load-button:active::before,
+  .theme-existence .reset-button:active::before {
+    opacity: 1;
+    animation: spectrumFlow 3s linear infinite;
+  }
+
+  /* Active nav button specific */
   .theme-existence .nav-button.active {
     box-shadow: 0 0 20px var(--existence-primary);
   }
-  
+
   .theme-existence .nav-button.active::before {
     opacity: 0.8;
     animation: spectrumFlow 5s linear infinite;
@@ -136,6 +194,7 @@
     box-shadow: var(--existence-glow);
     transition: all 0.3s ease;
     background: transparent;
+    transform-origin: center;
   }
 
   .theme-existence .item-base::before {
@@ -169,13 +228,23 @@
   }
 
   .theme-existence .item-base:hover {
-    transform: translateY(-2px) scale(1.02);
+    transform: scale(0.98);
     box-shadow: 0 0 30px var(--existence-primary);
   }
 
   .theme-existence .item-base:hover::before {
     opacity: 0.6;
     animation: spectrumFlow 4s linear infinite;
+  }
+
+  .theme-existence .item-base:active {
+    transform: scale(0.95);
+    box-shadow: 0 0 40px var(--existence-primary);
+  }
+
+  .theme-existence .item-base:active::before {
+    opacity: 0.8;
+    animation: spectrumFlow 3s linear infinite;
   }
 
   .theme-existence .item-base.current {
@@ -298,105 +367,6 @@
   .theme-existence .effect-value {
     color: var(--existence-secondary);
     text-shadow: 0 0 5px var(--existence-secondary);
-  }
-  
-  /* Save/Load section */
-  .theme-existence .save-load-section {
-    background: rgba(10, 10, 26, 0.8);
-    border: 1px solid var(--existence-primary);
-    box-shadow: var(--existence-glow);
-  }
-  
-  .theme-existence .save-button,
-  .theme-existence .load-button {
-    position: relative;
-    background: transparent;
-    border: 1px solid var(--existence-primary);
-    box-shadow: var(--existence-glow);
-    transition: all 0.3s ease;
-  }
-  
-  .theme-existence .save-button::before,
-  .theme-existence .load-button::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(
-      90deg,
-      var(--existence-primary),
-      var(--existence-secondary),
-      var(--existence-accent),
-      var(--existence-secondary),
-      var(--existence-primary)
-    );
-    background-size: 200% 100%;
-    animation: spectrumFlow 6s linear infinite;
-    opacity: 0.75;
-    z-index: -1;
-  }
-  
-  .theme-existence .save-button:hover,
-  .theme-existence .load-button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 0 20px var(--existence-primary);
-  }
-  
-  .theme-existence .save-button:hover::before,
-  .theme-existence .load-button:hover::before {
-    opacity: 0.9;
-    animation: spectrumFlow 4s linear infinite;
-  }
-  
-  /* Reset Button */
-  .theme-existence .reset-button {
-    position: relative;
-    background: transparent;
-    border: 1px solid var(--existence-accent);
-    box-shadow: 0 0 20px rgba(255, 0, 255, 0.5);
-    transition: all 0.3s ease;
-  }
-
-  .theme-existence .reset-button::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(
-      90deg,
-      var(--existence-accent),
-      var(--existence-primary),
-      var(--existence-accent),
-      var(--existence-primary),
-      var(--existence-accent)
-    );
-    background-size: 200% 100%;
-    animation: spectrumFlow 6s linear infinite;
-    opacity: 0.75;
-    z-index: -1;
-  }
-
-  .theme-existence .reset-button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 0 30px var(--existence-accent);
-  }
-
-  .theme-existence .reset-button:hover::before {
-    opacity: 0.9;
-    animation: spectrumFlow 4s linear infinite;
-  }
-
-  .theme-existence .reset-button:active {
-    box-shadow: 0 0 40px var(--existence-accent);
-  }
-
-  .theme-existence .reset-button:active::before {
-    opacity: 1;
-    animation: spectrumFlow 3s linear infinite;
   }
   
   /* Responsive adjustments */
