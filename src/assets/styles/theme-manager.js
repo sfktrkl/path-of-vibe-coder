@@ -80,6 +80,11 @@ class ThemeManager {
       this.deactivateAITheme();
     }
 
+    // Stop particle system if it's running
+    if (this.particleSystem) {
+      this.particleSystem.stop();
+    }
+
     this.currentTheme = "existence";
     document.body.classList.add("theme-existence");
     this.addExistenceBackground();
@@ -89,6 +94,11 @@ class ThemeManager {
     this.currentTheme = "normal";
     document.body.classList.remove("theme-existence");
     this.removeExistenceBackground();
+
+    // Stop particle system if it's running
+    if (this.particleSystem) {
+      this.particleSystem.stop();
+    }
   }
 
   deactivateTheme() {
@@ -149,23 +159,6 @@ class ThemeManager {
     const particlesContainer = document.createElement("div");
     particlesContainer.className = "existence-particles";
     document.body.appendChild(particlesContainer);
-
-    // Initialize particle system for existence theme
-    if (!this.particleSystem) {
-      this.particleSystem = new ParticleSystem({
-        particleColor: "rgba(155, 77, 202, 0.5)",
-        particleCount: 50,
-        particleSize: 2,
-        speed: 0.5,
-        connectionDistance: 150,
-        connectionColor: "rgba(0, 255, 157, 0.2)",
-      });
-    }
-
-    // Wait for the container to be available
-    this.waitForContainer(() => {
-      this.particleSystem.start();
-    });
   }
 
   removeExistenceBackground() {
