@@ -226,7 +226,7 @@
     );
     background-size: 200% 100%;
     animation: spectrumFlow 5s linear infinite;
-    opacity: 0.4;
+    opacity: 0.7;
     z-index: -1;
   }
 
@@ -244,7 +244,7 @@
   }
 
   .theme-existence .item-base:hover::before {
-    opacity: 0.6;
+    opacity: 0.7;
   }
 
   .theme-existence .item-base:active {
@@ -252,7 +252,7 @@
   }
 
   .theme-existence .item-base:active::before {
-    opacity: 0.8;
+    opacity: 0.7;
   }
 
   .theme-existence .item-base.current::before {
@@ -265,7 +265,7 @@
       #0066cc
     );
     background-size: 200% 100%;
-    opacity: 0.8;
+    opacity: 0.7;
   }
 
   .theme-existence .item-base.available {
@@ -273,7 +273,7 @@
   }
 
   .theme-existence .item-base.available::before {
-    opacity: 0.5;
+    opacity: 0.7;
   }
 
   .theme-existence .item-base.learning::before {
@@ -297,7 +297,7 @@
 
   .theme-existence .item-base.learned::before,
   .theme-existence .item-base.unlocked::before {
-    opacity: 0.75;
+    opacity: 0.7;
   }
   
   /* Progress Bar Styles */
@@ -456,7 +456,7 @@
       var(--existence-secondary)
     );
     background-size: 200% 100%;
-    opacity: 0.75;
+    opacity: 0.4;
     animation: spectrumFlow 5s linear infinite;
   }
 
@@ -473,7 +473,7 @@
       #ff3333
     );
     background-size: 200% 100%;
-    opacity: 0.3;
+    opacity: 0.7;
     animation: spectrumFlow 5s linear infinite;
   }
 
