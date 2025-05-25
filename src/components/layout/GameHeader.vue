@@ -348,11 +348,12 @@ h1 {
 
   .progress-bars {
     flex-direction: column;
-    height: auto;
   }
 
   .progress-bars > * {
-    min-width: 100%;
+    width: 100%;
+    max-width: 100%;
+    flex: 1 1 100%;
   }
 
   .header-content {
@@ -384,99 +385,102 @@ h1 {
 
   .story-progress {
     flex-direction: column;
-    height: auto;
   }
 
   .story-progress > * {
     min-width: 100%;
   }
+
+  .game-header:has(.progress-bars) {
+    min-height: 280px;
+  }
+
+  .game-header:has(.progress-bars) .header-content {
+    min-height: 280px;
+  }
 }
 
-/* Update dynamic height for the new layout */
-.game-header:has(.progress-bars) {
-  min-height: 200px;
+/* Update the progress bars container to handle multiple bars properly */
+.progress-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: 100%;
+  box-sizing: border-box;
+  margin-bottom: 0.5rem;
+  padding: 0;
 }
 
-.game-header:has(.progress-bars) .header-content {
-  min-height: 200px;
+/* Base styles for all progress bars */
+.progress-bars > * {
+  box-sizing: border-box;
+  width: 100%;
+  flex: 1;
 }
 
-/* Remove all story-progress specific styles since we're using progress-bars class */
+/* On larger screens, show progress bars side by side */
+@media (min-width: 768px) {
+  .progress-bars {
+    flex-direction: row;
+  }
+
+  .progress-bars > * {
+    width: calc(50% - 0.25rem); /* Half width minus half the gap */
+  }
+
+  /* Different heights based on number of progress bars */
+  .game-header:has(.progress-bars:has(> *:only-child)) {
+    min-height: 180px; /* Shorter height for single progress bar */
+  }
+
+  .game-header:has(.progress-bars:has(> *:nth-child(2))) {
+    min-height: 220px; /* Taller height for two progress bars */
+  }
+
+  .game-header:has(.progress-bars:has(> *:only-child)) .header-content {
+    min-height: 180px;
+  }
+
+  .game-header:has(.progress-bars:has(> *:nth-child(2))) .header-content {
+    min-height: 220px;
+  }
+}
+
+/* Mobile adjustments */
+@media (max-width: 767px) {
+  .progress-bars {
+    flex-direction: column;
+  }
+
+  .progress-bars > * {
+    width: 100%;
+  }
+
+  /* Different heights based on number of progress bars */
+  .game-header:has(.progress-bars:has(> *:only-child)) {
+    min-height: 220px; /* Shorter height for single progress bar */
+  }
+
+  .game-header:has(.progress-bars:has(> *:nth-child(2))) {
+    min-height: 280px; /* Taller height for two progress bars */
+  }
+
+  .game-header:has(.progress-bars:has(> *:only-child)) .header-content {
+    min-height: 220px;
+  }
+
+  .game-header:has(.progress-bars:has(> *:nth-child(2))) .header-content {
+    min-height: 280px;
+  }
+}
+
+/* Remove old story-progress specific styles since we're using progress-bars class */
 .story-progress {
   display: none;
 }
 
-/* The progress-bars class already has all the styling we need */
-.progress-bars {
-  display: flex;
-  gap: 0.5rem;
-  height: 48px;
-  width: 100%;
-  box-sizing: border-box;
-  margin-bottom: 0.5rem;
-}
-
-.progress-bars > * {
-  flex: 1;
-  min-width: 150px;
-  box-sizing: border-box;
-}
-
-.story-progress {
-  position: relative;
-  cursor: default;
-  transition: all 0.3s ease;
-}
-
-.story-progress.glowing {
-  cursor: pointer;
-  animation: glow 2s infinite;
-}
-
-.story-progress.glowing:hover {
-  transform: scale(1.02);
-  filter: brightness(1.2);
-}
-
-@keyframes glow {
-  0% {
-    box-shadow: 0 0 5px rgba(241, 196, 15, 0.5);
-  }
-  50% {
-    box-shadow: 0 0 20px rgba(241, 196, 15, 0.8);
-  }
-  100% {
-    box-shadow: 0 0 5px rgba(241, 196, 15, 0.5);
-  }
-}
-
+/* Remove duplicate styles */
 .story-progress-wrapper {
-  position: relative;
-  flex: 1;
-  min-width: 150px;
-  cursor: default;
-  transition: all 0.3s ease;
-}
-
-.story-progress-wrapper.glowing {
-  cursor: pointer;
-  animation: glow 2s infinite;
-}
-
-.story-progress-wrapper.glowing:hover {
-  transform: scale(1.02);
-  filter: brightness(1.2);
-}
-
-@keyframes glow {
-  0% {
-    box-shadow: 0 0 5px rgba(241, 196, 15, 0.5);
-  }
-  50% {
-    box-shadow: 0 0 20px rgba(241, 196, 15, 0.8);
-  }
-  100% {
-    box-shadow: 0 0 5px rgba(241, 196, 15, 0.5);
-  }
+  display: none;
 }
 </style>

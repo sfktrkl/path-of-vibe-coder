@@ -1,7 +1,10 @@
 <template>
   <div
     class="progress-container"
-    :class="{ glowing: type === 'story' && progress == 100 }"
+    :class="{
+      glowing: type === 'story' && progress == 100,
+      single: isSingleProgressBar,
+    }"
     :data-type="type"
     @click="handleClick"
     @mouseenter="handleMouseEnter"
@@ -44,6 +47,10 @@ export default {
       type: String,
       default: "",
     },
+    isSingleProgressBar: {
+      type: Boolean,
+      default: false,
+    },
   },
   data() {
     return {
@@ -84,12 +91,36 @@ export default {
   background-color: rgba(255, 255, 255, 0.05);
   padding: 0.5rem;
   border-radius: 4px;
-  flex: 1;
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
   transition: all 0.3s ease;
   cursor: default;
+  width: 100%;
+  min-width: 200px;
+  max-width: 100%;
+}
+
+/* When it's the only progress bar, take full width */
+.progress-container.single {
+  width: 100%;
+  max-width: 100%;
+}
+
+/* When multiple progress bars exist, they'll stack */
+@media (min-width: 768px) {
+  .progress-container:not(.single) {
+    width: calc(50% - 0.5rem);
+    min-width: 200px;
+  }
+}
+
+/* Ensure the container takes full width on mobile */
+@media (max-width: 767px) {
+  .progress-container {
+    width: 100%;
+    max-width: 100%;
+  }
 }
 
 .progress-container.glowing {
@@ -124,12 +155,14 @@ export default {
   text-overflow: ellipsis;
   position: relative;
   min-height: 1.2em;
+  width: 100%;
 }
 
 .label {
   display: inline-block;
   width: 100%;
   text-align: center;
+  padding: 0 0.5rem;
 }
 
 /* Only apply hover effects to story type progress bars at 100% progress */
