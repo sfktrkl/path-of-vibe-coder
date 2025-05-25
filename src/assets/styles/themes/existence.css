@@ -431,12 +431,14 @@
     background: transparent;
     border-color: var(--existence-secondary);
     color: var(--existence-secondary);
+    text-shadow: 0 0 5px var(--existence-secondary);
   }
 
   .theme-existence .available-badge {
     background: transparent;
     border-color: var(--existence-primary);
     color: var(--existence-primary);
+    text-shadow: 0 0 5px var(--existence-primary);
   }
 
   .theme-existence .unaffordable-badge {
@@ -518,5 +520,49 @@
     background: rgba(10, 10, 26, 0.8);
     border: 1px solid var(--existence-primary);
     color: var(--existence-primary);
+    text-shadow: 0 0 5px var(--existence-primary);
+  }
+
+  /* Text shadow styles matching AI theme */
+  .theme-existence h4 {
+    color: var(--existence-secondary);
+    text-shadow: 0 0 10px var(--existence-secondary);
+    padding-bottom: 8px;
+  }
+
+  /* GameHeader specific text shadows */
+  .theme-existence .game-header h1 {
+    color: var(--existence-text);
+    text-shadow: 0 0 10px var(--existence-primary);
+  }
+
+  .theme-existence .game-header .money {
+    color: var(--existence-secondary);
+    text-shadow: 0 0 10px var(--existence-secondary);
+  }
+
+  .theme-existence .game-header .influence {
+    color: var(--existence-accent);
+    text-shadow: 0 0 10px var(--existence-accent);
+  }
+
+  .theme-existence .game-header .influence-icon {
+    color: var(--existence-accent);
+    text-shadow: 0 0 10px var(--existence-accent);
+    filter: drop-shadow(0 0 5px var(--existence-accent));
+  }
+
+  .theme-existence .game-header .effect-name {
+    color: var(--existence-text);
+    opacity: 0.8;
+  }
+
+  .theme-existence .game-header .effect-value {
+    color: var(--existence-secondary);
+    text-shadow: 0 0 5px var(--existence-secondary);
+  }
+
+  .theme-existence .game-header .nav-button {
+    color: var(--existence-text);
     text-shadow: 0 0 5px var(--existence-primary);
   }
