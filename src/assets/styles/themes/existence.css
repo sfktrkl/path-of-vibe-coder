@@ -398,3 +398,122 @@
       padding: 8px;
     }
   }
+
+  /* Item name and description styles */
+  .theme-existence .item-name {
+    color: var(--existence-text);
+    text-shadow: 0 0 5px var(--existence-primary);
+  }
+
+  .theme-existence .item-description {
+    color: var(--existence-text);
+    opacity: 0.8;
+  }
+
+  .theme-existence .job-salary {
+    color: var(--existence-secondary);
+    text-shadow: 0 0 10px var(--existence-secondary);
+  }
+
+  /* Status badges */
+  .theme-existence .status-badge {
+    background: transparent;
+    border: 1px solid var(--existence-primary);
+    color: var(--existence-primary);
+    text-shadow: 0 0 5px var(--existence-primary);
+  }
+
+  .theme-existence .learned-badge,
+  .theme-existence .owned-badge {
+    background: transparent;
+    border-color: var(--existence-secondary);
+    color: var(--existence-secondary);
+  }
+
+  .theme-existence .available-badge {
+    background: transparent;
+    border-color: var(--existence-primary);
+    color: var(--existence-primary);
+  }
+
+  .theme-existence .unaffordable-badge {
+    background: transparent;
+    border-color: #ff3333;
+    color: #ff3333;
+    text-shadow: 0 0 5px rgba(255, 51, 51, 0.5);
+  }
+
+  /* Item states */
+  .theme-existence .item-base.owned {
+    border-color: var(--existence-secondary);
+  }
+
+  .theme-existence .item-base.owned::before {
+    background: linear-gradient(
+      90deg,
+      var(--existence-secondary),
+      var(--existence-primary),
+      var(--existence-secondary)
+    );
+    background-size: 200% 100%;
+    opacity: 0.75;
+    animation: spectrumFlow 5s linear infinite;
+  }
+
+  .theme-existence .item-base.unaffordable {
+    border-color: #ff3333;
+    opacity: 0.7;
+  }
+
+  .theme-existence .item-base.unaffordable::before {
+    background: linear-gradient(
+      90deg,
+      #ff3333,
+      #ff6666,
+      #ff3333
+    );
+    background-size: 200% 100%;
+    opacity: 0.3;
+    animation: spectrumFlow 5s linear infinite;
+  }
+
+  /* Job specific styles */
+  .theme-existence .job-influence {
+    color: var(--existence-accent);
+    text-shadow: 0 0 10px var(--existence-accent);
+  }
+
+  .theme-existence .job-influence-icon {
+    color: var(--existence-accent);
+    text-shadow: 0 0 10px var(--existence-accent);
+    filter: drop-shadow(0 0 5px var(--existence-accent));
+  }
+
+  /* Progress bar text styles */
+  .theme-existence .progress-info {
+    color: var(--existence-text);
+    text-shadow: 0 0 5px var(--existence-primary);
+  }
+
+  .theme-existence .progress-info span {
+    color: var(--existence-text);
+    text-shadow: 0 0 5px var(--existence-primary);
+  }
+
+  .theme-existence .progress-label {
+    color: var(--existence-text);
+    text-shadow: 0 0 5px var(--existence-primary);
+  }
+
+  /* Save/Load view styles */
+  .theme-existence .save-load-section {
+    background: transparent;
+    border: 1px solid var(--existence-primary);
+  }
+
+  .theme-existence .code-display {
+    background: rgba(10, 10, 26, 0.8);
+    border: 1px solid var(--existence-primary);
+    color: var(--existence-primary);
+    text-shadow: 0 0 5px var(--existence-primary);
+  }
