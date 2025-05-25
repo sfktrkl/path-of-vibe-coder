@@ -41,13 +41,13 @@
   
   /* Header Styles */
   .theme-existence .game-header {
-    background: linear-gradient(to right, rgba(155, 77, 202, 0.2), rgba(0, 255, 157, 0.2));
+    background: var(--existence-bg);
     border-bottom: 2px solid var(--existence-primary);
     box-shadow: var(--existence-glow);
   }
   
   .theme-existence .header-content {
-    background: rgba(10, 10, 26, 0.8);
+    background: var(--existence-bg);
   }
   
   .theme-existence .character-info {
@@ -390,7 +390,7 @@
   /* Responsive adjustments */
   @media (max-width: 480px) {
     .theme-existence .game-header {
-      background: linear-gradient(to bottom, rgba(155, 77, 202, 0.2), rgba(0, 255, 157, 0.2));
+      background: var(--existence-bg);
     }
     
     .theme-existence .nav-button {
