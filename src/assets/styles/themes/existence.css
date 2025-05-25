@@ -132,7 +132,7 @@
       #0066cc
     );
     background-size: 200% 100%;
-    opacity: 1;
+    opacity: 0.75;
     animation: spectrumFlow 5s linear infinite;
     z-index: -1;
   }
@@ -150,13 +150,13 @@
   .theme-existence .save-button:hover::before,
   .theme-existence .load-button:hover::before,
   .theme-existence .reset-button:hover::before {
-    opacity: 0.9;
+    opacity: 0.75;
     animation: spectrumFlow 5s linear infinite;
   }
 
   /* Active button hover state */
   .theme-existence .nav-button.active:hover::before {
-    opacity: 1;
+    opacity: 0.75;
     animation: spectrumFlow 5s linear infinite;
   }
 
@@ -173,7 +173,7 @@
   .theme-existence .save-button:active::before,
   .theme-existence .load-button:active::before,
   .theme-existence .reset-button:active::before {
-    opacity: 1;
+    opacity: 0.75;
     animation: spectrumFlow 5s linear infinite;
   }
   
@@ -226,7 +226,7 @@
     );
     background-size: 200% 100%;
     animation: spectrumFlow 5s linear infinite;
-    opacity: 0.7;
+    opacity: 0.75;
     z-index: -1;
   }
 
@@ -244,7 +244,7 @@
   }
 
   .theme-existence .item-base:hover::before {
-    opacity: 0.7;
+    opacity: 0.75;
   }
 
   .theme-existence .item-base:active {
@@ -252,7 +252,7 @@
   }
 
   .theme-existence .item-base:active::before {
-    opacity: 0.7;
+    opacity: 0.75;
   }
 
   .theme-existence .item-base.current::before {
@@ -265,7 +265,7 @@
       #0066cc
     );
     background-size: 200% 100%;
-    opacity: 0.7;
+    opacity: 0.75;
   }
 
   .theme-existence .item-base.available {
@@ -273,7 +273,7 @@
   }
 
   .theme-existence .item-base.available::before {
-    opacity: 0.7;
+    opacity: 0.75;
   }
 
   .theme-existence .item-base.learning::before {
@@ -286,7 +286,7 @@
       #00ff9d
     );
     background-size: 200% 100%;
-    opacity: 0.7;
+    opacity: 0.75;
     animation: spectrumFlow 5s linear infinite, pulse 2s infinite;
   }
 
@@ -295,9 +295,12 @@
     border-color: var(--existence-secondary);
   }
 
-  .theme-existence .item-base.learned::before,
+  .theme-existence .item-base.learned::before {
+    opacity: 0.4;
+  }
+
   .theme-existence .item-base.unlocked::before {
-    opacity: 0.7;
+    opacity: 0.75;
   }
   
   /* Progress Bar Styles */
@@ -462,7 +465,7 @@
 
   .theme-existence .item-base.unaffordable {
     border-color: #ff3333;
-    opacity: 0.7;
+    opacity: 0.75;
   }
 
   .theme-existence .item-base.unaffordable::before {
@@ -473,7 +476,7 @@
       #ff3333
     );
     background-size: 200% 100%;
-    opacity: 0.7;
+    opacity: 0.75;
     animation: spectrumFlow 5s linear infinite;
   }
 
