@@ -255,6 +255,15 @@
   }
 
   .theme-existence .item-base.current::before {
+    background: linear-gradient(
+      90deg,
+      #0066cc,
+      #00ff9d,
+      #0066cc,
+      #00ff9d,
+      #0066cc
+    );
+    background-size: 200% 100%;
     opacity: 0.8;
     animation: spectrumFlow 5s linear infinite;
   }
@@ -270,6 +279,15 @@
   }
 
   .theme-existence .item-base.learning::before {
+    background: linear-gradient(
+      90deg,
+      #00ff9d,
+      #0066cc,
+      #00ff9d,
+      #0066cc,
+      #00ff9d
+    );
+    background-size: 200% 100%;
     opacity: 0.7;
     animation: spectrumFlow 5s linear infinite, pulse 2s infinite;
   }
