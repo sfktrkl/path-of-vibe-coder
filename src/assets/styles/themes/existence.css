@@ -304,19 +304,36 @@
   }
   
   /* Progress Bar Styles */
-  .theme-existence .progress-container {
+  /* Header Progress Container */
+  .theme-existence .game-header .progress-container {
+    background: rgba(10, 10, 26, 0.8);
+    border: 1px solid var(--existence-primary);
+    box-shadow: var(--existence-glow);
+  }
+
+  .theme-existence .game-header .progress-bar {
+    background: rgba(155, 77, 202, 0.2);
+  }
+
+  .theme-existence .game-header .progress {
+    background: linear-gradient(90deg, var(--existence-primary), var(--existence-secondary));
+    box-shadow: 0 0 10px var(--existence-primary);
+  }
+
+  /* Skill Progress Bars */
+  .theme-existence .skills-view .progress-container {
     background: transparent;
     border: none;
     box-shadow: var(--existence-glow);
   }
-  
-  .theme-existence .progress-bar {
+
+  .theme-existence .skills-view .progress-bar {
     background: transparent;
     border: none;
     border-radius: 4px;
   }
-  
-  .theme-existence .progress {
+
+  .theme-existence .skills-view .progress {
     background: linear-gradient(90deg, var(--existence-primary), var(--existence-secondary));
     box-shadow: 0 0 10px var(--existence-primary);
     border: none;
