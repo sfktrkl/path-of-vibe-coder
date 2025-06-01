@@ -210,12 +210,12 @@
 }
 
 .theme-ai .game-header .progress {
-  background: var(--gradient-primary);
-  box-shadow: var(--glow);
+  background: linear-gradient(90deg, var(--primary), #00cc7d);
+  box-shadow: 0 0 10px var(--primary);
 }
 
 .theme-ai .game-header .progress.job-progress {
-  background: linear-gradient(90deg, var(--primary), var(--accent));
+  background: linear-gradient(90deg, var(--primary), #00cc7d);
 }
 
 /* Skill Progress Bars */
@@ -226,14 +226,14 @@
 }
 
 .theme-ai .skills-view .progress-bar {
-  background: transparent;
+  background: rgba(0, 255, 157, 0.1);
   border: none;
   border-radius: 4px;
 }
 
 .theme-ai .skills-view .progress {
-  background: var(--gradient-primary);
-  box-shadow: var(--glow);
+  background: linear-gradient(90deg, var(--primary), #00cc7d);
+  box-shadow: 0 0 10px var(--primary);
   border: none;
   border-radius: 4px;
   height: 100%;
