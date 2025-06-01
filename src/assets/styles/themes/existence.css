@@ -301,7 +301,7 @@
   /* Progress Bar Styles */
   /* Header Progress Container */
   .theme-existence .game-header .progress-container {
-    background: rgba(10, 10, 26, 0.8);
+    background: rgba(155, 77, 202, 0.1);
     border: 1px solid var(--existence-primary);
     box-shadow: var(--existence-glow);
   }
