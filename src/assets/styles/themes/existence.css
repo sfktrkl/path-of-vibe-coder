@@ -69,7 +69,6 @@
     position: relative;
     background: transparent;
     border: 1px solid var(--existence-primary);
-    box-shadow: var(--existence-glow);
     transition: all 0.3s ease;
     transform-origin: center;
     z-index: 1;
@@ -102,7 +101,6 @@
   /* Reset button specific styles */
   .theme-existence .reset-button {
     border: 1px solid var(--existence-accent);
-    box-shadow: 0 0 20px rgba(255, 0, 255, 0.5);
   }
 
   .theme-existence .reset-button::before {
@@ -118,7 +116,6 @@
 
   /* Active nav button specific */
   .theme-existence .nav-button.active {
-    box-shadow: 0 0 20px var(--existence-primary);
     z-index: 2;
   }
 
@@ -143,7 +140,6 @@
   .theme-existence .load-button:hover,
   .theme-existence .reset-button:hover {
     transform: scale(0.98);
-    box-shadow: 0 0 30px var(--existence-primary);
   }
 
   .theme-existence .nav-button:hover::before,
@@ -166,7 +162,6 @@
   .theme-existence .load-button:active,
   .theme-existence .reset-button:active {
     transform: scale(0.95);
-    box-shadow: 0 0 40px var(--existence-primary);
   }
 
   .theme-existence .nav-button:active::before,

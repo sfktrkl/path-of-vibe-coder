@@ -262,7 +262,6 @@
 .theme-ai .copy-button {
   background: var(--gradient-primary);
   border: none;
-  box-shadow: 0 0 3% rgba(0, 255, 157, 0.05);
   color: var(--background);
   font-weight: bold;
   transition: all 0.2s ease;
@@ -272,14 +271,12 @@
 .theme-ai .save-button:hover,
 .theme-ai .load-button:hover,
 .theme-ai .copy-button:hover {
-  box-shadow: 0 0 4% rgba(0, 255, 157, 0.1);
   transform: scale(0.98);
 }
 
 .theme-ai .reset-button {
   background: linear-gradient(90deg, var(--accent), #ff3366);
   border: none;
-  box-shadow: 0 0 3% rgba(255, 0, 255, 0.05);
   color: var(--background);
   font-weight: bold;
   transition: all 0.2s ease;
@@ -287,13 +284,11 @@
 }
 
 .theme-ai .reset-button:hover {
-  box-shadow: 0 0 4% rgba(255, 0, 255, 0.1);
   transform: scale(0.98);
 }
 
 .theme-ai .reset-button.confirm-reset {
   background: linear-gradient(90deg, #ff3366, var(--accent));
-  box-shadow: 0 0 4% rgba(255, 0, 255, 0.2);
   animation: pulse 1s infinite;
 }
 
@@ -409,14 +404,12 @@
 .theme-ai .game-header .nav-button:hover {
   background: rgba(0, 255, 157, 0.1);
   border-color: var(--primary);
-  box-shadow: var(--glow);
 }
 
 .theme-ai .game-header .nav-button.active {
   background: rgba(0, 255, 157, 0.15);
   border-color: var(--primary);
   color: var(--primary);
-  box-shadow: var(--glow);
 }
 
 .theme-ai .game-header .progress-label {
