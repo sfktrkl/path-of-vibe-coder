@@ -429,16 +429,17 @@
   .theme-existence .learned-badge,
   .theme-existence .owned-badge {
     background: transparent;
+    border-color: #0066cc;
+    color: #0066cc;
+    text-shadow: 0 0 5px #0066cc;
+  }
+
+  .theme-existence .available-badge,
+  .theme-existence .affordable-badge {
+    background: transparent;
     border-color: var(--existence-secondary);
     color: var(--existence-secondary);
     text-shadow: 0 0 5px var(--existence-secondary);
-  }
-
-  .theme-existence .available-badge {
-    background: transparent;
-    border-color: var(--existence-primary);
-    color: var(--existence-primary);
-    text-shadow: 0 0 5px var(--existence-primary);
   }
 
   .theme-existence .unaffordable-badge {
