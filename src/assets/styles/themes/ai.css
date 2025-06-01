@@ -427,4 +427,16 @@
   color: #f1c40f;
   text-shadow: 0 0 10px rgba(241, 196, 15, 0.7);
   filter: drop-shadow(0 0 5px rgba(241, 196, 15, 0.7));
+}
+
+/* Item stat styles */
+.theme-ai .item-stat-value,
+.theme-ai .stat-value {
+  color: var(--primary);
+  text-shadow: 0 0 5px var(--primary);
+}
+
+.theme-ai .item-stat-name,
+.theme-ai .stat-name {
+  color: var(--text-light);
 } 
