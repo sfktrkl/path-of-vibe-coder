@@ -584,3 +584,20 @@
     color: var(--existence-text);
     text-shadow: 0 0 5px var(--existence-primary);
   }
+
+  /* Item stat styles */
+  .theme-existence .stat-name {
+    color: var(--existence-text);
+    opacity: 0.8;
+  }
+
+  .theme-existence .item-stat-value {
+    color: var(--existence-text);
+    text-shadow: 0 0 5px var(--existence-primary);
+  }
+
+  .theme-existence .game-header .effect-name,
+  .theme-existence .stat-name {
+    color: var(--existence-text);
+    opacity: 0.8;
+  }
