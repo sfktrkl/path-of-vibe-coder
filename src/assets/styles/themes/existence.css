@@ -305,18 +305,23 @@
   
   /* Progress Bar Styles */
   .theme-existence .progress-container {
-    background: rgba(10, 10, 26, 0.8);
-    border: 1px solid var(--existence-primary);
+    background: transparent;
+    border: none;
     box-shadow: var(--existence-glow);
   }
   
   .theme-existence .progress-bar {
-    background: rgba(155, 77, 202, 0.2);
+    background: transparent;
+    border: none;
+    border-radius: 4px;
   }
   
   .theme-existence .progress {
     background: linear-gradient(90deg, var(--existence-primary), var(--existence-secondary));
     box-shadow: 0 0 10px var(--existence-primary);
+    border: none;
+    border-radius: 4px;
+    height: 100%;
   }
   
   /* Existence-specific Effects */
