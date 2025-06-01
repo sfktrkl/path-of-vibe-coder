@@ -398,8 +398,8 @@
   
   /* Glowing text effects */
   .theme-existence .influence {
-    color: var(--existence-accent);
-    text-shadow: 0 0 10px var(--existence-accent);
+    color: #f1c40f;
+    text-shadow: 0 0 10px rgba(241, 196, 15, 0.7);
   }
   
   .theme-existence .effect-value {
@@ -502,14 +502,14 @@
 
   /* Job specific styles */
   .theme-existence .job-influence {
-    color: var(--existence-accent);
-    text-shadow: 0 0 10px var(--existence-accent);
+    color: #f1c40f;
+    text-shadow: 0 0 10px rgba(241, 196, 15, 0.7);
   }
 
   .theme-existence .job-influence-icon {
-    color: var(--existence-accent);
-    text-shadow: 0 0 10px var(--existence-accent);
-    filter: drop-shadow(0 0 5px var(--existence-accent));
+    color: #f1c40f;
+    text-shadow: 0 0 10px rgba(241, 196, 15, 0.7);
+    filter: drop-shadow(0 0 5px rgba(241, 196, 15, 0.7));
   }
 
   /* Progress bar text styles */
@@ -560,14 +560,14 @@
   }
 
   .theme-existence .game-header .influence {
-    color: var(--existence-accent);
-    text-shadow: 0 0 10px var(--existence-accent);
+    color: #f1c40f;
+    text-shadow: 0 0 10px rgba(241, 196, 15, 0.7);
   }
 
   .theme-existence .game-header .influence-icon {
-    color: var(--existence-accent);
-    text-shadow: 0 0 10px var(--existence-accent);
-    filter: drop-shadow(0 0 5px var(--existence-accent));
+    color: #f1c40f;
+    text-shadow: 0 0 10px rgba(241, 196, 15, 0.7);
+    filter: drop-shadow(0 0 5px rgba(241, 196, 15, 0.7));
   }
 
   .theme-existence .game-header .effect-name {
