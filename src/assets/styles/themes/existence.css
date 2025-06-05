@@ -69,11 +69,11 @@
         rgba(155, 77, 202, 0.1)
     );
     background-size: 400% 400%;
-    animation: headerBackgroundShift 15s ease infinite;
+    animation: headerBackgroundShift1 15s ease infinite;
     z-index: 0;
   }
   
-  @keyframes headerBackgroundShift {
+  @keyframes headerBackgroundShift1 {
     0% {
         background-position: 0% 50%;
     }
@@ -258,6 +258,33 @@
     background: rgba(10, 10, 26, 0.8);
     border: 1px solid var(--existence-primary);
     box-shadow: var(--existence-glow);
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .theme-existence .game-content::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+        45deg,
+        rgba(155, 77, 202, 0.1),
+        rgba(0, 255, 157, 0.1),
+        rgba(255, 0, 255, 0.1),
+        rgba(155, 77, 202, 0.1)
+    );
+    background-size: 400% 400%;
+    animation: headerBackgroundShift2 15s ease infinite;
+    z-index: 0;
+  }
+  
+  /* Ensure game content stays above the background animation */
+  .theme-existence .game-content > * {
+    position: relative;
+    z-index: 1;
   }
   
   .theme-existence .game-content h2 {
@@ -719,5 +746,17 @@
     }
     100% {
         transform: translateX(100%) translateY(100%);
+    }
+  }
+
+  @keyframes headerBackgroundShift2 {
+    0% {
+        background-position: 100% 50%;
+    }
+    50% {
+        background-position: 0% 50%;
+    }
+    100% {
+        background-position: 100% 50%;
     }
   }
