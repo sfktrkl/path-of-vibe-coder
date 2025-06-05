@@ -7,6 +7,12 @@
     --existence-text: #ffffff;
     --existence-glow: 0 0 20px rgba(155, 77, 202, 0.5);
     --existence-matrix-color: rgba(0, 255, 157, 0.15);
+    --existence-header-gradient: linear-gradient(
+      135deg,
+      rgba(155, 77, 202, 0.2),
+      rgba(0, 255, 157, 0.2),
+      rgba(255, 0, 255, 0.2)
+    );
   }
   
   .theme-existence {
@@ -54,6 +60,44 @@
     background: rgba(155, 77, 202, 0.1);
     border: 1px solid var(--existence-primary);
     box-shadow: var(--existence-glow);
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .theme-existence .character-info::before {
+    content: '';
+    position: absolute;
+    top: -100%;
+    left: -100%;
+    width: 300%;
+    height: 300%;
+    background: linear-gradient(
+        45deg,
+        transparent 0%,
+        transparent 45%,
+        rgba(155, 77, 202, 0.2) 50%,
+        transparent 55%,
+        transparent 100%
+    );
+    animation: shimmerEffect 6s linear infinite;
+    z-index: 0;
+  }
+  
+  @keyframes shimmerEffect {
+    0% {
+        transform: translateX(100%) translateY(100%);
+    }
+    100% {
+        transform: translateX(-100%) translateY(-100%);
+    }
+  }
+  
+  /* Ensure content stays above the animation */
+  .theme-existence .character-info h1,
+  .theme-existence .character-info .stats,
+  .theme-existence .character-info .item-effects {
+    position: relative;
+    z-index: 1;
   }
   
   .theme-existence .money {
