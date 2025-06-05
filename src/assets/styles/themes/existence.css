@@ -79,11 +79,11 @@
         transparent 55%,
         transparent 100%
     );
-    animation: shimmerEffect 6s linear infinite;
+    animation: shimmerEffect1 6s linear infinite;
     z-index: 0;
   }
   
-  @keyframes shimmerEffect {
+  @keyframes shimmerEffect1 {
     0% {
         transform: translateX(100%) translateY(100%);
     }
@@ -95,7 +95,8 @@
   /* Ensure content stays above the animation */
   .theme-existence .character-info h1,
   .theme-existence .character-info .stats,
-  .theme-existence .character-info .item-effects {
+  .theme-existence .character-info .item-effects,
+  .theme-existence .progress-bars > * {
     position: relative;
     z-index: 1;
   }
@@ -644,4 +645,43 @@
   .theme-existence .stat-name {
     color: var(--existence-text);
     opacity: 0.8;
+  }
+
+  .theme-existence .progress-bars {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .theme-existence .progress-bars::before {
+    content: '';
+    position: absolute;
+    top: -100%;
+    left: -100%;
+    width: 300%;
+    height: 300%;
+    background: linear-gradient(
+        45deg,
+        transparent 0%,
+        transparent 45%,
+        rgba(155, 77, 202, 0.2) 50%,
+        transparent 55%,
+        transparent 100%
+    );
+    animation: shimmerEffect2 6s linear infinite;
+    z-index: 0;
+  }
+
+  /* Ensure progress bars content stays above the animation */
+  .theme-existence .progress-bars > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  @keyframes shimmerEffect2 {
+    0% {
+        transform: translateX(-100%) translateY(-100%);
+    }
+    100% {
+        transform: translateX(100%) translateY(100%);
+    }
   }
