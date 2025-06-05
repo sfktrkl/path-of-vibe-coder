@@ -50,10 +50,46 @@
     background: var(--existence-bg);
     border-bottom: 2px solid var(--existence-primary);
     box-shadow: var(--existence-glow);
+    position: relative;
+    overflow: hidden;
   }
   
+  .theme-existence .game-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+        45deg,
+        rgba(155, 77, 202, 0.1),
+        rgba(0, 255, 157, 0.1),
+        rgba(255, 0, 255, 0.1),
+        rgba(155, 77, 202, 0.1)
+    );
+    background-size: 400% 400%;
+    animation: headerBackgroundShift 15s ease infinite;
+    z-index: 0;
+  }
+  
+  @keyframes headerBackgroundShift {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+  }
+  
+  /* Ensure header content stays above the background animation */
   .theme-existence .header-content {
-    background: var(--existence-bg);
+    position: relative;
+    z-index: 1;
+    background: transparent;
   }
   
   .theme-existence .character-info {
