@@ -530,4 +530,85 @@ export const jobs = {
     timeRequired: 900, // 15 minutes
     influenceGain: 100,
   },
+
+  // Existence Path Jobs
+  time_weaver: {
+    id: "time_weaver",
+    name: "Time Weaver",
+    description: "Mastering the flow of time... or not?",
+    category: "existence",
+    salary: 150000,
+    requiredSkills: ["time_manipulation"],
+    requiredJobs: ["world_dominator"],
+    requiresAIPath: true,
+    timeRequired: 1200, // 20 minutes
+    influenceGain: 200,
+    features: {
+      // While in this job, actually stops ALL time in the game
+      // This includes player progress, skill learning, and job completion
+      // A prank that forces players to switch jobs to progress
+      // This is a toggle feature that can be used while in this job
+      // Implementation: Completely halts all time-based progress
+      timeStop: true,
+    },
+  },
+  reality_stylist: {
+    id: "reality_stylist",
+    name: "Reality Stylist",
+    description: "Mastering the game's appearance",
+    category: "existence",
+    salary: 200000,
+    requiredSkills: ["reality_styling"],
+    requiredJobs: ["world_dominator"], // Same as time_weaver to allow skipping
+    requiresAIPath: true,
+    timeRequired: 1500, // 25 minutes
+    influenceGain: 300,
+    features: {
+      // While in this job, allows switching between different game themes
+      // Themes include: Matrix (green text), Retro (8-bit), Cyberpunk, etc.
+      // This is a toggle feature that can be used while in this job
+      // Implementation: Adds a theme switcher with custom visual styles
+      themeSwitcher: true,
+    },
+  },
+  existence_master: {
+    id: "existence_master",
+    name: "Existence Master",
+    description: "Mastering the game's essence",
+    category: "existence",
+    salary: 500000,
+    requiredSkills: ["existence_mastery"],
+    requiredJobs: ["reality_stylist"],
+    requiresAIPath: true,
+    timeRequired: 2400, // 40 minutes
+    influenceGain: 500,
+    features: {
+      // While in this job, hides all jobs except existence_transcendent
+      // This is a toggle feature that can be used while in this job
+      // Implementation: Filters the job list to only show existence_transcendent
+      // This represents focusing on the ultimate goal of transcendence
+      transcendenceFocus: true,
+    },
+  },
+  existence_transcendent: {
+    id: "existence_transcendent",
+    name: "Existence Transcendent",
+    description: "Transcending the game's limits",
+    category: "existence",
+    salary: 1000000,
+    requiredSkills: ["existence_transcendence"],
+    requiredJobs: ["existence_master"],
+    requiresAIPath: true,
+    timeRequired: 3600, // 60 minutes
+    influenceGain: 1000,
+    features: {
+      // While in this job, hides all game features except skills
+      // This includes hiding jobs, influence, salary, and other UI elements
+      // Only existence_transcendence skill remains visible
+      // This is a toggle feature that can be used while in this job
+      // Implementation: Strips the UI to bare minimum, showing only skills
+      // This represents the final step before transcendence
+      pureExistence: true,
+    },
+  },
 };
