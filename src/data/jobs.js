@@ -558,7 +558,7 @@ export const jobs = {
     description: "Mastering the game's appearance",
     category: "existence",
     salary: 200000,
-    requiredSkills: ["reality_styling"],
+    requiredSkills: ["reality_styling", "game_mechanics"],
     requiredJobs: ["world_dominator"], // Same as time_weaver to allow skipping
     requiresAIPath: true,
     timeRequired: 1500, // 25 minutes
