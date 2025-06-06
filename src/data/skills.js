@@ -536,4 +536,83 @@ export const skills = {
     requiresAIPath: true,
     timeRequired: 720, // 12 minutes
   },
+
+  // Existence Path Skills
+  time_manipulation: {
+    id: "time_manipulation",
+    name: "Time Manipulation",
+    description: "Mastering the flow of time",
+    category: "existence",
+    prerequisites: ["reality_mastery", "consciousness_control"],
+    requiresAIPath: true,
+    timeRequired: 900, // 15 minutes
+    features: {
+      // Once learned, provides a 50% chance to instantly complete any skill
+      // Implementation: When starting a skill, there's a 50% chance it completes instantly
+      instantLearning: true,
+    },
+  },
+  reality_styling: {
+    id: "reality_styling",
+    name: "Reality Styling",
+    description: "Seeing beyond current limitations",
+    category: "existence",
+    prerequisites: ["time_manipulation"],
+    requiresAIPath: true,
+    timeRequired: 1200, // 20 minutes
+    features: {
+      // Once learned, shows all jobs and skills that are currently locked
+      // Instead of hiding them, displays them with their requirements
+      // This is a permanent ability that's always active
+      // Implementation: Modifies the UI to show locked content with requirements
+      revealLocked: true,
+    },
+  },
+  game_mechanics: {
+    id: "game_mechanics",
+    name: "Game Mechanics",
+    description: "Seeing beyond the veil of progression",
+    category: "existence",
+    prerequisites: ["reality_styling"],
+    requiresAIPath: true,
+    timeRequired: 1500, // 25 minutes
+    features: {
+      // Once learned, reveals all skills and jobs in the game
+      // This includes locked, hidden, and future content
+      // This is a permanent ability that's always active
+      // Implementation: When active, the skill and job trees show all possible paths
+      // regardless of current progression or requirements
+      completeVision: true,
+    },
+  },
+  existence_mastery: {
+    id: "existence_mastery",
+    name: "Existence Mastery",
+    description: "Mastering the game's essence",
+    category: "existence",
+    prerequisites: ["game_mechanics"],
+    requiresAIPath: true,
+    timeRequired: 1800, // 30 minutes
+    features: {
+      // Once learned, provides a 50% chance to instantly complete any job
+      // Implementation: When starting a job, there's a 50% chance it completes instantly
+      instantJobMastery: true,
+    },
+  },
+  existence_transcendence: {
+    id: "existence_transcendence",
+    name: "Existence Transcendence",
+    description: "Transcending the game's limits",
+    category: "existence",
+    prerequisites: ["existence_mastery"],
+    requiresAIPath: true,
+    timeRequired: 2400, // 40 minutes
+    features: {
+      // Once learned, allows complete game reset while keeping all existence path skills
+      // This is a permanent ability that can be used once
+      // Implementation: Adds a "Transcend" button that resets the game but keeps existence skills
+      // This allows players to experience the game again with their existence powers
+      transcendReset: true,
+    },
+  },
 };
