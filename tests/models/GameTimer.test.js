@@ -41,6 +41,7 @@ describe("GameTimer", () => {
       getCurrentSkillInfo: jest.fn().mockReturnValue(null),
       getCurrentJobInfo: jest.fn().mockReturnValue(null),
       setCurrentJobProgress: jest.fn(),
+      isTimeStopActive: jest.fn().mockReturnValue(false),
       getItemEffects: () => ({
         salaryBoost: 1,
         learningSpeed: 1,
@@ -415,6 +416,130 @@ describe("GameTimer", () => {
 
       // Job should restart with initial progress
       expect(mockGameState.setCurrentJobProgress).toHaveBeenCalledWith(30);
+    });
+  });
+
+  describe("Time Stop Feature", () => {
+    test("should not update progress when time stop is active", () => {
+      // Set up learning and job
+      mockGameState.getCurrentLearning.mockReturnValue("test_skill");
+      mockGameState.getCurrentSkillInfo.mockReturnValue({
+        id: "test_skill",
+        timeRequired: 10,
+      });
+      mockGameState.getCurrentJob.mockReturnValue("test_job");
+      mockGameState.getCurrentJobInfo.mockReturnValue({
+        id: "test_job",
+        timeRequired: 10,
+        salary: 100,
+      });
+
+      // Enable time stop
+      mockGameState.isTimeStopActive.mockReturnValue(true);
+
+      timer.start();
+      jest.advanceTimersByTime(1000);
+
+      // Verify no progress was made
+      expect(mockGameState.setCurrentLearningProgress).not.toHaveBeenCalled();
+      expect(mockGameState.setCurrentJobProgress).not.toHaveBeenCalled();
+      expect(mockGameState.addMoney).not.toHaveBeenCalled();
+    });
+
+    test("should resume progress when time stop is disabled", () => {
+      // Set up learning and job
+      mockGameState.getCurrentLearning.mockReturnValue("test_skill");
+      mockGameState.getCurrentSkillInfo.mockReturnValue({
+        id: "test_skill",
+        timeRequired: 10,
+      });
+      mockGameState.getCurrentJob.mockReturnValue("test_job");
+      mockGameState.getCurrentJobInfo.mockReturnValue({
+        id: "test_job",
+        timeRequired: 10,
+        salary: 100,
+      });
+
+      // Start with time stop active
+      mockGameState.isTimeStopActive.mockReturnValue(true);
+      timer.start();
+      jest.advanceTimersByTime(1000);
+
+      // Verify no progress was made
+      expect(mockGameState.setCurrentLearningProgress).not.toHaveBeenCalled();
+      expect(mockGameState.setCurrentJobProgress).not.toHaveBeenCalled();
+
+      // Disable time stop
+      mockGameState.isTimeStopActive.mockReturnValue(false);
+      jest.advanceTimersByTime(1000);
+
+      // Verify progress resumed
+      expect(mockGameState.setCurrentLearningProgress).toHaveBeenCalledWith(10);
+      expect(mockGameState.setCurrentJobProgress).toHaveBeenCalledWith(10);
+    });
+
+    test("should maintain timer state during time stop", () => {
+      timer.start();
+      expect(timer.isRunning).toBe(true);
+
+      // Enable time stop
+      mockGameState.isTimeStopActive.mockReturnValue(true);
+      jest.advanceTimersByTime(1000);
+
+      // Timer should still be running
+      expect(timer.isRunning).toBe(true);
+      expect(timer.timer).not.toBeNull();
+    });
+
+    test("should handle time stop with all effects", () => {
+      // Set up learning and job with effects
+      mockGameState.getCurrentLearning.mockReturnValue("test_skill");
+      mockGameState.getCurrentSkillInfo.mockReturnValue({
+        id: "test_skill",
+        timeRequired: 10,
+      });
+      mockGameState.getCurrentJob.mockReturnValue("test_job");
+      mockGameState.getCurrentJobInfo.mockReturnValue({
+        id: "test_job",
+        timeRequired: 10,
+        salary: 100,
+      });
+
+      // Set up effects
+      mockGameState.getItemEffects = jest.fn().mockReturnValue({
+        salaryBoost: 2,
+        learningSpeed: 2,
+        workSpeed: 2,
+        skillTimeReduction: 0.5,
+        jobInitialProgress: 20,
+        influenceBoost: 1,
+      });
+
+      // Set initial job progress
+      mockGameState.getCurrentJobProgress.mockReturnValue(20);
+
+      // Enable time stop
+      mockGameState.isTimeStopActive.mockReturnValue(true);
+      timer.start();
+      jest.advanceTimersByTime(1000);
+
+      // Verify no progress was made despite effects
+      expect(mockGameState.setCurrentLearningProgress).not.toHaveBeenCalled();
+      expect(mockGameState.setCurrentJobProgress).not.toHaveBeenCalled();
+      expect(mockGameState.addMoney).not.toHaveBeenCalled();
+
+      // Disable time stop
+      mockGameState.isTimeStopActive.mockReturnValue(false);
+      jest.advanceTimersByTime(1000);
+
+      // Calculate expected values:
+      // Learning: base 10% * 2 speed * 2 time reduction = 40%
+      // Job: 20% initial + (base 10% * 2 speed) = 40%
+      expect(mockGameState.setCurrentLearningProgress).toHaveBeenCalledWith(40);
+      expect(mockGameState.setCurrentJobProgress).toHaveBeenCalledWith(40);
+
+      // Verify effects were applied correctly
+      expect(mockGameState.getItemEffects).toHaveBeenCalled();
     });
   });
 });

@@ -32,6 +32,11 @@ export default class GameTimer {
     const deltaTime = (now - this.lastUpdate) / 1000; // Convert to seconds
     this.lastUpdate = now;
 
+    // Check if time stop is active - if so, don't process any updates
+    if (this.gameState.isTimeStopActive()) {
+      return;
+    }
+
     // Get current item effects
     const effects = this.gameState.getItemEffects();
 

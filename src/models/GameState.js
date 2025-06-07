@@ -144,6 +144,17 @@ export default class GameState {
     return jobs[this._currentJob];
   }
 
+  // Check if time stop feature is active
+  isTimeStopActive() {
+    const currentJob = this.getCurrentJobInfo();
+    if (!currentJob) return false;
+
+    // Check if current job is time_weaver and has timeStop feature
+    return (
+      currentJob.id === "time_weaver" && currentJob.features?.timeStop === true
+    );
+  }
+
   getJobsByCategory() {
     const categories = {};
     Object.values(jobs).forEach((job) => {

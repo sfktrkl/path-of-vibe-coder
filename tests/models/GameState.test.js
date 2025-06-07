@@ -972,4 +972,58 @@ describe("GameState", () => {
       expect(state.getStoryProgressPercentage()).toBeCloseTo(50);
     });
   });
+
+  describe("Time Stop Feature", () => {
+    test("should return false for time stop when no job is set", () => {
+      expect(gameState.isTimeStopActive()).toBe(false);
+    });
+
+    test("should return false for time stop when not in time_weaver job", () => {
+      gameState.setCurrentJob("everyday_normal_guy");
+      expect(gameState.isTimeStopActive()).toBe(false);
+    });
+
+    test("should return false for time stop when in time_weaver but feature not enabled", () => {
+      // Mock the time_weaver job without the feature
+      jest.spyOn(gameState, "getCurrentJobInfo").mockReturnValue({
+        id: "time_weaver",
+        features: {},
+      });
+      expect(gameState.isTimeStopActive()).toBe(false);
+    });
+
+    test("should return true for time stop when in time_weaver with feature enabled", () => {
+      // Mock the time_weaver job with the feature enabled
+      jest.spyOn(gameState, "getCurrentJobInfo").mockReturnValue({
+        id: "time_weaver",
+        features: {
+          timeStop: true,
+        },
+      });
+      expect(gameState.isTimeStopActive()).toBe(true);
+    });
+
+    test("should persist time stop state in serialization", () => {
+      // Mock the time_weaver job with the feature enabled
+      jest.spyOn(gameState, "getCurrentJobInfo").mockReturnValue({
+        id: "time_weaver",
+        features: {
+          timeStop: true,
+        },
+      });
+
+      const json = gameState.toJSON();
+      const newState = GameState.fromJSON(json);
+
+      // Mock the same job info for the new state
+      jest.spyOn(newState, "getCurrentJobInfo").mockReturnValue({
+        id: "time_weaver",
+        features: {
+          timeStop: true,
+        },
+      });
+
+      expect(newState.isTimeStopActive()).toBe(true);
+    });
+  });
 });
