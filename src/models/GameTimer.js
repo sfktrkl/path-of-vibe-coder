@@ -43,15 +43,26 @@ export default class GameTimer {
     // Update learning progress if currently learning
     const skill = this.gameState.getCurrentSkillInfo();
     if (skill) {
-      // Apply learning speed multiplier and skill time reduction
-      const baseProgressPerSecond =
-        100 / (skill.timeRequired * effects.skillTimeReduction);
-      const adjustedProgressPerSecond =
-        baseProgressPerSecond * effects.learningSpeed;
-      const progress = deltaTime * adjustedProgressPerSecond;
-      const totalProgress =
-        this.gameState.getCurrentLearningProgress() + progress;
-      this.gameState.setCurrentLearningProgress(totalProgress);
+      if (
+        this.gameState.isInstantLearningActive() &&
+        this.gameState.getCurrentLearningProgress() === 0
+      ) {
+        // Try instant learning with 50% chance
+        if (Math.random() < 0.5) {
+          // Success! Complete the skill instantly
+          this.gameState.setCurrentLearningProgress(100);
+        }
+      } else {
+        // Apply learning speed multiplier and skill time reduction
+        const baseProgressPerSecond =
+          100 / (skill.timeRequired * effects.skillTimeReduction);
+        const adjustedProgressPerSecond =
+          baseProgressPerSecond * effects.learningSpeed;
+        const progress = deltaTime * adjustedProgressPerSecond;
+        const totalProgress =
+          this.gameState.getCurrentLearningProgress() + progress;
+        this.gameState.setCurrentLearningProgress(totalProgress);
+      }
     }
 
     // Update job progress if currently working

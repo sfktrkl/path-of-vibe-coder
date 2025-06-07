@@ -155,6 +155,12 @@ export default class GameState {
     );
   }
 
+  // Check if instant learning is active
+  isInstantLearningActive() {
+    // Only check if player has the time_manipulation skill
+    return this.hasSkill("time_manipulation");
+  }
+
   getJobsByCategory() {
     const categories = {};
     Object.values(jobs).forEach((job) => {

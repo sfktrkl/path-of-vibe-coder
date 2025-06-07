@@ -1026,4 +1026,28 @@ describe("GameState", () => {
       expect(newState.isTimeStopActive()).toBe(true);
     });
   });
+
+  describe("Instant Learning Feature", () => {
+    test("should return false for instant learning when time_manipulation not learned", () => {
+      expect(gameState.isInstantLearningActive()).toBe(false);
+    });
+
+    test("should return true for instant learning when time_manipulation is learned", () => {
+      gameState._skillProgress = {
+        time_manipulation: 100,
+      };
+      expect(gameState.isInstantLearningActive()).toBe(true);
+    });
+
+    test("should persist instant learning state in serialization", () => {
+      gameState._skillProgress = {
+        time_manipulation: 100,
+      };
+
+      const json = gameState.toJSON();
+      const newState = GameState.fromJSON(json);
+
+      expect(newState.isInstantLearningActive()).toBe(true);
+    });
+  });
 });

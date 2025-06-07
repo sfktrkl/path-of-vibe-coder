@@ -60,6 +60,7 @@ describe("GameTimer", () => {
         }
         return true;
       }),
+      isInstantLearningActive: jest.fn().mockReturnValue(false),
     };
     timer = new GameTimer(mockGameState);
   });
@@ -540,6 +541,47 @@ describe("GameTimer", () => {
 
       // Verify effects were applied correctly
       expect(mockGameState.getItemEffects).toHaveBeenCalled();
+    });
+  });
+
+  describe("Instant Learning Feature", () => {
+    beforeEach(() => {
+      // Mock Math.random to control the 50% chance
+      jest.spyOn(Math, "random").mockReturnValue(0.3); // Below 0.5 for success
+      mockGameState.isInstantLearningActive.mockReturnValue(true);
+      mockGameState.getCurrentLearning.mockReturnValue("test_skill");
+      mockGameState.getCurrentLearningProgress.mockReturnValue(0);
+      mockGameState.getCurrentSkillInfo.mockReturnValue({
+        id: "test_skill",
+        timeRequired: 10,
+      });
+    });
+
+    afterEach(() => {
+      jest.restoreAllMocks();
+    });
+
+    test("should attempt instant learning when skill has 0 progress", () => {
+      timer.update(1000);
+      expect(mockGameState.setCurrentLearningProgress).toHaveBeenCalledWith(
+        100
+      );
+    });
+
+    test("should not attempt instant learning when skill has progress", () => {
+      mockGameState.getCurrentLearningProgress.mockReturnValue(10);
+      timer.update(1000);
+      expect(mockGameState.setCurrentLearningProgress).not.toHaveBeenCalledWith(
+        100
+      );
+    });
+
+    test("should not attempt instant learning when random chance fails", () => {
+      Math.random.mockReturnValue(0.7); // Above 0.5 for failure
+      timer.update(1000);
+      expect(mockGameState.setCurrentLearningProgress).not.toHaveBeenCalledWith(
+        100
+      );
     });
   });
 });
