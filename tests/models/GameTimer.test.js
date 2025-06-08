@@ -584,6 +584,16 @@ describe("GameTimer", () => {
         100
       );
     });
+
+    test("should perform normal progress calculation if instant learning fails", () => {
+      Math.random.mockReturnValue(0.7); // Above 0.5 for failure
+      timer.update(1000);
+      // Check that setCurrentLearningProgress was called with a value not 100 but greater than 0
+      const calls = mockGameState.setCurrentLearningProgress.mock.calls;
+      const value = calls[0][0];
+      expect(value).not.toBe(100);
+      expect(value).toBeGreaterThan(0);
+    });
   });
 
   describe("Instant Job Mastery Feature", () => {
@@ -618,6 +628,16 @@ describe("GameTimer", () => {
       Math.random.mockReturnValue(0.7); // Above 0.5 for failure
       timer.update(1000);
       expect(mockGameState.setCurrentJobProgress).not.toHaveBeenCalledWith(100);
+    });
+
+    test("should perform normal progress calculation if instant job mastery fails", () => {
+      Math.random.mockReturnValue(0.7); // Above 0.5 for failure
+      timer.update(1000);
+      // Check that setCurrentJobProgress was called with a value not 100 but greater than 0
+      const calls = mockGameState.setCurrentJobProgress.mock.calls;
+      const value = calls[0][0];
+      expect(value).not.toBe(100);
+      expect(value).toBeGreaterThan(0);
     });
   });
 });

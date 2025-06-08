@@ -43,26 +43,24 @@ export default class GameTimer {
     // Update learning progress if currently learning
     const skill = this.gameState.getCurrentSkillInfo();
     if (skill) {
+      let totalProgress;
       if (
         this.gameState.isInstantLearningActive() &&
-        this.gameState.getCurrentLearningProgress() === 0
+        this.gameState.getCurrentLearningProgress() === 0 &&
+        Math.random() < 0.5
       ) {
-        // Try instant learning with 50% chance
-        if (Math.random() < 0.5) {
-          // Success! Complete the skill instantly
-          this.gameState.setCurrentLearningProgress(100);
-        }
+        // Success! Complete the skill instantly
+        totalProgress = 100;
       } else {
-        // Apply learning speed multiplier and skill time reduction
+        // Normal progress calculation (including failed instant attempts)
         const baseProgressPerSecond =
           100 / (skill.timeRequired * effects.skillTimeReduction);
         const adjustedProgressPerSecond =
           baseProgressPerSecond * effects.learningSpeed;
         const progress = deltaTime * adjustedProgressPerSecond;
-        const totalProgress =
-          this.gameState.getCurrentLearningProgress() + progress;
-        this.gameState.setCurrentLearningProgress(totalProgress);
+        totalProgress = this.gameState.getCurrentLearningProgress() + progress;
       }
+      this.gameState.setCurrentLearningProgress(totalProgress);
     }
 
     // Update job progress if currently working
@@ -71,22 +69,13 @@ export default class GameTimer {
       let totalProgress;
       if (
         this.gameState.isInstantJobMasteryActive() &&
-        this.gameState.getCurrentJobProgress() === 0
+        this.gameState.getCurrentJobProgress() === 0 &&
+        Math.random() < 0.5
       ) {
-        // Try instant job mastery with 50% chance
-        if (Math.random() < 0.5) {
-          // Success! Complete the job instantly
-          totalProgress = 100;
-        } else {
-          // Failed instant mastery, calculate normal progress
-          const baseProgressPerSecond = 100 / job.timeRequired;
-          const adjustedProgressPerSecond =
-            baseProgressPerSecond * effects.workSpeed;
-          const progress = deltaTime * adjustedProgressPerSecond;
-          totalProgress = this.gameState.getCurrentJobProgress() + progress;
-        }
+        // Success! Complete the job instantly
+        totalProgress = 100;
       } else {
-        // Normal progress calculation
+        // Normal progress calculation (including failed instant attempts)
         const baseProgressPerSecond = 100 / job.timeRequired;
         const adjustedProgressPerSecond =
           baseProgressPerSecond * effects.workSpeed;
