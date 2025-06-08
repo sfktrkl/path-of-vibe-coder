@@ -157,8 +157,11 @@ export default class GameState {
 
   // Check if instant learning is active
   isInstantLearningActive() {
-    // Only check if player has the time_manipulation skill
-    return this.hasSkill("time_manipulation");
+    return this._skillProgress["time_manipulation"] === 100;
+  }
+
+  isInstantJobMasteryActive() {
+    return this._skillProgress["existence_mastery"] === 100;
   }
 
   getJobsByCategory() {

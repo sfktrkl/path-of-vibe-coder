@@ -68,12 +68,31 @@ export default class GameTimer {
     // Update job progress if currently working
     const job = this.gameState.getCurrentJobInfo();
     if (job) {
-      // Apply work progress multiplier
-      const baseProgressPerSecond = 100 / job.timeRequired;
-      const adjustedProgressPerSecond =
-        baseProgressPerSecond * effects.workSpeed;
-      const progress = deltaTime * adjustedProgressPerSecond;
-      const totalProgress = this.gameState.getCurrentJobProgress() + progress;
+      let totalProgress;
+      if (
+        this.gameState.isInstantJobMasteryActive() &&
+        this.gameState.getCurrentJobProgress() === 0
+      ) {
+        // Try instant job mastery with 50% chance
+        if (Math.random() < 0.5) {
+          // Success! Complete the job instantly
+          totalProgress = 100;
+        } else {
+          // Failed instant mastery, calculate normal progress
+          const baseProgressPerSecond = 100 / job.timeRequired;
+          const adjustedProgressPerSecond =
+            baseProgressPerSecond * effects.workSpeed;
+          const progress = deltaTime * adjustedProgressPerSecond;
+          totalProgress = this.gameState.getCurrentJobProgress() + progress;
+        }
+      } else {
+        // Normal progress calculation
+        const baseProgressPerSecond = 100 / job.timeRequired;
+        const adjustedProgressPerSecond =
+          baseProgressPerSecond * effects.workSpeed;
+        const progress = deltaTime * adjustedProgressPerSecond;
+        totalProgress = this.gameState.getCurrentJobProgress() + progress;
+      }
       this.gameState.setCurrentJobProgress(totalProgress);
 
       // If job is complete, pay the salary with multiplier

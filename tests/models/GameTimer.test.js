@@ -61,6 +61,7 @@ describe("GameTimer", () => {
         return true;
       }),
       isInstantLearningActive: jest.fn().mockReturnValue(false),
+      isInstantJobMasteryActive: jest.fn().mockReturnValue(false),
     };
     timer = new GameTimer(mockGameState);
   });
@@ -582,6 +583,41 @@ describe("GameTimer", () => {
       expect(mockGameState.setCurrentLearningProgress).not.toHaveBeenCalledWith(
         100
       );
+    });
+  });
+
+  describe("Instant Job Mastery Feature", () => {
+    beforeEach(() => {
+      // Mock Math.random to control the 50% chance
+      jest.spyOn(Math, "random").mockReturnValue(0.3); // Below 0.5 for success
+      mockGameState.isInstantJobMasteryActive.mockReturnValue(true);
+      mockGameState.getCurrentJob.mockReturnValue("test_job");
+      mockGameState.getCurrentJobProgress.mockReturnValue(0);
+      mockGameState.getCurrentJobInfo.mockReturnValue({
+        id: "test_job",
+        timeRequired: 10,
+      });
+    });
+
+    afterEach(() => {
+      jest.restoreAllMocks();
+    });
+
+    test("should attempt instant job mastery when job has 0 progress", () => {
+      timer.update(1000);
+      expect(mockGameState.setCurrentJobProgress).toHaveBeenCalledWith(100);
+    });
+
+    test("should not attempt instant job mastery when job has progress", () => {
+      mockGameState.getCurrentJobProgress.mockReturnValue(10);
+      timer.update(1000);
+      expect(mockGameState.setCurrentJobProgress).not.toHaveBeenCalledWith(100);
+    });
+
+    test("should not attempt instant job mastery when random chance fails", () => {
+      Math.random.mockReturnValue(0.7); // Above 0.5 for failure
+      timer.update(1000);
+      expect(mockGameState.setCurrentJobProgress).not.toHaveBeenCalledWith(100);
     });
   });
 });

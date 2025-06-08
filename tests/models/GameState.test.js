@@ -1050,4 +1050,28 @@ describe("GameState", () => {
       expect(newState.isInstantLearningActive()).toBe(true);
     });
   });
+
+  describe("Instant Job Mastery Feature", () => {
+    test("should return false for instant job mastery when existence_mastery not learned", () => {
+      expect(gameState.isInstantJobMasteryActive()).toBe(false);
+    });
+
+    test("should return true for instant job mastery when existence_mastery is learned", () => {
+      gameState._skillProgress = {
+        existence_mastery: 100,
+      };
+      expect(gameState.isInstantJobMasteryActive()).toBe(true);
+    });
+
+    test("should persist instant job mastery state in serialization", () => {
+      gameState._skillProgress = {
+        existence_mastery: 100,
+      };
+
+      const json = gameState.toJSON();
+      const newState = GameState.fromJSON(json);
+
+      expect(newState.isInstantJobMasteryActive()).toBe(true);
+    });
+  });
 });
