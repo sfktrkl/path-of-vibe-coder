@@ -541,6 +541,7 @@ export const jobs = {
     requiredSkills: ["time_manipulation"],
     requiredJobs: ["world_dominator"],
     requiresAIPath: true,
+    requiresExistencePath: true,
     timeRequired: 1200, // 20 minutes
     influenceGain: 200,
     features: {
@@ -561,6 +562,7 @@ export const jobs = {
     requiredSkills: ["reality_styling", "game_mechanics"],
     requiredJobs: ["world_dominator"], // Same as time_weaver to allow skipping
     requiresAIPath: true,
+    requiresExistencePath: true,
     timeRequired: 1500, // 25 minutes
     influenceGain: 300,
     features: {
@@ -580,6 +582,7 @@ export const jobs = {
     requiredSkills: ["existence_mastery"],
     requiredJobs: ["reality_stylist"],
     requiresAIPath: true,
+    requiresExistencePath: true,
     timeRequired: 2400, // 40 minutes
     influenceGain: 500,
     features: {
@@ -599,6 +602,7 @@ export const jobs = {
     requiredSkills: ["existence_transcendence"],
     requiredJobs: ["existence_master"],
     requiresAIPath: true,
+    requiresExistencePath: true,
     timeRequired: 3600, // 60 minutes
     influenceGain: 1000,
     features: {

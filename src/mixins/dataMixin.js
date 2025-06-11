@@ -46,6 +46,7 @@ export default {
     jobsByCategory() {
       const categories = {};
       const isAIPathUnlocked = this.gameState.getAIPathUnlocked();
+      const isExistencePathUnlocked = this.gameState.getExistencePathUnlocked();
       const currentJob = this.gameState.getCurrentJob();
 
       // First pass: collect all available architect jobs and their categories
@@ -72,6 +73,11 @@ export default {
 
         // For other jobs, check if they're available
         if (this.gameState.isJobUnlocked(job.id)) {
+          // Check existence path requirements first
+          if (job.requiresExistencePath && !isExistencePathUnlocked) {
+            return; // Skip existence jobs if existence path is not unlocked
+          }
+
           // If AI path is unlocked
           if (isAIPathUnlocked) {
             // Show jobs that require AI path in their original categories

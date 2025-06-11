@@ -14,6 +14,7 @@ describe("JobsView.vue", () => {
     setCurrentJob: jest.fn(),
     getCurrentJobProgress: jest.fn().mockReturnValue(0),
     getAIPathUnlocked: jest.fn().mockReturnValue(false),
+    getExistencePathUnlocked: jest.fn().mockReturnValue(false),
   };
 
   beforeEach(() => {
@@ -22,6 +23,7 @@ describe("JobsView.vue", () => {
     gameStateMock.getCurrentJob.mockReturnValue(null);
     gameStateMock.getCurrentJobProgress.mockReturnValue(0);
     gameStateMock.getAIPathUnlocked.mockReturnValue(false);
+    gameStateMock.getExistencePathUnlocked.mockReturnValue(false);
 
     wrapper = mount(JobsView, {
       propsData: { gameState: gameStateMock },
@@ -122,10 +124,10 @@ describe("JobsView.vue", () => {
       gameState: { ...gameStateMock },
     });
 
-    // Should now show all jobs
-    expect(wrapper.findAllComponents(JobItem).length).toBe(
-      Object.keys(jobs).length
-    );
+    // Should now show all jobs that would be displayed by jobsByCategory
+    const expectedJobCount = Object.values(wrapper.vm.jobsByCategory).flat()
+      .length;
+    expect(wrapper.findAllComponents(JobItem).length).toBe(expectedJobCount);
   });
 
   it("groups jobs by their respective categories", () => {
@@ -250,5 +252,49 @@ describe("JobsView.vue", () => {
     const vibeJobs = newWrapper.vm.jobsByCategory["vibe"] || [];
     expect(vibeJobs).toContainEqual(seniorWebDev);
     expect(vibeJobs).toContainEqual(webArchitect);
+  });
+
+  it("does not display existence jobs without AI path and existence path", () => {
+    // Mock all jobs as unlocked, but both paths locked
+    gameStateMock.isJobUnlocked.mockReturnValue(true);
+    gameStateMock.getAIPathUnlocked.mockReturnValue(false);
+    gameStateMock.getExistencePathUnlocked.mockReturnValue(false);
+
+    const newWrapper = mount(JobsView, {
+      propsData: { gameState: gameStateMock },
+    });
+
+    // Existence jobs should not be displayed
+    const displayedJobs = Object.values(newWrapper.vm.jobsByCategory).flat();
+    const existenceJobs = Object.values(jobs).filter(
+      (j) => j.category === "existence"
+    );
+    existenceJobs.forEach((job) => {
+      expect(displayedJobs).not.toContainEqual(job);
+    });
+  });
+
+  it("shows both AI path and existence path jobs if both are unlocked", () => {
+    // Mock all jobs as unlocked, both paths unlocked
+    gameStateMock.isJobUnlocked.mockReturnValue(true);
+    gameStateMock.getAIPathUnlocked.mockReturnValue(true);
+    gameStateMock.getExistencePathUnlocked.mockReturnValue(true);
+
+    const newWrapper = mount(JobsView, {
+      propsData: { gameState: gameStateMock },
+    });
+
+    // Both AI path and existence jobs should be displayed
+    const displayedJobs = Object.values(newWrapper.vm.jobsByCategory).flat();
+    const aiJobs = Object.values(jobs).filter((j) => j.requiresAIPath);
+    const existenceJobs = Object.values(jobs).filter(
+      (j) => j.category === "existence"
+    );
+    aiJobs.forEach((job) => {
+      expect(displayedJobs).toContainEqual(job);
+    });
+    existenceJobs.forEach((job) => {
+      expect(displayedJobs).toContainEqual(job);
+    });
   });
 });
