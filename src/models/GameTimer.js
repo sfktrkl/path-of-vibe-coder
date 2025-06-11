@@ -69,7 +69,7 @@ export default class GameTimer {
       let totalProgress;
       if (
         this.gameState.isInstantJobMasteryActive() &&
-        this.gameState.getCurrentJobProgress() === 0 &&
+        this.gameState.getCurrentJobProgress() === effects.jobInitialProgress &&
         Math.random() < 0.5
       ) {
         // Success! Complete the job instantly

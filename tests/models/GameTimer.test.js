@@ -639,5 +639,118 @@ describe("GameTimer", () => {
       expect(value).not.toBe(100);
       expect(value).toBeGreaterThan(0);
     });
+
+    test("should attempt instant job mastery when job progress equals initial progress (with item effects)", () => {
+      // Set up item effects with initial progress
+      mockGameState.getItemEffects = () => ({
+        salaryBoost: 1,
+        learningSpeed: 1,
+        workSpeed: 1,
+        skillTimeReduction: 1,
+        jobInitialProgress: 20, // 20% initial progress
+      });
+
+      // Set current progress to match initial progress
+      mockGameState.getCurrentJobProgress.mockReturnValue(20);
+
+      timer.update(1000);
+      expect(mockGameState.setCurrentJobProgress).toHaveBeenCalledWith(100);
+    });
+
+    test("should not attempt instant job mastery when job progress is above initial progress (with item effects)", () => {
+      // Set up item effects with initial progress
+      mockGameState.getItemEffects = () => ({
+        salaryBoost: 1,
+        learningSpeed: 1,
+        workSpeed: 1,
+        skillTimeReduction: 1,
+        jobInitialProgress: 20, // 20% initial progress
+      });
+
+      // Set current progress above initial progress
+      mockGameState.getCurrentJobProgress.mockReturnValue(30);
+
+      timer.update(1000);
+      expect(mockGameState.setCurrentJobProgress).not.toHaveBeenCalledWith(100);
+    });
+
+    test("should perform normal progress calculation when instant job mastery fails (with item effects)", () => {
+      // Set up item effects with initial progress
+      mockGameState.getItemEffects = () => ({
+        salaryBoost: 1,
+        learningSpeed: 1,
+        workSpeed: 1,
+        skillTimeReduction: 1,
+        jobInitialProgress: 20, // 20% initial progress
+      });
+
+      // Set current progress to match initial progress
+      mockGameState.getCurrentJobProgress.mockReturnValue(20);
+
+      // Make random chance fail
+      Math.random.mockReturnValue(0.7); // Above 0.5 for failure
+
+      timer.update(1000);
+
+      // Check that setCurrentJobProgress was called with a value not 100 but greater than initial progress
+      const calls = mockGameState.setCurrentJobProgress.mock.calls;
+      const value = calls[0][0];
+      expect(value).not.toBe(100);
+      expect(value).toBeGreaterThan(20); // Should be greater than initial progress
+    });
+
+    test("should attempt instant job mastery with high initial progress", () => {
+      // Set up item effects with high initial progress
+      mockGameState.getItemEffects = () => ({
+        salaryBoost: 1,
+        learningSpeed: 1,
+        workSpeed: 1,
+        skillTimeReduction: 1,
+        jobInitialProgress: 50, // 50% initial progress
+      });
+
+      // Set current progress to match initial progress
+      mockGameState.getCurrentJobProgress.mockReturnValue(50);
+
+      timer.update(1000);
+      expect(mockGameState.setCurrentJobProgress).toHaveBeenCalledWith(100);
+    });
+
+    test("should not attempt instant job mastery when feature is disabled", () => {
+      // Set up item effects with initial progress
+      mockGameState.getItemEffects = () => ({
+        salaryBoost: 1,
+        learningSpeed: 1,
+        workSpeed: 1,
+        skillTimeReduction: 1,
+        jobInitialProgress: 20,
+      });
+
+      // Set current progress to match initial progress
+      mockGameState.getCurrentJobProgress.mockReturnValue(20);
+
+      // Disable instant job mastery
+      mockGameState.isInstantJobMasteryActive.mockReturnValue(false);
+
+      timer.update(1000);
+      expect(mockGameState.setCurrentJobProgress).not.toHaveBeenCalledWith(100);
+    });
+
+    test("should work with zero initial progress (no item effects)", () => {
+      // Set up with zero initial progress
+      mockGameState.getItemEffects = () => ({
+        salaryBoost: 1,
+        learningSpeed: 1,
+        workSpeed: 1,
+        skillTimeReduction: 1,
+        jobInitialProgress: 0, // Zero initial progress
+      });
+
+      // Set current progress to match initial progress
+      mockGameState.getCurrentJobProgress.mockReturnValue(0);
+
+      timer.update(1000);
+      expect(mockGameState.setCurrentJobProgress).toHaveBeenCalledWith(100);
+    });
   });
 });
