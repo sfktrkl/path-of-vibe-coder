@@ -14,6 +14,7 @@ describe("SkillsView.vue", () => {
     getCurrentLearningProgress: jest.fn().mockReturnValue(0),
     isSkillAvailable: jest.fn().mockReturnValue(false),
     getAIPathUnlocked: jest.fn().mockReturnValue(false),
+    getExistencePathUnlocked: jest.fn().mockReturnValue(false),
   };
 
   beforeEach(() => {
@@ -22,6 +23,7 @@ describe("SkillsView.vue", () => {
     gameStateMock.getCurrentLearningProgress.mockReturnValue(0);
     gameStateMock.isSkillAvailable.mockReturnValue(false);
     gameStateMock.getAIPathUnlocked.mockReturnValue(false);
+    gameStateMock.getExistencePathUnlocked.mockReturnValue(false);
 
     wrapper = mount(SkillsView, {
       propsData: { gameState: gameStateMock },
@@ -84,6 +86,131 @@ describe("SkillsView.vue", () => {
       expect(
         skillItems.some((item) => item.props("skill").id === skill.id)
       ).toBe(true);
+    });
+  });
+
+  it("filters out existence path skills when existence path is not unlocked", () => {
+    // Mock existence path as locked
+    gameStateMock.getExistencePathUnlocked.mockReturnValue(false);
+
+    // Mock some existence path skills as available
+    const existencePathSkills = Object.values(skills).filter(
+      (skill) => skill.requiresExistencePath === true
+    );
+    const availableExistenceSkills = existencePathSkills.slice(0, 2);
+
+    gameStateMock.isSkillAvailable.mockImplementation((skillId) => {
+      return availableExistenceSkills.some((skill) => skill.id === skillId);
+    });
+
+    const newWrapper = mount(SkillsView, {
+      propsData: { gameState: gameStateMock },
+    });
+
+    const skillItems = newWrapper.findAllComponents(SkillItem);
+
+    // Should not show any existence path skills when path is locked
+    availableExistenceSkills.forEach((skill) => {
+      expect(
+        skillItems.some((item) => item.props("skill").id === skill.id)
+      ).toBe(false);
+    });
+  });
+
+  it("displays existence path skills when existence path is unlocked", () => {
+    // Mock existence path as unlocked
+    gameStateMock.getExistencePathUnlocked.mockReturnValue(true);
+
+    // Mock some existence path skills as available
+    const existencePathSkills = Object.values(skills).filter(
+      (skill) => skill.requiresExistencePath === true
+    );
+    const availableExistenceSkills = existencePathSkills.slice(0, 2);
+
+    gameStateMock.isSkillAvailable.mockImplementation((skillId) => {
+      return availableExistenceSkills.some((skill) => skill.id === skillId);
+    });
+
+    const newWrapper = mount(SkillsView, {
+      propsData: { gameState: gameStateMock },
+    });
+
+    const skillItems = newWrapper.findAllComponents(SkillItem);
+
+    // Should show available existence path skills when path is unlocked
+    expect(skillItems.length).toBe(availableExistenceSkills.length);
+    availableExistenceSkills.forEach((skill) => {
+      expect(
+        skillItems.some((item) => item.props("skill").id === skill.id)
+      ).toBe(true);
+    });
+  });
+
+  it("combines AI path and existence path filtering correctly", () => {
+    // Mock both paths as unlocked
+    gameStateMock.getAIPathUnlocked.mockReturnValue(true);
+    gameStateMock.getExistencePathUnlocked.mockReturnValue(true);
+
+    // Get skills that require both AI path and existence path
+    const aiPathSkills = Object.values(skills).filter(
+      (skill) => skill.requiresAIPath === true
+    );
+    const existencePathSkills = Object.values(skills).filter(
+      (skill) => skill.requiresExistencePath === true
+    );
+
+    // Mock some skills as available
+    const availableSkills = [
+      ...aiPathSkills.slice(0, 1),
+      ...existencePathSkills.slice(0, 1),
+    ];
+
+    gameStateMock.isSkillAvailable.mockImplementation((skillId) => {
+      return availableSkills.some((skill) => skill.id === skillId);
+    });
+
+    const newWrapper = mount(SkillsView, {
+      propsData: { gameState: gameStateMock },
+    });
+
+    const skillItems = newWrapper.findAllComponents(SkillItem);
+
+    // Should show both AI path and existence path skills when both paths are unlocked
+    expect(skillItems.length).toBe(availableSkills.length);
+    availableSkills.forEach((skill) => {
+      expect(
+        skillItems.some((item) => item.props("skill").id === skill.id)
+      ).toBe(true);
+    });
+  });
+
+  it("prioritizes existence path check over AI path check", () => {
+    // Mock existence path as locked but AI path as unlocked
+    gameStateMock.getExistencePathUnlocked.mockReturnValue(false);
+    gameStateMock.getAIPathUnlocked.mockReturnValue(true);
+
+    // Get skills that require both AI path and existence path
+    const dualPathSkills = Object.values(skills).filter(
+      (skill) =>
+        skill.requiresAIPath === true && skill.requiresExistencePath === true
+    );
+    const availableDualPathSkills = dualPathSkills.slice(0, 1);
+
+    gameStateMock.isSkillAvailable.mockImplementation((skillId) => {
+      return availableDualPathSkills.some((skill) => skill.id === skillId);
+    });
+
+    const newWrapper = mount(SkillsView, {
+      propsData: { gameState: gameStateMock },
+    });
+
+    const skillItems = newWrapper.findAllComponents(SkillItem);
+
+    // Should not show dual path skills when existence path is locked, even if AI path is unlocked
+    availableDualPathSkills.forEach((skill) => {
+      expect(
+        skillItems.some((item) => item.props("skill").id === skill.id)
+      ).toBe(false);
     });
   });
 

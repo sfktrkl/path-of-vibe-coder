@@ -148,7 +148,14 @@ export default {
     // From SkillsView.vue
     sortedSkills() {
       const allSkills = Object.values(skills);
+      const isExistencePathUnlocked = this.gameState.getExistencePathUnlocked();
+
       const filteredSkills = allSkills.filter((skill) => {
+        // Check existence path requirements first
+        if (skill.requiresExistencePath && !isExistencePathUnlocked) {
+          return false; // Skip existence skills if existence path is not unlocked
+        }
+
         // If AI path is unlocked, hide learned non-AI path skills
         if (this.gameState.getAIPathUnlocked()) {
           return (
