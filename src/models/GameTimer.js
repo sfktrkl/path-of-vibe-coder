@@ -4,6 +4,7 @@ export default class GameTimer {
     this.timer = null;
     this.lastUpdate = null;
     this.isRunning = false;
+    this.instantCompletion = true;
   }
 
   // Start the timer
@@ -70,11 +71,13 @@ export default class GameTimer {
       if (
         this.gameState.isInstantJobMasteryActive() &&
         this.gameState.getCurrentJobProgress() === effects.jobInitialProgress &&
+        this.instantCompletion &&
         Math.random() < 0.5
       ) {
         // Success! Complete the job instantly
         totalProgress = 100;
       } else {
+        this.instantCompletion = false;
         // Normal progress calculation (including failed instant attempts)
         const baseProgressPerSecond = 100 / job.timeRequired;
         const adjustedProgressPerSecond =
@@ -95,6 +98,7 @@ export default class GameTimer {
           this.gameState.addInfluence(influenceWithBoost);
         }
 
+        this.instantCompletion = true;
         this.gameState.setCurrentJobProgress(effects.jobInitialProgress);
       }
     }
@@ -118,6 +122,7 @@ export default class GameTimer {
       currentJob: this.gameState.getCurrentJob(),
       learningProgress: this.gameState.getCurrentLearningProgress(),
       jobProgress: this.gameState.getCurrentJobProgress(),
+      instantCompletion: this.instantCompletion,
     };
   }
 }

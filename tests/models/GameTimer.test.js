@@ -131,6 +131,7 @@ describe("GameTimer", () => {
       currentJob: null,
       learningProgress: 0,
       jobProgress: 0,
+      instantCompletion: true,
     });
   });
 
@@ -751,6 +752,85 @@ describe("GameTimer", () => {
 
       timer.update(1000);
       expect(mockGameState.setCurrentJobProgress).toHaveBeenCalledWith(100);
+    });
+
+    test("should persist instant completion flag across job switches", () => {
+      // Set up item effects with initial progress
+      mockGameState.getItemEffects = () => ({
+        salaryBoost: 1,
+        learningSpeed: 1,
+        workSpeed: 1,
+        skillTimeReduction: 1,
+        jobInitialProgress: 30, // 30% initial progress
+      });
+
+      // Set current progress to match initial progress
+      mockGameState.getCurrentJobProgress.mockReturnValue(30);
+
+      // First job - should attempt instant completion
+      timer.update(1000);
+      expect(mockGameState.setCurrentJobProgress).toHaveBeenCalledWith(100);
+
+      // Flag should still be enabled for next job
+      expect(timer.instantCompletion).toBe(true);
+    });
+
+    test("should re-enable instant completion flag after normal job completion", () => {
+      // Set up item effects with initial progress
+      mockGameState.getItemEffects = () => ({
+        salaryBoost: 1,
+        learningSpeed: 1,
+        workSpeed: 1,
+        skillTimeReduction: 1,
+        jobInitialProgress: 30, // 30% initial progress
+      });
+
+      // Disable instant completion flag first
+      timer.instantCompletion = false;
+
+      // Set job progress to 99% so it will complete normally
+      mockGameState.getCurrentJobProgress.mockReturnValue(99);
+
+      timer.update(1000);
+
+      // Job should complete normally
+      expect(mockGameState.addMoney).toHaveBeenCalled();
+
+      // Flag should be re-enabled
+      expect(timer.instantCompletion).toBe(true);
+    });
+
+    test("should allow instant completion to succeed multiple times in a row", () => {
+      // Set up item effects with initial progress
+      mockGameState.getItemEffects = () => ({
+        salaryBoost: 1,
+        learningSpeed: 1,
+        workSpeed: 1,
+        skillTimeReduction: 1,
+        jobInitialProgress: 30, // 30% initial progress
+      });
+
+      // Set current progress to match initial progress
+      mockGameState.getCurrentJobProgress.mockReturnValue(30);
+
+      // First instant completion - should succeed
+      timer.update(1000);
+      expect(mockGameState.setCurrentJobProgress).toHaveBeenCalledWith(100);
+
+      // Flag should still be enabled
+      expect(timer.instantCompletion).toBe(true);
+
+      // Reset mock to simulate job restart
+      mockGameState.getCurrentJobProgress.mockReturnValue(30);
+      mockGameState.setCurrentJobProgress.mockClear();
+      mockGameState.addMoney.mockClear();
+
+      // Second instant completion - should also succeed
+      timer.update(1000);
+      expect(mockGameState.setCurrentJobProgress).toHaveBeenCalledWith(100);
+
+      // Flag should still be enabled
+      expect(timer.instantCompletion).toBe(true);
     });
   });
 });
