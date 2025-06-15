@@ -15,6 +15,7 @@ describe("JobsView.vue", () => {
     getCurrentJobProgress: jest.fn().mockReturnValue(0),
     getAIPathUnlocked: jest.fn().mockReturnValue(false),
     getExistencePathUnlocked: jest.fn().mockReturnValue(false),
+    isRevealLockedActive: jest.fn().mockReturnValue(false),
   };
 
   beforeEach(() => {

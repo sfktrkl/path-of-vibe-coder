@@ -699,6 +699,23 @@ describe("GameState", () => {
     mockRandom.mockRestore();
   });
 
+  test("should check if revealLocked feature is active", () => {
+    // Initially should be false
+    expect(gameState.isRevealLockedActive()).toBe(false);
+
+    // Learn the reality_styling skill
+    gameState.setCurrentLearning("reality_styling");
+    gameState.setCurrentLearningProgress(100);
+
+    // Should now be true
+    expect(gameState.isRevealLockedActive()).toBe(true);
+
+    // Learning other skills should not affect it
+    gameState.setCurrentLearning("javascript");
+    gameState.setCurrentLearningProgress(100);
+    expect(gameState.isRevealLockedActive()).toBe(true);
+  });
+
   test("should update job progress within bounds", () => {
     const state = new GameState();
     state.setCurrentJob("everyday_normal_guy");

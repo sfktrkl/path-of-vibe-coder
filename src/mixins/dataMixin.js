@@ -48,6 +48,7 @@ export default {
       const isAIPathUnlocked = this.gameState.getAIPathUnlocked();
       const isExistencePathUnlocked = this.gameState.getExistencePathUnlocked();
       const currentJob = this.gameState.getCurrentJob();
+      const isRevealLockedActive = this.gameState.isRevealLockedActive();
 
       // First pass: collect all available architect jobs and their categories
       const availableArchitectJobs = new Map();
@@ -71,52 +72,66 @@ export default {
           return;
         }
 
-        // For other jobs, check if they're available
-        if (this.gameState.isJobUnlocked(job.id)) {
-          // Check existence path requirements first
-          if (job.requiresExistencePath && !isExistencePathUnlocked) {
-            return; // Skip existence jobs if existence path is not unlocked
+        // Check if job should be shown
+        let shouldShow = false;
+
+        // If revealLocked is active, show all jobs
+        if (isRevealLockedActive) {
+          shouldShow = true;
+        } else {
+          // For other jobs, check if they're available
+          if (this.gameState.isJobUnlocked(job.id)) {
+            // Check existence path requirements first
+            if (job.requiresExistencePath && !isExistencePathUnlocked) {
+              return; // Skip existence jobs if existence path is not unlocked
+            }
+
+            // If AI path is unlocked
+            if (isAIPathUnlocked) {
+              // Show jobs that require AI path in their original categories
+              if (job.requiresAIPath) {
+                shouldShow = true;
+              } else {
+                // Handle architect jobs for non-AI path
+                if (job.id.includes("_architect")) {
+                  shouldShow = true;
+                }
+                // Handle senior jobs non-AI path only
+                else if (job.id.includes("senior_")) {
+                  // Show senior job if there's no architect job in its category
+                  // OR if this senior job is currently selected
+                  if (
+                    job.id === currentJob ||
+                    !availableArchitectJobs.has(job.category)
+                  ) {
+                    shouldShow = true;
+                  }
+                }
+              }
+            }
+            // If AI path is not unlocked, show all available jobs in their original categories
+            else {
+              shouldShow = true;
+            }
+          }
+        }
+
+        if (shouldShow) {
+          let targetCategory = job.category;
+
+          // If AI path is unlocked and this is a non-AI path senior or architect job
+          if (
+            isAIPathUnlocked &&
+            !job.requiresAIPath &&
+            (job.id.includes("_architect") || job.id.includes("senior_"))
+          ) {
+            targetCategory = "vibe";
           }
 
-          // If AI path is unlocked
-          if (isAIPathUnlocked) {
-            // Show jobs that require AI path in their original categories
-            if (job.requiresAIPath) {
-              if (!categories[job.category]) {
-                categories[job.category] = [];
-              }
-              categories[job.category].push(job);
-            } else {
-              // Handle architect jobs for non-AI path
-              if (job.id.includes("_architect")) {
-                if (!categories["vibe"]) {
-                  categories["vibe"] = [];
-                }
-                categories["vibe"].push(job);
-              }
-              // Handle senior jobs non-AI path only
-              else if (job.id.includes("senior_")) {
-                // Show senior job if there's no architect job in its category
-                // OR if this senior job is currently selected
-                if (
-                  job.id === currentJob ||
-                  !availableArchitectJobs.has(job.category)
-                ) {
-                  if (!categories["vibe"]) {
-                    categories["vibe"] = [];
-                  }
-                  categories["vibe"].push(job);
-                }
-              }
-            }
+          if (!categories[targetCategory]) {
+            categories[targetCategory] = [];
           }
-          // If AI path is not unlocked, show all available jobs in their original categories
-          else {
-            if (!categories[job.category]) {
-              categories[job.category] = [];
-            }
-            categories[job.category].push(job);
-          }
+          categories[targetCategory].push(job);
         }
       });
 
@@ -149,8 +164,14 @@ export default {
     sortedSkills() {
       const allSkills = Object.values(skills);
       const isExistencePathUnlocked = this.gameState.getExistencePathUnlocked();
+      const isRevealLockedActive = this.gameState.isRevealLockedActive();
 
       const filteredSkills = allSkills.filter((skill) => {
+        // If revealLocked is active, show all skills
+        if (isRevealLockedActive) {
+          return true;
+        }
+
         // Check existence path requirements first
         if (skill.requiresExistencePath && !isExistencePathUnlocked) {
           return false; // Skip existence skills if existence path is not unlocked

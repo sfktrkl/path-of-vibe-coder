@@ -164,6 +164,11 @@ export default class GameState {
     return this._skillProgress["existence_mastery"] === 100;
   }
 
+  // Check if revealLocked feature is active
+  isRevealLockedActive() {
+    return this._skillProgress["reality_styling"] === 100;
+  }
+
   getJobsByCategory() {
     const categories = {};
     Object.values(jobs).forEach((job) => {

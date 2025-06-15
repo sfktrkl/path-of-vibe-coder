@@ -15,6 +15,7 @@ describe("SkillsView.vue", () => {
     isSkillAvailable: jest.fn().mockReturnValue(false),
     getAIPathUnlocked: jest.fn().mockReturnValue(false),
     getExistencePathUnlocked: jest.fn().mockReturnValue(false),
+    isRevealLockedActive: jest.fn().mockReturnValue(false),
   };
 
   beforeEach(() => {
