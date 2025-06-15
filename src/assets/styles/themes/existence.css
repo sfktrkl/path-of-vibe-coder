@@ -760,3 +760,59 @@
         background-position: 100% 50%;
     }
   }
+
+  /* === Existence Path Locked/Requirement Styles === */
+  .theme-existence .item-base.locked {
+    background-color: rgba(255, 0, 80, 0.10); /* magenta/red accent, subtle */
+    border-color: var(--existence-accent);
+    opacity: 0.8;
+    cursor: not-allowed;
+    box-shadow: 0 0 8px var(--existence-accent), 0 0 2px #ff0050;
+  }
+  .theme-existence .item-base.locked:hover {
+    background-color: rgba(255, 0, 80, 0.15);
+    box-shadow: 0 0 12px var(--existence-accent), 0 0 4px #ff0050;
+  }
+
+  .theme-existence .requirements {
+    margin-top: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    text-align: left;
+  }
+  .theme-existence .requirement-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    align-items: center;
+  }
+  .theme-existence .requirement-label {
+    color: var(--existence-accent);
+    font-size: 0.8em;
+    font-weight: 500;
+    margin-right: 4px;
+    text-shadow: 0 0 4px var(--existence-accent);
+  }
+  .theme-existence .requirement-item {
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: 0.8em;
+    background-color: rgba(255, 0, 80, 0.18);
+    color: var(--existence-accent);
+    border: 1px solid var(--existence-accent);
+    box-shadow: 0 0 4px var(--existence-accent);
+    transition: background 0.2s, color 0.2s, border 0.2s;
+  }
+  .theme-existence .requirement-item.met {
+    background-color: rgba(0, 255, 157, 0.18);
+    color: var(--existence-secondary);
+    border-color: var(--existence-secondary);
+    box-shadow: 0 0 4px var(--existence-secondary);
+  }
+  .theme-existence .locked-badge {
+    background: rgba(255, 0, 80, 0.18);
+    color: var(--existence-accent);
+    border: 1px solid var(--existence-accent);
+    text-shadow: 0 0 6px var(--existence-accent);
+  }
