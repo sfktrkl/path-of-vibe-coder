@@ -164,14 +164,8 @@ export default {
     sortedSkills() {
       const allSkills = Object.values(skills);
       const isExistencePathUnlocked = this.gameState.getExistencePathUnlocked();
-      const isRevealLockedActive = this.gameState.isRevealLockedActive();
 
       const filteredSkills = allSkills.filter((skill) => {
-        // If revealLocked is active, show all skills
-        if (isRevealLockedActive) {
-          return true;
-        }
-
         // Check existence path requirements first
         if (skill.requiresExistencePath && !isExistencePathUnlocked) {
           return false; // Skip existence skills if existence path is not unlocked

@@ -16,6 +16,7 @@ describe("JobsView.vue", () => {
     getAIPathUnlocked: jest.fn().mockReturnValue(false),
     getExistencePathUnlocked: jest.fn().mockReturnValue(false),
     isRevealLockedActive: jest.fn().mockReturnValue(false),
+    hasSkill: jest.fn().mockReturnValue(false),
   };
 
   beforeEach(() => {
@@ -25,6 +26,7 @@ describe("JobsView.vue", () => {
     gameStateMock.getCurrentJobProgress.mockReturnValue(0);
     gameStateMock.getAIPathUnlocked.mockReturnValue(false);
     gameStateMock.getExistencePathUnlocked.mockReturnValue(false);
+    gameStateMock.hasSkill.mockReturnValue(false);
 
     wrapper = mount(JobsView, {
       propsData: { gameState: gameStateMock },
@@ -165,6 +167,114 @@ describe("JobsView.vue", () => {
     );
   });
 
+  it("displays all jobs when revealLocked feature is active", () => {
+    // Mock revealLocked as active
+    gameStateMock.isRevealLockedActive.mockReturnValue(true);
+
+    // Mock all jobs as locked (except starting job)
+    gameStateMock.isJobUnlocked.mockImplementation(
+      (jobId) => jobId === "everyday_normal_guy"
+    );
+
+    const newWrapper = mount(JobsView, {
+      propsData: { gameState: gameStateMock },
+    });
+
+    const jobItems = newWrapper.findAllComponents(JobItem);
+
+    // Should show all jobs when revealLocked is active, regardless of unlock status
+    expect(jobItems.length).toBe(Object.keys(jobs).length);
+
+    // Verify all jobs are displayed
+    Object.values(jobs).forEach((job) => {
+      expect(jobItems.some((item) => item.props("job").id === job.id)).toBe(
+        true
+      );
+    });
+  });
+
+  it("displays locked jobs with requirements when revealLocked is active", () => {
+    // Mock revealLocked as active
+    gameStateMock.isRevealLockedActive.mockReturnValue(true);
+
+    // Mock some skills as learned to test requirement display
+    const learnedSkills = Object.values(jobs)
+      .slice(0, 2)
+      .map((job) => job.requiredSkills?.[0])
+      .filter(Boolean);
+    gameStateMock.hasSkill.mockImplementation((skillId) =>
+      learnedSkills.includes(skillId)
+    );
+
+    // Mock all jobs as locked (except starting job)
+    gameStateMock.isJobUnlocked.mockImplementation(
+      (jobId) => jobId === "everyday_normal_guy"
+    );
+
+    const newWrapper = mount(JobsView, {
+      propsData: { gameState: gameStateMock },
+    });
+
+    const jobItems = newWrapper.findAllComponents(JobItem);
+
+    // Should show all jobs
+    expect(jobItems.length).toBe(Object.keys(jobs).length);
+
+    // Check that jobs with requirements show them
+    const jobsWithRequirements = Object.values(jobs).filter(
+      (job) => job.requiredSkills?.length > 0 || job.requiredJobs?.length > 0
+    );
+
+    jobsWithRequirements.forEach((job) => {
+      const jobItem = jobItems.find((item) => item.props("job").id === job.id);
+      expect(jobItem.exists()).toBe(true);
+
+      // The job should be marked as locked
+      expect(jobItem.props("job")).toEqual(job);
+    });
+  });
+
+  it("shows AI path and existence path jobs when revealLocked is active, even if paths are locked", () => {
+    // Mock revealLocked as active but paths as locked
+    gameStateMock.isRevealLockedActive.mockReturnValue(true);
+    gameStateMock.getAIPathUnlocked.mockReturnValue(false);
+    gameStateMock.getExistencePathUnlocked.mockReturnValue(false);
+
+    // Mock all jobs as locked (except starting job)
+    gameStateMock.isJobUnlocked.mockImplementation(
+      (jobId) => jobId === "everyday_normal_guy"
+    );
+
+    const newWrapper = mount(JobsView, {
+      propsData: { gameState: gameStateMock },
+    });
+
+    const jobItems = newWrapper.findAllComponents(JobItem);
+
+    // Should show all jobs including AI path and existence path jobs
+    expect(jobItems.length).toBe(Object.keys(jobs).length);
+
+    // Verify AI path jobs are shown
+    const aiPathJobs = Object.values(jobs).filter(
+      (job) => job.requiresAIPath === true
+    );
+    aiPathJobs.forEach((job) => {
+      expect(jobItems.some((item) => item.props("job").id === job.id)).toBe(
+        true
+      );
+    });
+
+    // Verify existence path jobs are shown
+    const existenceJobs = Object.values(jobs).filter(
+      (job) => job.category === "existence"
+    );
+    existenceJobs.forEach((job) => {
+      expect(jobItems.some((item) => item.props("job").id === job.id)).toBe(
+        true
+      );
+    });
+  });
+
   it("shows only AI path jobs and senior/architect jobs in vibe category when AI path is unlocked", () => {
     // Mock AI path as unlocked
     gameStateMock.getAIPathUnlocked.mockReturnValue(true);
@@ -260,6 +370,7 @@ describe("JobsView.vue", () => {
     gameStateMock.isJobUnlocked.mockReturnValue(true);
     gameStateMock.getAIPathUnlocked.mockReturnValue(false);
     gameStateMock.getExistencePathUnlocked.mockReturnValue(false);
+    gameStateMock.isRevealLockedActive.mockReturnValue(false);
 
     const newWrapper = mount(JobsView, {
       propsData: { gameState: gameStateMock },

@@ -25,6 +25,7 @@ describe("SkillsView.vue", () => {
     gameStateMock.isSkillAvailable.mockReturnValue(false);
     gameStateMock.getAIPathUnlocked.mockReturnValue(false);
     gameStateMock.getExistencePathUnlocked.mockReturnValue(false);
+    gameStateMock.isRevealLockedActive.mockReturnValue(false);
 
     wrapper = mount(SkillsView, {
       propsData: { gameState: gameStateMock },
@@ -212,6 +213,107 @@ describe("SkillsView.vue", () => {
       expect(
         skillItems.some((item) => item.props("skill").id === skill.id)
       ).toBe(false);
+    });
+  });
+
+  it("displays all skills when revealLocked feature is active", () => {
+    // Mock revealLocked as active
+    gameStateMock.isRevealLockedActive.mockReturnValue(true);
+
+    // Mock all skills as unavailable (locked)
+    gameStateMock.isSkillAvailable.mockReturnValue(false);
+
+    const newWrapper = mount(SkillsView, {
+      propsData: { gameState: gameStateMock },
+    });
+
+    const skillItems = newWrapper.findAllComponents(SkillItem);
+
+    // Should show all skills when revealLocked is active, regardless of availability
+    expect(skillItems.length).toBe(Object.keys(skills).length);
+
+    // Verify all skills are displayed
+    Object.values(skills).forEach((skill) => {
+      expect(
+        skillItems.some((item) => item.props("skill").id === skill.id)
+      ).toBe(true);
+    });
+  });
+
+  it("displays locked skills with requirements when revealLocked is active", () => {
+    // Mock revealLocked as active
+    gameStateMock.isRevealLockedActive.mockReturnValue(true);
+
+    // Mock some skills as learned to test requirement display
+    const learnedSkills = Object.values(skills).slice(0, 2);
+    gameStateMock.hasSkill.mockImplementation((skillId) =>
+      learnedSkills.some((skill) => skill.id === skillId)
+    );
+
+    // Mock all skills as unavailable (locked)
+    gameStateMock.isSkillAvailable.mockReturnValue(false);
+
+    const newWrapper = mount(SkillsView, {
+      propsData: { gameState: gameStateMock },
+    });
+
+    const skillItems = newWrapper.findAllComponents(SkillItem);
+
+    // Should show all skills
+    expect(skillItems.length).toBe(Object.keys(skills).length);
+
+    // Check that skills with prerequisites show requirements
+    const skillsWithPrereqs = Object.values(skills).filter(
+      (skill) => skill.prerequisites.length > 0
+    );
+
+    skillsWithPrereqs.forEach((skill) => {
+      const skillItem = skillItems.find(
+        (item) => item.props("skill").id === skill.id
+      );
+      expect(skillItem.exists()).toBe(true);
+
+      // The skill should be marked as locked
+      expect(skillItem.props("skill")).toEqual(skill);
+    });
+  });
+
+  it("shows AI path and existence path skills when revealLocked is active, even if paths are locked", () => {
+    // Mock revealLocked as active but paths as locked
+    gameStateMock.isRevealLockedActive.mockReturnValue(true);
+    gameStateMock.getAIPathUnlocked.mockReturnValue(false);
+    gameStateMock.getExistencePathUnlocked.mockReturnValue(false);
+
+    // Mock all skills as unavailable (locked)
+    gameStateMock.isSkillAvailable.mockReturnValue(false);
+
+    const newWrapper = mount(SkillsView, {
+      propsData: { gameState: gameStateMock },
+    });
+
+    const skillItems = newWrapper.findAllComponents(SkillItem);
+
+    // Should show all skills including AI path and existence path skills
+    expect(skillItems.length).toBe(Object.keys(skills).length);
+
+    // Verify AI path skills are shown
+    const aiPathSkills = Object.values(skills).filter(
+      (skill) => skill.requiresAIPath === true
+    );
+    aiPathSkills.forEach((skill) => {
+      expect(
+        skillItems.some((item) => item.props("skill").id === skill.id)
+      ).toBe(true);
+    });
+
+    // Verify existence path skills are shown
+    const existencePathSkills = Object.values(skills).filter(
+      (skill) => skill.requiresExistencePath === true
+    );
+    existencePathSkills.forEach((skill) => {
+      expect(
+        skillItems.some((item) => item.props("skill").id === skill.id)
+      ).toBe(true);
     });
   });
 

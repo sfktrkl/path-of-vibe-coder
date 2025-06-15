@@ -4,6 +4,7 @@
       <SkillItem
         v-for="skill in sortedSkills.filter(
           (s) =>
+            gameState.isRevealLockedActive() ||
             gameState.isSkillAvailable(s.id) ||
             gameState.hasSkill(s.id) ||
             gameState.getCurrentLearning() === s.id
