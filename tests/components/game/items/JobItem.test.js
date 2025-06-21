@@ -11,6 +11,7 @@ describe("JobItem", () => {
     setCurrentJob: jest.fn(),
     getCurrentJob: jest.fn().mockReturnValue(null),
     isRevealLockedActive: jest.fn().mockReturnValue(false),
+    isCompleteVisionActive: jest.fn().mockReturnValue(false),
   };
 
   beforeEach(() => {

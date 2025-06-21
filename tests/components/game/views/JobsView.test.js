@@ -16,6 +16,7 @@ describe("JobsView.vue", () => {
     getAIPathUnlocked: jest.fn().mockReturnValue(false),
     getExistencePathUnlocked: jest.fn().mockReturnValue(false),
     isRevealLockedActive: jest.fn().mockReturnValue(false),
+    isCompleteVisionActive: jest.fn().mockReturnValue(false),
     hasSkill: jest.fn().mockReturnValue(false),
   };
 
@@ -26,6 +27,8 @@ describe("JobsView.vue", () => {
     gameStateMock.getCurrentJobProgress.mockReturnValue(0);
     gameStateMock.getAIPathUnlocked.mockReturnValue(false);
     gameStateMock.getExistencePathUnlocked.mockReturnValue(false);
+    gameStateMock.isRevealLockedActive.mockReturnValue(false);
+    gameStateMock.isCompleteVisionActive.mockReturnValue(false);
     gameStateMock.hasSkill.mockReturnValue(false);
 
     wrapper = mount(JobsView, {
@@ -407,6 +410,35 @@ describe("JobsView.vue", () => {
     });
     existenceJobs.forEach((job) => {
       expect(displayedJobs).toContainEqual(job);
+    });
+  });
+
+  it("shows all jobs when completeVision is active, overriding any other conditions", () => {
+    // Mock completeVision as active but all other conditions as locked
+    gameStateMock.isCompleteVisionActive.mockReturnValue(true);
+    gameStateMock.isRevealLockedActive.mockReturnValue(false);
+    gameStateMock.getAIPathUnlocked.mockReturnValue(false);
+    gameStateMock.getExistencePathUnlocked.mockReturnValue(false);
+
+    // Mock all jobs as locked (except starting job)
+    gameStateMock.isJobUnlocked.mockImplementation(
+      (jobId) => jobId === "everyday_normal_guy"
+    );
+
+    const newWrapper = mount(JobsView, {
+      propsData: { gameState: gameStateMock },
+    });
+
+    const jobItems = newWrapper.findAllComponents(JobItem);
+
+    // Should show ALL jobs regardless of any conditions
+    expect(jobItems.length).toBe(Object.keys(jobs).length);
+
+    // Verify all jobs are shown, including AI path, existence path, and regular jobs
+    Object.values(jobs).forEach((job) => {
+      expect(jobItems.some((item) => item.props("job").id === job.id)).toBe(
+        true
+      );
     });
   });
 });

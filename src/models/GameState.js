@@ -169,6 +169,11 @@ export default class GameState {
     return this._skillProgress["reality_styling"] === 100;
   }
 
+  // Check if completeVision feature is active
+  isCompleteVisionActive() {
+    return this._skillProgress["game_mechanics"] === 100;
+  }
+
   getJobsByCategory() {
     const categories = {};
     Object.values(jobs).forEach((job) => {

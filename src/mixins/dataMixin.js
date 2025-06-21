@@ -49,6 +49,7 @@ export default {
       const isExistencePathUnlocked = this.gameState.getExistencePathUnlocked();
       const currentJob = this.gameState.getCurrentJob();
       const isRevealLockedActive = this.gameState.isRevealLockedActive();
+      const isCompleteVisionActive = this.gameState.isCompleteVisionActive();
 
       // First pass: collect all available architect jobs and their categories
       const availableArchitectJobs = new Map();
@@ -75,8 +76,12 @@ export default {
         // Check if job should be shown
         let shouldShow = false;
 
+        // If completeVision is active, show all jobs regardless of any conditions
+        if (isCompleteVisionActive) {
+          shouldShow = true;
+        }
         // If revealLocked is active, show all jobs
-        if (isRevealLockedActive) {
+        else if (isRevealLockedActive) {
           shouldShow = true;
         } else {
           // For other jobs, check if they're available
@@ -164,8 +169,14 @@ export default {
     sortedSkills() {
       const allSkills = Object.values(skills);
       const isExistencePathUnlocked = this.gameState.getExistencePathUnlocked();
+      const isCompleteVisionActive = this.gameState.isCompleteVisionActive();
 
       const filteredSkills = allSkills.filter((skill) => {
+        // If completeVision is active, show all skills regardless of any conditions
+        if (isCompleteVisionActive) {
+          return true;
+        }
+
         // Check existence path requirements first
         if (skill.requiresExistencePath && !isExistencePathUnlocked) {
           return false; // Skip existence skills if existence path is not unlocked

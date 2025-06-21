@@ -16,6 +16,7 @@ describe("SkillsView.vue", () => {
     getAIPathUnlocked: jest.fn().mockReturnValue(false),
     getExistencePathUnlocked: jest.fn().mockReturnValue(false),
     isRevealLockedActive: jest.fn().mockReturnValue(false),
+    isCompleteVisionActive: jest.fn().mockReturnValue(false),
   };
 
   beforeEach(() => {
@@ -26,6 +27,7 @@ describe("SkillsView.vue", () => {
     gameStateMock.getAIPathUnlocked.mockReturnValue(false);
     gameStateMock.getExistencePathUnlocked.mockReturnValue(false);
     gameStateMock.isRevealLockedActive.mockReturnValue(false);
+    gameStateMock.isCompleteVisionActive.mockReturnValue(false);
 
     wrapper = mount(SkillsView, {
       propsData: { gameState: gameStateMock },
@@ -459,5 +461,33 @@ describe("SkillsView.vue", () => {
         (item) => item.props("skill").id === skillWithMultiplePrereqs.id
       )
     ).toBe(true);
+  });
+
+  it("shows all skills when completeVision is active, overriding any other conditions", () => {
+    // Mock completeVision as active but all other conditions as locked
+    gameStateMock.isCompleteVisionActive.mockReturnValue(true);
+    gameStateMock.isRevealLockedActive.mockReturnValue(false);
+    gameStateMock.getAIPathUnlocked.mockReturnValue(false);
+    gameStateMock.getExistencePathUnlocked.mockReturnValue(false);
+
+    // Mock all skills as unavailable (locked)
+    gameStateMock.isSkillAvailable.mockReturnValue(false);
+    gameStateMock.hasSkill.mockReturnValue(false);
+
+    const newWrapper = mount(SkillsView, {
+      propsData: { gameState: gameStateMock },
+    });
+
+    const skillItems = newWrapper.findAllComponents(SkillItem);
+
+    // Should show ALL skills regardless of any conditions
+    expect(skillItems.length).toBe(Object.keys(skills).length);
+
+    // Verify all skills are shown, including AI path, existence path, and regular skills
+    Object.values(skills).forEach((skill) => {
+      expect(
+        skillItems.some((item) => item.props("skill").id === skill.id)
+      ).toBe(true);
+    });
   });
 });

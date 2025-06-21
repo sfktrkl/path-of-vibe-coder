@@ -716,6 +716,23 @@ describe("GameState", () => {
     expect(gameState.isRevealLockedActive()).toBe(true);
   });
 
+  test("should check if completeVision feature is active", () => {
+    // Initially should be false
+    expect(gameState.isCompleteVisionActive()).toBe(false);
+
+    // Learn the game_mechanics skill
+    gameState.setCurrentLearning("game_mechanics");
+    gameState.setCurrentLearningProgress(100);
+
+    // Should now be true
+    expect(gameState.isCompleteVisionActive()).toBe(true);
+
+    // Learning other skills should not affect it
+    gameState.setCurrentLearning("javascript");
+    gameState.setCurrentLearningProgress(100);
+    expect(gameState.isCompleteVisionActive()).toBe(true);
+  });
+
   test("should update job progress within bounds", () => {
     const state = new GameState();
     state.setCurrentJob("everyday_normal_guy");
