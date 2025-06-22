@@ -214,6 +214,11 @@ export default class GameState {
       );
       // When learning is complete, mark as learned and update features
       if (progress >= 100) {
+        // If existence_transcendence is learned, trigger transcend reset
+        if (this._currentLearning === "existence_transcendence") {
+          this._performTranscendReset();
+          return;
+        }
         this.updateFeaturesFromSkills();
         this._currentLearning = null;
         // Check for AI path unlock when completing a skill
@@ -639,5 +644,18 @@ export default class GameState {
     } catch (error) {
       return null;
     }
+  }
+
+  _performTranscendReset() {
+    // Reset all game state, except acquired features
+    this._money = 0;
+    this._influence = 0;
+    this._currentJob = null;
+    this._jobProgress = 0;
+    this._currentLearning = null;
+    this._skillProgress = {};
+    this._ownedItems = new Set();
+    this._aiPathUnlocked = false;
+    this._existencePathUnlocked = false;
   }
 }
