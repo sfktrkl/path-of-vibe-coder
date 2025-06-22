@@ -1070,6 +1070,7 @@ describe("GameState", () => {
       gameState._skillProgress = {
         time_manipulation: 100,
       };
+      gameState.updateFeaturesFromSkills();
       expect(gameState.isInstantLearningActive()).toBe(true);
     });
 
@@ -1077,6 +1078,7 @@ describe("GameState", () => {
       gameState._skillProgress = {
         time_manipulation: 100,
       };
+      gameState.updateFeaturesFromSkills();
 
       const json = gameState.toJSON();
       const newState = GameState.fromJSON(json);
@@ -1094,6 +1096,7 @@ describe("GameState", () => {
       gameState._skillProgress = {
         existence_mastery: 100,
       };
+      gameState.updateFeaturesFromSkills();
       expect(gameState.isInstantJobMasteryActive()).toBe(true);
     });
 
@@ -1101,6 +1104,7 @@ describe("GameState", () => {
       gameState._skillProgress = {
         existence_mastery: 100,
       };
+      gameState.updateFeaturesFromSkills();
 
       const json = gameState.toJSON();
       const newState = GameState.fromJSON(json);

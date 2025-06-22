@@ -25,6 +25,9 @@ export default class GameState {
 
     // Existence Path state
     this._existencePathUnlocked = false;
+
+    // Acquired features (persist through transcendReset)
+    this._acquiredFeatures = new Set();
   }
 
   // Money management
@@ -157,21 +160,21 @@ export default class GameState {
 
   // Check if instant learning is active
   isInstantLearningActive() {
-    return this._skillProgress["time_manipulation"] === 100;
+    return this.hasFeature("instantLearning");
   }
 
   isInstantJobMasteryActive() {
-    return this._skillProgress["existence_mastery"] === 100;
+    return this.hasFeature("instantJobMastery");
   }
 
   // Check if revealLocked feature is active
   isRevealLockedActive() {
-    return this._skillProgress["reality_styling"] === 100;
+    return this.hasFeature("revealLocked");
   }
 
   // Check if completeVision feature is active
   isCompleteVisionActive() {
-    return this._skillProgress["game_mechanics"] === 100;
+    return this.hasFeature("completeVision");
   }
 
   getJobsByCategory() {
@@ -209,8 +212,9 @@ export default class GameState {
         Math.max(progress, 0),
         100
       );
-      // When learning is complete, mark as learned
+      // When learning is complete, mark as learned and update features
       if (progress >= 100) {
+        this.updateFeaturesFromSkills();
         this._currentLearning = null;
         // Check for AI path unlock when completing a skill
         this.checkAIPathUnlock();
@@ -537,6 +541,28 @@ export default class GameState {
     return true;
   }
 
+  hasFeature(featureName) {
+    return this._acquiredFeatures.has(featureName);
+  }
+
+  addFeature(featureName) {
+    this._acquiredFeatures.add(featureName);
+  }
+
+  // Check and update features when skills are completed
+  updateFeaturesFromSkills() {
+    Object.entries(this._skillProgress).forEach(([skillId, progress]) => {
+      if (progress >= 100) {
+        const skill = skills[skillId];
+        if (skill && skill.features) {
+          Object.keys(skill.features).forEach((featureName) => {
+            this.addFeature(featureName);
+          });
+        }
+      }
+    });
+  }
+
   // State serialization
   toJSON() {
     return {
@@ -549,6 +575,7 @@ export default class GameState {
       ownedItems: Array.from(this._ownedItems),
       aiPathUnlocked: this._aiPathUnlocked,
       existencePathUnlocked: this._existencePathUnlocked, // Add existence path state
+      acquiredFeatures: Array.from(this._acquiredFeatures), // Add acquired features
     };
   }
 
@@ -564,6 +591,7 @@ export default class GameState {
     state._ownedItems = new Set(json.ownedItems || []);
     state._aiPathUnlocked = json.aiPathUnlocked || false;
     state._existencePathUnlocked = json.existencePathUnlocked || false; // Add existence path state
+    state._acquiredFeatures = new Set(json.acquiredFeatures || []); // Add acquired features
     return state;
   }
 
