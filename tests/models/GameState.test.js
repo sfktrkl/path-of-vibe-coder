@@ -1067,18 +1067,14 @@ describe("GameState", () => {
     });
 
     test("should return true for instant learning when time_manipulation is learned", () => {
-      gameState._skillProgress = {
-        time_manipulation: 100,
-      };
-      gameState.updateFeaturesFromSkills();
+      gameState.setCurrentLearning("time_manipulation");
+      gameState.setCurrentLearningProgress(100);
       expect(gameState.isInstantLearningActive()).toBe(true);
     });
 
     test("should persist instant learning state in serialization", () => {
-      gameState._skillProgress = {
-        time_manipulation: 100,
-      };
-      gameState.updateFeaturesFromSkills();
+      gameState.setCurrentLearning("time_manipulation");
+      gameState.setCurrentLearningProgress(100);
 
       const json = gameState.toJSON();
       const newState = GameState.fromJSON(json);
@@ -1093,18 +1089,14 @@ describe("GameState", () => {
     });
 
     test("should return true for instant job mastery when existence_mastery is learned", () => {
-      gameState._skillProgress = {
-        existence_mastery: 100,
-      };
-      gameState.updateFeaturesFromSkills();
+      gameState.setCurrentLearning("existence_mastery");
+      gameState.setCurrentLearningProgress(100);
       expect(gameState.isInstantJobMasteryActive()).toBe(true);
     });
 
     test("should persist instant job mastery state in serialization", () => {
-      gameState._skillProgress = {
-        existence_mastery: 100,
-      };
-      gameState.updateFeaturesFromSkills();
+      gameState.setCurrentLearning("existence_mastery");
+      gameState.setCurrentLearningProgress(100);
 
       const json = gameState.toJSON();
       const newState = GameState.fromJSON(json);
