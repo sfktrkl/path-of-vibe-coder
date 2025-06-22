@@ -1021,7 +1021,7 @@ describe("GameState", () => {
       // Mock the time_weaver job without the feature
       jest.spyOn(gameState, "getCurrentJobInfo").mockReturnValue({
         id: "time_weaver",
-        features: {},
+        abilities: {},
       });
       expect(gameState.isTimeStopActive()).toBe(false);
     });
@@ -1030,7 +1030,7 @@ describe("GameState", () => {
       // Mock the time_weaver job with the feature enabled
       jest.spyOn(gameState, "getCurrentJobInfo").mockReturnValue({
         id: "time_weaver",
-        features: {
+        abilities: {
           timeStop: true,
         },
       });
@@ -1041,7 +1041,7 @@ describe("GameState", () => {
       // Mock the time_weaver job with the feature enabled
       jest.spyOn(gameState, "getCurrentJobInfo").mockReturnValue({
         id: "time_weaver",
-        features: {
+        abilities: {
           timeStop: true,
         },
       });
@@ -1052,7 +1052,7 @@ describe("GameState", () => {
       // Mock the same job info for the new state
       jest.spyOn(newState, "getCurrentJobInfo").mockReturnValue({
         id: "time_weaver",
-        features: {
+        abilities: {
           timeStop: true,
         },
       });

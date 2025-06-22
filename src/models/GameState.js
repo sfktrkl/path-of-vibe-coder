@@ -154,7 +154,7 @@ export default class GameState {
 
     // Check if current job is time_weaver and has timeStop feature
     return (
-      currentJob.id === "time_weaver" && currentJob.features?.timeStop === true
+      currentJob.id === "time_weaver" && currentJob.abilities?.timeStop === true
     );
   }
 

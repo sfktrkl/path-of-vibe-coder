@@ -544,7 +544,7 @@ export const jobs = {
     requiresExistencePath: true,
     timeRequired: 1200, // 20 minutes
     influenceGain: 200,
-    features: {
+    abilities: {
       // While in this job, actually stops ALL time in the game
       // This includes player progress, skill learning, and job completion
       // A prank that forces players to switch jobs to progress
@@ -565,7 +565,7 @@ export const jobs = {
     requiresExistencePath: true,
     timeRequired: 1500, // 25 minutes
     influenceGain: 300,
-    features: {
+    abilities: {
       // While in this job, allows switching between different game themes
       // Themes include: Matrix (green text), Retro (8-bit), Cyberpunk, etc.
       // This is a toggle feature that can be used while in this job
@@ -585,7 +585,7 @@ export const jobs = {
     requiresExistencePath: true,
     timeRequired: 2400, // 40 minutes
     influenceGain: 500,
-    features: {
+    abilities: {
       // While in this job, hides all jobs except existence_transcendent
       // This is a toggle feature that can be used while in this job
       // Implementation: Filters the job list to only show existence_transcendent
@@ -605,7 +605,7 @@ export const jobs = {
     requiresExistencePath: true,
     timeRequired: 3600, // 60 minutes
     influenceGain: 1000,
-    features: {
+    abilities: {
       // While in this job, hides all game features except skills
       // This includes hiding jobs, influence, salary, and other UI elements
       // Only existence_transcendence skill remains visible
