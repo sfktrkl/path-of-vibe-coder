@@ -481,3 +481,166 @@ describe("JobsView.vue", () => {
     });
   });
 });
+
+describe("JobsView.vue feature combinations (transcendence, complete vision, reveal locked)", () => {
+  const gameStateMock = {
+    isJobUnlocked: jest.fn().mockReturnValue(false),
+    getCurrentJob: jest.fn().mockReturnValue(null),
+    setCurrentJob: jest.fn(),
+    getCurrentJobProgress: jest.fn().mockReturnValue(0),
+    getAIPathUnlocked: jest.fn().mockReturnValue(false),
+    getExistencePathUnlocked: jest.fn().mockReturnValue(false),
+    isRevealLockedActive: jest.fn().mockReturnValue(false),
+    isCompleteVisionActive: jest.fn().mockReturnValue(false),
+    isTranscendenceFocusActive: jest.fn().mockReturnValue(false),
+    hasSkill: jest.fn().mockReturnValue(false),
+  };
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+    gameStateMock.isJobUnlocked.mockReturnValue(false);
+    gameStateMock.getCurrentJob.mockReturnValue(null);
+    gameStateMock.getCurrentJobProgress.mockReturnValue(0);
+    gameStateMock.getAIPathUnlocked.mockReturnValue(false);
+    gameStateMock.getExistencePathUnlocked.mockReturnValue(false);
+    gameStateMock.isRevealLockedActive.mockReturnValue(false);
+    gameStateMock.isCompleteVisionActive.mockReturnValue(false);
+    gameStateMock.isTranscendenceFocusActive.mockReturnValue(false);
+    gameStateMock.hasSkill.mockReturnValue(false);
+  });
+
+  const allJobs = Object.values(jobs);
+  const startingJob = allJobs.find((job) => job.id === "everyday_normal_guy");
+  const transcendenceJobs = allJobs.filter(
+    (job) => job.abilities?.transcendenceFocus === true
+  );
+  // Use a realistic set of unlocked jobs (basic category jobs that don't require AI path)
+  const unlockedJobs = allJobs
+    .filter(
+      (job) =>
+        job.category === "basic" &&
+        !job.requiresAIPath &&
+        job.id !== startingJob.id
+    )
+    .slice(0, 2); // Take first 2 basic jobs
+
+  function mountWithFeatures({
+    transcendence = false,
+    completeVision = false,
+    revealLocked = false,
+    unlocked = unlockedJobs.map((j) => j.id),
+  }) {
+    gameStateMock.isTranscendenceFocusActive.mockReturnValue(transcendence);
+    gameStateMock.isCompleteVisionActive.mockReturnValue(completeVision);
+    gameStateMock.isRevealLockedActive.mockReturnValue(revealLocked);
+    gameStateMock.isJobUnlocked.mockImplementation(
+      (jobId) => jobId === startingJob.id || unlocked.includes(jobId)
+    );
+    return mount(JobsView, { propsData: { gameState: gameStateMock } });
+  }
+
+  it("shows only unlocked jobs and starting job when no features are active", () => {
+    const wrapper = mountWithFeatures({});
+    const jobItems = wrapper.findAllComponents(JobItem);
+    const expectedJobs = [startingJob, ...unlockedJobs];
+
+    // Check that we have the expected number of jobs
+    expect(jobItems.length).toBe(expectedJobs.length);
+
+    // Check that each expected job is present
+    expectedJobs.forEach((job) => {
+      expect(jobItems.some((item) => item.props("job").id === job.id)).toBe(
+        true
+      );
+    });
+
+    // Check that no unexpected jobs are present
+    jobItems.forEach((item) => {
+      const job = item.props("job");
+      expect(expectedJobs.some((expected) => expected.id === job.id)).toBe(
+        true
+      );
+    });
+  });
+
+  it("shows all jobs and starting job when only revealLocked is active", () => {
+    const wrapper = mountWithFeatures({ revealLocked: true });
+    const jobItems = wrapper.findAllComponents(JobItem);
+    const expectedJobs = allJobs;
+    expect(jobItems.length).toBe(expectedJobs.length);
+    expectedJobs.forEach((job) => {
+      expect(jobItems.some((item) => item.props("job").id === job.id)).toBe(
+        true
+      );
+    });
+  });
+
+  it("shows all jobs and starting job when only completeVision is active", () => {
+    const wrapper = mountWithFeatures({ completeVision: true });
+    const jobItems = wrapper.findAllComponents(JobItem);
+    const expectedJobs = allJobs;
+    expect(jobItems.length).toBe(expectedJobs.length);
+    expectedJobs.forEach((job) => {
+      expect(jobItems.some((item) => item.props("job").id === job.id)).toBe(
+        true
+      );
+    });
+  });
+
+  it("shows all jobs and starting job when both completeVision and revealLocked are active", () => {
+    const wrapper = mountWithFeatures({
+      completeVision: true,
+      revealLocked: true,
+    });
+    const jobItems = wrapper.findAllComponents(JobItem);
+    const expectedJobs = allJobs;
+    expect(jobItems.length).toBe(expectedJobs.length);
+    expectedJobs.forEach((job) => {
+      expect(jobItems.some((item) => item.props("job").id === job.id)).toBe(
+        true
+      );
+    });
+  });
+
+  it("shows only transcendence jobs and starting job when only transcendenceFocus is active", () => {
+    const wrapper = mountWithFeatures({ transcendence: true });
+    const jobItems = wrapper.findAllComponents(JobItem);
+    const expectedJobs = [startingJob, ...transcendenceJobs];
+    expect(jobItems.length).toBe(expectedJobs.length);
+    expectedJobs.forEach((job) => {
+      expect(jobItems.some((item) => item.props("job").id === job.id)).toBe(
+        true
+      );
+    });
+    // No other jobs should be shown
+    jobItems.forEach((item) => {
+      const job = item.props("job");
+      expect(
+        job.abilities?.transcendenceFocus === true || job.id === startingJob.id
+      ).toBe(true);
+    });
+  });
+
+  it("shows only transcendence jobs and starting job when all features are active", () => {
+    const wrapper = mountWithFeatures({
+      transcendence: true,
+      completeVision: true,
+      revealLocked: true,
+    });
+    const jobItems = wrapper.findAllComponents(JobItem);
+    const expectedJobs = [startingJob, ...transcendenceJobs];
+    expect(jobItems.length).toBe(expectedJobs.length);
+    expectedJobs.forEach((job) => {
+      expect(jobItems.some((item) => item.props("job").id === job.id)).toBe(
+        true
+      );
+    });
+    // No other jobs should be shown
+    jobItems.forEach((item) => {
+      const job = item.props("job");
+      expect(
+        job.abilities?.transcendenceFocus === true || job.id === startingJob.id
+      ).toBe(true);
+    });
+  });
+});
