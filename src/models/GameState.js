@@ -147,18 +147,7 @@ export default class GameState {
     return jobs[this._currentJob];
   }
 
-  // Check if time stop feature is active
-  isTimeStopActive() {
-    const currentJob = this.getCurrentJobInfo();
-    if (!currentJob) return false;
-
-    // Check if current job is time_weaver and has timeStop feature
-    return (
-      currentJob.id === "time_weaver" && currentJob.abilities?.timeStop === true
-    );
-  }
-
-  // Check if instant learning is active
+  // Features
   isInstantLearningActive() {
     return this.hasFeature("instantLearning");
   }
@@ -167,20 +156,33 @@ export default class GameState {
     return this.hasFeature("instantJobMastery");
   }
 
-  // Check if revealLocked feature is active
   isRevealLockedActive() {
     return this.hasFeature("revealLocked");
   }
 
-  // Check if completeVision feature is active
   isCompleteVisionActive() {
     return this.hasFeature("completeVision");
   }
 
-  // Check if transcendence focus feature is active
+  // Abilities
+  isTimeStopActive() {
+    const currentJob = this.getCurrentJobInfo();
+    return currentJob?.abilities?.timeStop === true;
+  }
+
   isTranscendenceFocusActive() {
     const currentJob = this.getCurrentJobInfo();
     return currentJob?.abilities?.transcendenceFocus === true;
+  }
+
+  isThemeSwitcherActive() {
+    const currentJob = this.getCurrentJobInfo();
+    return currentJob?.abilities?.themeSwitcher === true;
+  }
+
+  isPureExistenceActive() {
+    const currentJob = this.getCurrentJobInfo();
+    return currentJob?.abilities?.pureExistence === true;
   }
 
   getJobsByCategory() {

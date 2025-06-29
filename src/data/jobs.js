@@ -545,11 +545,6 @@ export const jobs = {
     timeRequired: 1200, // 20 minutes
     influenceGain: 200,
     abilities: {
-      // While in this job, actually stops ALL time in the game
-      // This includes player progress, skill learning, and job completion
-      // A prank that forces players to switch jobs to progress
-      // This is a toggle feature that can be used while in this job
-      // Implementation: Completely halts all time-based progress
       timeStop: true,
     },
   },
@@ -566,10 +561,6 @@ export const jobs = {
     timeRequired: 1500, // 25 minutes
     influenceGain: 300,
     abilities: {
-      // While in this job, allows switching between different game themes
-      // Themes include: Matrix (green text), Retro (8-bit), Cyberpunk, etc.
-      // This is a toggle feature that can be used while in this job
-      // Implementation: Adds a theme switcher with custom visual styles
       themeSwitcher: true,
     },
   },
@@ -586,10 +577,6 @@ export const jobs = {
     timeRequired: 2400, // 40 minutes
     influenceGain: 500,
     abilities: {
-      // While in this job, hides all jobs except existence_transcendent
-      // This is a toggle feature that can be used while in this job
-      // Implementation: Filters the job list to only show existence_transcendent
-      // This represents focusing on the ultimate goal of transcendence
       transcendenceFocus: true,
     },
   },
@@ -606,12 +593,6 @@ export const jobs = {
     timeRequired: 3600, // 60 minutes
     influenceGain: 1000,
     abilities: {
-      // While in this job, hides all game features except skills
-      // This includes hiding jobs, influence, salary, and other UI elements
-      // Only existence_transcendence skill remains visible
-      // This is a toggle feature that can be used while in this job
-      // Implementation: Strips the UI to bare minimum, showing only skills
-      // This represents the final step before transcendence
       pureExistence: true,
       transcendenceFocus: true,
     },

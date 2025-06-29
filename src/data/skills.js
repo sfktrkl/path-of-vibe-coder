@@ -547,8 +547,6 @@ export const skills = {
     requiresAIPath: true,
     timeRequired: 900, // 15 minutes
     features: {
-      // Once learned, provides a 50% chance to instantly complete any skill
-      // Implementation: When starting a skill, there's a 50% chance it completes instantly
       instantLearning: true,
     },
   },
@@ -561,10 +559,6 @@ export const skills = {
     requiresAIPath: true,
     timeRequired: 1200, // 20 minutes
     features: {
-      // Once learned, shows all jobs and skills that are currently locked
-      // Instead of hiding them, displays them with their requirements
-      // This is a permanent ability that's always active
-      // Implementation: Modifies the UI to show locked content with requirements
       revealLocked: true,
     },
   },
@@ -577,11 +571,6 @@ export const skills = {
     requiresAIPath: true,
     timeRequired: 1500, // 25 minutes
     features: {
-      // Once learned, reveals all skills and jobs in the game
-      // This includes locked, hidden, and future content
-      // This is a permanent ability that's always active
-      // Implementation: When active, the skill and job trees show all possible paths
-      // regardless of current progression or requirements
       completeVision: true,
     },
   },
@@ -594,8 +583,6 @@ export const skills = {
     requiresAIPath: true,
     timeRequired: 1800, // 30 minutes
     features: {
-      // Once learned, provides a 50% chance to instantly complete any job
-      // Implementation: When starting a job, there's a 50% chance it completes instantly
       instantJobMastery: true,
     },
   },
@@ -608,10 +595,6 @@ export const skills = {
     requiresAIPath: true,
     timeRequired: 2400, // 40 minutes
     features: {
-      // Once learned, allows complete game reset while keeping all existence path skills
-      // This is a permanent ability that can be used once
-      // Implementation: Adds a "Transcend" button that resets the game but keeps existence skills
-      // This allows players to experience the game again with their existence powers
       transcendReset: true,
     },
   },
