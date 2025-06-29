@@ -53,23 +53,20 @@ export default {
       const isTranscendenceFocusActive =
         this.gameState.isTranscendenceFocusActive();
 
-      // If transcendence focus is active, only show jobs with that ability
+      // Helper to add a job to its (or a target) category
+      function addToCategory(job, cat = job.category) {
+        if (!categories[cat]) categories[cat] = [];
+        categories[cat].push(job);
+      }
+
+      // 1. Transcendence Focus: Only show jobs with that ability and the starting job
       if (isTranscendenceFocusActive) {
         Object.values(jobs).forEach((job) => {
-          // Always include the starting job
-          if (job.id === "everyday_normal_guy") {
-            if (!categories[job.category]) {
-              categories[job.category] = [];
-            }
-            categories[job.category].push(job);
-            return;
-          }
-          // Include jobs with transcendenceFocus ability
-          if (job.abilities?.transcendenceFocus === true) {
-            if (!categories[job.category]) {
-              categories[job.category] = [];
-            }
-            categories[job.category].push(job);
+          if (
+            job.id === "everyday_normal_guy" ||
+            job.abilities?.transcendenceFocus === true
+          ) {
+            addToCategory(job);
           }
         });
         return Object.fromEntries(
@@ -77,6 +74,17 @@ export default {
         );
       }
 
+      // 2. Complete Vision or Reveal Locked: Show all jobs, grouped by category
+      if (isCompleteVisionActive || isRevealLockedActive) {
+        Object.values(jobs).forEach((job) => {
+          addToCategory(job);
+        });
+        return Object.fromEntries(
+          Object.entries(categories).filter(([, jobs]) => jobs.length > 0)
+        );
+      }
+
+      // 3. Default: Only show unlocked jobs and the starting job, with AI path logic
       // First pass: collect all available architect jobs and their categories
       const availableArchitectJobs = new Map();
       Object.values(jobs).forEach((job) => {
@@ -92,65 +100,39 @@ export default {
       Object.values(jobs).forEach((job) => {
         // Always show the starting job
         if (job.id === "everyday_normal_guy") {
-          if (!categories[job.category]) {
-            categories[job.category] = [];
-          }
-          categories[job.category].push(job);
+          addToCategory(job);
           return;
         }
 
-        // Check if job should be shown
+        // Only show unlocked jobs
+        if (!this.gameState.isJobUnlocked(job.id)) return;
+
+        // Existence path requirement
+        if (job.requiresExistencePath && !isExistencePathUnlocked) return;
+
         let shouldShow = false;
-
-        // If completeVision is active, show all jobs regardless of any conditions
-        if (isCompleteVisionActive) {
-          shouldShow = true;
-        }
-        // If revealLocked is active, show all jobs
-        else if (isRevealLockedActive) {
-          shouldShow = true;
-        } else {
-          // For other jobs, check if they're available
-          if (this.gameState.isJobUnlocked(job.id)) {
-            // Check existence path requirements first
-            if (job.requiresExistencePath && !isExistencePathUnlocked) {
-              return; // Skip existence jobs if existence path is not unlocked
-            }
-
-            // If AI path is unlocked
-            if (isAIPathUnlocked) {
-              // Show jobs that require AI path in their original categories
-              if (job.requiresAIPath) {
-                shouldShow = true;
-              } else {
-                // Handle architect jobs for non-AI path
-                if (job.id.includes("_architect")) {
-                  shouldShow = true;
-                }
-                // Handle senior jobs non-AI path only
-                else if (job.id.includes("senior_")) {
-                  // Show senior job if there's no architect job in its category
-                  // OR if this senior job is currently selected
-                  if (
-                    job.id === currentJob ||
-                    !availableArchitectJobs.has(job.category)
-                  ) {
-                    shouldShow = true;
-                  }
-                }
-              }
-            }
-            // If AI path is not unlocked, show all available jobs in their original categories
-            else {
+        if (isAIPathUnlocked) {
+          if (job.requiresAIPath) {
+            shouldShow = true;
+          } else if (job.id.includes("_architect")) {
+            shouldShow = true;
+          } else if (job.id.includes("senior_")) {
+            // Show senior job if there's no architect job in its category or if this senior job is currently selected
+            if (
+              job.id === currentJob ||
+              !availableArchitectJobs.has(job.category)
+            ) {
               shouldShow = true;
             }
           }
+        } else {
+          // If AI path is not unlocked, show all available jobs in their original categories
+          shouldShow = true;
         }
 
         if (shouldShow) {
           let targetCategory = job.category;
-
-          // If AI path is unlocked and this is a non-AI path senior or architect job
+          // If AI path is unlocked and this is a non-AI path senior or architect job, put in vibe
           if (
             isAIPathUnlocked &&
             !job.requiresAIPath &&
@@ -158,11 +140,7 @@ export default {
           ) {
             targetCategory = "vibe";
           }
-
-          if (!categories[targetCategory]) {
-            categories[targetCategory] = [];
-          }
-          categories[targetCategory].push(job);
+          addToCategory(job, targetCategory);
         }
       });
 
