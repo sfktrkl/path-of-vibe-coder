@@ -50,6 +50,32 @@ export default {
       const currentJob = this.gameState.getCurrentJob();
       const isRevealLockedActive = this.gameState.isRevealLockedActive();
       const isCompleteVisionActive = this.gameState.isCompleteVisionActive();
+      const isTranscendenceFocusActive =
+        this.gameState.isTranscendenceFocusActive();
+
+      // If transcendence focus is active, only show jobs with that ability
+      if (isTranscendenceFocusActive) {
+        Object.values(jobs).forEach((job) => {
+          // Always include the starting job
+          if (job.id === "everyday_normal_guy") {
+            if (!categories[job.category]) {
+              categories[job.category] = [];
+            }
+            categories[job.category].push(job);
+            return;
+          }
+          // Include jobs with transcendenceFocus ability
+          if (job.abilities?.transcendenceFocus === true) {
+            if (!categories[job.category]) {
+              categories[job.category] = [];
+            }
+            categories[job.category].push(job);
+          }
+        });
+        return Object.fromEntries(
+          Object.entries(categories).filter(([, jobs]) => jobs.length > 0)
+        );
+      }
 
       // First pass: collect all available architect jobs and their categories
       const availableArchitectJobs = new Map();

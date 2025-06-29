@@ -613,6 +613,7 @@ export const jobs = {
       // Implementation: Strips the UI to bare minimum, showing only skills
       // This represents the final step before transcendence
       pureExistence: true,
+      transcendenceFocus: true,
     },
   },
 };

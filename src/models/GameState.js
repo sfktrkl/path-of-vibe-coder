@@ -177,6 +177,12 @@ export default class GameState {
     return this.hasFeature("completeVision");
   }
 
+  // Check if transcendence focus feature is active
+  isTranscendenceFocusActive() {
+    const currentJob = this.getCurrentJobInfo();
+    return currentJob?.abilities?.transcendenceFocus === true;
+  }
+
   getJobsByCategory() {
     const categories = {};
     Object.values(jobs).forEach((job) => {

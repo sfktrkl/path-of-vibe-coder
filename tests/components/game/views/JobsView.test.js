@@ -17,6 +17,7 @@ describe("JobsView.vue", () => {
     getExistencePathUnlocked: jest.fn().mockReturnValue(false),
     isRevealLockedActive: jest.fn().mockReturnValue(false),
     isCompleteVisionActive: jest.fn().mockReturnValue(false),
+    isTranscendenceFocusActive: jest.fn().mockReturnValue(false),
     hasSkill: jest.fn().mockReturnValue(false),
   };
 
@@ -29,6 +30,7 @@ describe("JobsView.vue", () => {
     gameStateMock.getExistencePathUnlocked.mockReturnValue(false);
     gameStateMock.isRevealLockedActive.mockReturnValue(false);
     gameStateMock.isCompleteVisionActive.mockReturnValue(false);
+    gameStateMock.isTranscendenceFocusActive.mockReturnValue(false);
     gameStateMock.hasSkill.mockReturnValue(false);
 
     wrapper = mount(JobsView, {
@@ -439,6 +441,43 @@ describe("JobsView.vue", () => {
       expect(jobItems.some((item) => item.props("job").id === job.id)).toBe(
         true
       );
+    });
+  });
+
+  it("shows only jobs with transcendenceFocus ability when transcendence focus is active, regardless of other features", () => {
+    // Mock transcendence focus as active
+    gameStateMock.isTranscendenceFocusActive = jest.fn().mockReturnValue(true);
+    gameStateMock.isCompleteVisionActive.mockReturnValue(true);
+    gameStateMock.isRevealLockedActive.mockReturnValue(true);
+    // All jobs are locked except starting job
+    // gameStateMock.isJobUnlocked.mockImplementation(
+    //   (jobId) => jobId === "everyday_normal_guy"
+    // );
+
+    const newWrapper = mount(JobsView, {
+      propsData: { gameState: gameStateMock },
+    });
+
+    const jobItems = newWrapper.findAllComponents(JobItem);
+    // Only jobs with transcendenceFocus ability and the starting job should be shown
+    const expectedJobs = Object.values(jobs).filter(
+      (job) =>
+        job.abilities?.transcendenceFocus === true ||
+        job.id === "everyday_normal_guy"
+    );
+    expect(jobItems.length).toBe(expectedJobs.length);
+    expectedJobs.forEach((job) => {
+      expect(jobItems.some((item) => item.props("job").id === job.id)).toBe(
+        true
+      );
+    });
+    // No other jobs should be shown
+    jobItems.forEach((item) => {
+      const job = item.props("job");
+      expect(
+        job.abilities?.transcendenceFocus === true ||
+          job.id === "everyday_normal_guy"
+      ).toBe(true);
     });
   });
 });
