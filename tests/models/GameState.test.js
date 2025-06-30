@@ -1104,4 +1104,111 @@ describe("GameState", () => {
       expect(newState.isInstantJobMasteryActive()).toBe(true);
     });
   });
+
+  describe("Transcend Reset Tracking", () => {
+    test("should initialize with hasTranscendReset as false", () => {
+      expect(gameState.hasTranscendReset()).toBe(false);
+    });
+
+    test("should mark transcend reset when _performTranscendReset is called", () => {
+      // Set up some game state
+      gameState.addMoney(1000);
+      gameState.setCurrentJob("everyday_normal_guy");
+      gameState.setCurrentLearning("computer_basics");
+      gameState.setCurrentLearningProgress(50);
+
+      // Perform transcend reset
+      gameState._performTranscendReset();
+
+      // Check that transcend reset is marked
+      expect(gameState.hasTranscendReset()).toBe(true);
+
+      // Check that game state is reset
+      expect(gameState.getMoney()).toBe(0);
+      expect(gameState.getCurrentJob()).toBeNull();
+      expect(gameState.getCurrentLearning()).toBeNull();
+    });
+
+    test("should persist transcend reset state in serialization", () => {
+      // Perform transcend reset
+      gameState._performTranscendReset();
+
+      const json = gameState.toJSON();
+      const newState = GameState.fromJSON(json);
+
+      expect(newState.hasTranscendReset()).toBe(true);
+    });
+
+    test("should not reset transcend reset state when performing transcend reset again", () => {
+      // Perform transcend reset
+      gameState._performTranscendReset();
+      expect(gameState.hasTranscendReset()).toBe(true);
+
+      // Perform another transcend reset
+      gameState._performTranscendReset();
+      expect(gameState.hasTranscendReset()).toBe(true);
+    });
+  });
+
+  describe("Pure Existence Ability", () => {
+    test("should return false for pure existence when no job is set", () => {
+      expect(gameState.isPureExistenceActive()).toBe(false);
+    });
+
+    test("should return false for pure existence when not in existence_transcendent job", () => {
+      gameState.setCurrentJob("everyday_normal_guy");
+      expect(gameState.isPureExistenceActive()).toBe(false);
+    });
+
+    test("should return false for pure existence when in existence_transcendent but no transcend reset", () => {
+      // Mock the existence_transcendent job
+      jest.spyOn(gameState, "getCurrentJobInfo").mockReturnValue({
+        id: "existence_transcendent",
+        abilities: {
+          pureExistence: true,
+        },
+      });
+      expect(gameState.isPureExistenceActive()).toBe(false);
+    });
+
+    test("should return true for pure existence when in existence_transcendent with transcend reset", () => {
+      // Perform transcend reset first
+      gameState._performTranscendReset();
+
+      // Mock the existence_transcendent job
+      jest.spyOn(gameState, "getCurrentJobInfo").mockReturnValue({
+        id: "existence_transcendent",
+        abilities: {
+          pureExistence: true,
+        },
+      });
+      expect(gameState.isPureExistenceActive()).toBe(true);
+    });
+
+    test("should persist pure existence state in serialization", () => {
+      // Perform transcend reset
+      gameState._performTranscendReset();
+
+      // Mock the existence_transcendent job
+      jest.spyOn(gameState, "getCurrentJobInfo").mockReturnValue({
+        id: "existence_transcendent",
+        abilities: {
+          pureExistence: true,
+        },
+      });
+
+      const json = gameState.toJSON();
+      const newState = GameState.fromJSON(json);
+
+      // Mock the same job info for the new state
+      jest.spyOn(newState, "getCurrentJobInfo").mockReturnValue({
+        id: "existence_transcendent",
+        abilities: {
+          pureExistence: true,
+        },
+      });
+
+      expect(newState.isPureExistenceActive()).toBe(true);
+    });
+  });
 });

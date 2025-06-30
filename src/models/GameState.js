@@ -28,6 +28,9 @@ export default class GameState {
 
     // Acquired features (persist through transcendReset)
     this._acquiredFeatures = new Set();
+
+    // Transcend reset tracking (persists through transcendReset)
+    this._hasTranscendReset = false;
   }
 
   // Money management
@@ -182,7 +185,10 @@ export default class GameState {
 
   isPureExistenceActive() {
     const currentJob = this.getCurrentJobInfo();
-    return currentJob?.abilities?.pureExistence === true;
+    // Pure existence requires both the job ability AND having performed a transcend reset
+    return (
+      currentJob?.abilities?.pureExistence === true && this._hasTranscendReset
+    );
   }
 
   getJobsByCategory() {
@@ -589,6 +595,7 @@ export default class GameState {
       aiPathUnlocked: this._aiPathUnlocked,
       existencePathUnlocked: this._existencePathUnlocked, // Add existence path state
       acquiredFeatures: Array.from(this._acquiredFeatures), // Add acquired features
+      hasTranscendReset: this._hasTranscendReset, // Add transcend reset tracking
     };
   }
 
@@ -605,6 +612,7 @@ export default class GameState {
     state._aiPathUnlocked = json.aiPathUnlocked || false;
     state._existencePathUnlocked = json.existencePathUnlocked || false; // Add existence path state
     state._acquiredFeatures = new Set(json.acquiredFeatures || []); // Add acquired features
+    state._hasTranscendReset = json.hasTranscendReset || false; // Add transcend reset tracking
     return state;
   }
 
@@ -655,7 +663,10 @@ export default class GameState {
   }
 
   _performTranscendReset() {
-    // Reset all game state, except acquired features
+    // Mark that a transcend reset has been performed
+    this._hasTranscendReset = true;
+
+    // Reset all game state, except acquired features and transcend reset tracking
     this._money = 0;
     this._influence = 0;
     this._currentJob = null;
@@ -665,5 +676,10 @@ export default class GameState {
     this._ownedItems = new Set();
     this._aiPathUnlocked = false;
     this._existencePathUnlocked = false;
+  }
+
+  // Transcend reset tracking
+  hasTranscendReset() {
+    return this._hasTranscendReset;
   }
 }
