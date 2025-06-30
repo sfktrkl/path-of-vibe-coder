@@ -5,36 +5,47 @@
         class="character-info"
         :class="{ 'default-title': !gameState.getCurrentJob() }"
       >
-        <h1>{{ currentJob ? currentJob.name : "Path of Vibe Coder" }}</h1>
-        <div class="stats">
-          <div class="money">${{ gameState.getMoney() }}</div>
-          <div
-            v-if="hasInfluenceGainJobs || gameState.getInfluence() > 0"
-            class="influence"
-          >
-            <span class="influence-icon">⚡</span>{{ gameState.getInfluence() }}
+        <h1>
+          <template v-if="isPureExistence">
+            You have acceded the limits. Congratulations!
+          </template>
+          <template v-else>
+            {{ currentJob ? currentJob.name : "Path of Vibe Coder" }}
+          </template>
+        </h1>
+        <template v-if="!isPureExistence">
+          <div class="stats">
+            <div class="money">${{ gameState.getMoney() }}</div>
+            <div
+              v-if="hasInfluenceGainJobs || gameState.getInfluence() > 0"
+              class="influence"
+            >
+              <span class="influence-icon">⚡</span
+              >{{ gameState.getInfluence() }}
+            </div>
           </div>
-        </div>
-        <div
-          class="item-effects"
-          v-if="totalItemEffects && gameState.getCurrentJob()"
-        >
           <div
-            v-for="(value, effect) in filteredItemEffects"
-            :key="effect"
-            class="effect"
+            class="item-effects"
+            v-if="totalItemEffects && gameState.getCurrentJob()"
           >
-            <span class="effect-name">{{ formatEffectName(effect) }}:</span>
-            <span class="effect-value">{{
-              formatEffectValue(effect, value)
-            }}</span>
+            <div
+              v-for="(value, effect) in filteredItemEffects"
+              :key="effect"
+              class="effect"
+            >
+              <span class="effect-name">{{ formatEffectName(effect) }}:</span>
+              <span class="effect-value">{{
+                formatEffectValue(effect, value)
+              }}</span>
+            </div>
           </div>
-        </div>
+        </template>
       </div>
 
       <div
         class="progress-bars"
         v-if="
+          !isPureExistence &&
           (hasInfluenceGainJobs || gameState.getInfluence() > 0) &&
           !gameState.getExistencePathUnlocked()
         "
@@ -50,7 +61,10 @@
         />
       </div>
 
-      <div class="progress-bars" v-if="currentLearning || currentJob">
+      <div
+        class="progress-bars"
+        v-if="!isPureExistence && (currentLearning || currentJob)"
+      >
         <ProgressBar
           v-if="currentLearning"
           :label="`Learning: ${currentLearning.name}`"
@@ -68,7 +82,7 @@
 
       <nav class="navigation">
         <button
-          v-for="view in views"
+          v-for="view in filteredViews"
           :key="view.id"
           :class="['nav-button', { active: currentView === view.id }]"
           @click="$emit('view-change', view.id)"
@@ -113,6 +127,15 @@ export default {
     };
   },
   computed: {
+    isPureExistence() {
+      return this.gameState.isPureExistenceActive();
+    },
+    filteredViews() {
+      if (this.isPureExistence) {
+        return this.views.filter((v) => v.id === "job" || v.id === "save");
+      }
+      return this.views;
+    },
     currentLearning() {
       if (!this.gameState.getCurrentLearning()) return null;
       return skills[this.gameState.getCurrentLearning()];

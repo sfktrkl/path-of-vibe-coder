@@ -19,6 +19,7 @@ describe("JobsView.vue", () => {
     isCompleteVisionActive: jest.fn().mockReturnValue(false),
     isTranscendenceFocusActive: jest.fn().mockReturnValue(false),
     hasSkill: jest.fn().mockReturnValue(false),
+    isPureExistenceActive: jest.fn().mockReturnValue(false),
   };
 
   beforeEach(() => {
@@ -494,6 +495,7 @@ describe("JobsView.vue feature combinations (transcendence, complete vision, rev
     isCompleteVisionActive: jest.fn().mockReturnValue(false),
     isTranscendenceFocusActive: jest.fn().mockReturnValue(false),
     hasSkill: jest.fn().mockReturnValue(false),
+    isPureExistenceActive: jest.fn().mockReturnValue(false),
   };
 
   beforeEach(() => {

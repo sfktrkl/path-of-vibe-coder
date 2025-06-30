@@ -52,11 +52,24 @@ export default {
       const isCompleteVisionActive = this.gameState.isCompleteVisionActive();
       const isTranscendenceFocusActive =
         this.gameState.isTranscendenceFocusActive();
+      const isPureExistenceActive = this.gameState.isPureExistenceActive();
 
       // Helper to add a job to its (or a target) category
       function addToCategory(job, cat = job.category) {
         if (!categories[cat]) categories[cat] = [];
         categories[cat].push(job);
+      }
+
+      // 0. Pure Existence: Only show the existence_transcendent job
+      if (isPureExistenceActive) {
+        Object.values(jobs).forEach((job) => {
+          if (job.id === "existence_transcendent") {
+            addToCategory(job, "existence");
+          }
+        });
+        return Object.fromEntries(
+          Object.entries(categories).filter(([, jobs]) => jobs.length > 0)
+        );
       }
 
       // 1. Transcendence Focus: Only show jobs with that ability and the starting job

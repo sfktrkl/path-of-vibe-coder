@@ -48,6 +48,7 @@ describe("GameHeader.vue", () => {
     checkExistencePathUnlock: () => false,
     getExistencePathUnlocked: () => false,
     getAIPathUnlocked: () => false,
+    isPureExistenceActive: () => false,
   };
 
   beforeEach(() => {
