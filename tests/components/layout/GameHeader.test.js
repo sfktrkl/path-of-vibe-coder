@@ -428,4 +428,144 @@ describe("GameHeader.vue", () => {
       expect(progressBar.exists()).toBe(false);
     });
   });
+
+  describe("Pure Existence Mode", () => {
+    const createPureExistenceGameState = (overrides = {}) => ({
+      ...mockGameState,
+      isPureExistenceActive: () => true,
+      getCurrentJob: () => "existence_transcendent",
+      getCurrentJobProgress: () => 75,
+      getCurrentLearning: () => "test_skill",
+      getCurrentLearningProgress: () => 50,
+      getInfluence: () => 1000,
+      getMoney: () => 1000000,
+      getCurrentStoryStage: () => ({
+        message: "Sometimes I feel bored... there must be more...",
+        influenceRequired: 1000,
+      }),
+      getStoryProgressPercentage: () => 100,
+      ...overrides,
+    });
+
+    test("shows only Jobs and Save/Load navigation buttons in pure existence mode", async () => {
+      const pureExistenceGameState = createPureExistenceGameState();
+      await wrapper.setProps({
+        gameState: pureExistenceGameState,
+      });
+
+      const navButtons = wrapper.findAll(".nav-button");
+      expect(navButtons).toHaveLength(2);
+      expect(navButtons[0].text()).toBe("Jobs");
+      expect(navButtons[1].text()).toBe("Save/Load");
+    });
+
+    test("hides Skills and Shop navigation buttons in pure existence mode", async () => {
+      const pureExistenceGameState = createPureExistenceGameState();
+      await wrapper.setProps({
+        gameState: pureExistenceGameState,
+      });
+
+      const navButtons = wrapper.findAll(".nav-button");
+      const buttonTexts = navButtons.map((button) => button.text());
+
+      expect(buttonTexts).not.toContain("Skills");
+      expect(buttonTexts).not.toContain("Shop");
+    });
+
+    test("hides all progress bars in pure existence mode", async () => {
+      const pureExistenceGameState = createPureExistenceGameState();
+      await wrapper.setProps({
+        gameState: pureExistenceGameState,
+      });
+
+      const progressBars = wrapper.findAll(".progress-bars");
+      expect(progressBars).toHaveLength(0);
+    });
+
+    test("hides money display in pure existence mode", async () => {
+      const pureExistenceGameState = createPureExistenceGameState();
+      await wrapper.setProps({
+        gameState: pureExistenceGameState,
+      });
+
+      const moneyDisplay = wrapper.find(".money");
+      expect(moneyDisplay.exists()).toBe(false);
+    });
+
+    test("hides influence display in pure existence mode", async () => {
+      const pureExistenceGameState = createPureExistenceGameState();
+      await wrapper.setProps({
+        gameState: pureExistenceGameState,
+      });
+
+      const influenceDisplay = wrapper.find(".influence");
+      expect(influenceDisplay.exists()).toBe(false);
+    });
+
+    test("hides item effects in pure existence mode", async () => {
+      const pureExistenceGameState = createPureExistenceGameState();
+      await wrapper.setProps({
+        gameState: pureExistenceGameState,
+      });
+
+      const itemEffects = wrapper.find(".item-effects");
+      expect(itemEffects.exists()).toBe(false);
+    });
+
+    test("shows congratulatory message instead of job name in pure existence mode", async () => {
+      const pureExistenceGameState = createPureExistenceGameState();
+      await wrapper.setProps({
+        gameState: pureExistenceGameState,
+      });
+
+      // Should show congratulatory message instead of job name
+      expect(wrapper.text()).toContain(
+        "You have acceded the limits. Congratulations!"
+      );
+      expect(wrapper.text()).not.toContain("Working: Existence Transcendent");
+    });
+
+    test("shows normal UI when pure existence is not active", async () => {
+      const normalGameState = {
+        ...mockGameState,
+        isPureExistenceActive: () => false,
+        getCurrentJob: () => "test_job",
+        getCurrentJobProgress: () => 75,
+      };
+      await wrapper.setProps({
+        gameState: normalGameState,
+      });
+
+      // Should show all navigation buttons
+      const navButtons = wrapper.findAll(".nav-button");
+      expect(navButtons).toHaveLength(4);
+      expect(navButtons[0].text()).toBe("Jobs");
+      expect(navButtons[1].text()).toBe("Skills");
+      expect(navButtons[2].text()).toBe("Shop");
+      expect(navButtons[3].text()).toBe("Save/Load");
+
+      // Should show progress bars
+      const progressBars = wrapper.findAll(".progress-bars");
+      expect(progressBars.length).toBeGreaterThan(0);
+
+      // Should show money
+      const moneyDisplay = wrapper.find(".money");
+      expect(moneyDisplay.exists()).toBe(true);
+    });
+
+    test("emits view-change events correctly in pure existence mode", async () => {
+      const pureExistenceGameState = createPureExistenceGameState();
+      await wrapper.setProps({
+        gameState: pureExistenceGameState,
+      });
+
+      const jobsButton = wrapper.findAll(".nav-button")[0];
+      await jobsButton.trigger("click");
+      expect(wrapper.emitted("view-change")[0][0]).toBe("job");
+
+      const saveLoadButton = wrapper.findAll(".nav-button")[1];
+      await saveLoadButton.trigger("click");
+      expect(wrapper.emitted("view-change")[1][0]).toBe("save");
+    });
+  });
 });

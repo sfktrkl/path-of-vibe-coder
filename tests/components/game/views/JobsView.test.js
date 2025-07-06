@@ -646,3 +646,183 @@ describe("JobsView.vue feature combinations (transcendence, complete vision, rev
     });
   });
 });
+
+describe("JobsView.vue Pure Existence Mode", () => {
+  const gameStateMock = {
+    isJobUnlocked: jest.fn().mockReturnValue(false),
+    getCurrentJob: jest.fn().mockReturnValue(null),
+    setCurrentJob: jest.fn(),
+    getCurrentJobProgress: jest.fn().mockReturnValue(0),
+    getAIPathUnlocked: jest.fn().mockReturnValue(false),
+    getExistencePathUnlocked: jest.fn().mockReturnValue(false),
+    isRevealLockedActive: jest.fn().mockReturnValue(false),
+    isCompleteVisionActive: jest.fn().mockReturnValue(false),
+    isTranscendenceFocusActive: jest.fn().mockReturnValue(false),
+    hasSkill: jest.fn().mockReturnValue(false),
+    isPureExistenceActive: jest.fn().mockReturnValue(false),
+  };
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+    gameStateMock.isJobUnlocked.mockReturnValue(false);
+    gameStateMock.getCurrentJob.mockReturnValue(null);
+    gameStateMock.getCurrentJobProgress.mockReturnValue(0);
+    gameStateMock.getAIPathUnlocked.mockReturnValue(false);
+    gameStateMock.getExistencePathUnlocked.mockReturnValue(false);
+    gameStateMock.isRevealLockedActive.mockReturnValue(false);
+    gameStateMock.isCompleteVisionActive.mockReturnValue(false);
+    gameStateMock.isTranscendenceFocusActive.mockReturnValue(false);
+    gameStateMock.hasSkill.mockReturnValue(false);
+    gameStateMock.isPureExistenceActive.mockReturnValue(false);
+  });
+
+  it("shows only existence_transcendent job when pure existence is active", () => {
+    // Mock pure existence as active
+    gameStateMock.isPureExistenceActive.mockReturnValue(true);
+
+    // Mock all jobs as unlocked to test filtering
+    gameStateMock.isJobUnlocked.mockReturnValue(true);
+
+    const wrapper = mount(JobsView, {
+      propsData: { gameState: gameStateMock },
+    });
+
+    const jobItems = wrapper.findAllComponents(JobItem);
+
+    // Should only show the existence_transcendent job
+    expect(jobItems).toHaveLength(1);
+
+    const displayedJob = jobItems[0].props("job");
+    expect(displayedJob.id).toBe("existence_transcendent");
+  });
+
+  it("shows only existence_transcendent job even when other features are active", () => {
+    // Mock pure existence as active along with other features
+    gameStateMock.isPureExistenceActive.mockReturnValue(true);
+    gameStateMock.isRevealLockedActive.mockReturnValue(true);
+    gameStateMock.isCompleteVisionActive.mockReturnValue(true);
+    gameStateMock.isTranscendenceFocusActive.mockReturnValue(true);
+
+    // Mock all jobs as unlocked
+    gameStateMock.isJobUnlocked.mockReturnValue(true);
+
+    const wrapper = mount(JobsView, {
+      propsData: { gameState: gameStateMock },
+    });
+
+    const jobItems = wrapper.findAllComponents(JobItem);
+
+    // Should only show the existence_transcendent job, regardless of other features
+    expect(jobItems).toHaveLength(1);
+
+    const displayedJob = jobItems[0].props("job");
+    expect(displayedJob.id).toBe("existence_transcendent");
+  });
+
+  it("shows only existence_transcendent job even when no jobs are unlocked", () => {
+    // Mock pure existence as active
+    gameStateMock.isPureExistenceActive.mockReturnValue(true);
+
+    // Mock all jobs as locked
+    gameStateMock.isJobUnlocked.mockReturnValue(false);
+
+    const wrapper = mount(JobsView, {
+      propsData: { gameState: gameStateMock },
+    });
+
+    const jobItems = wrapper.findAllComponents(JobItem);
+
+    // Should still show the existence_transcendent job even when locked
+    expect(jobItems).toHaveLength(1);
+
+    const displayedJob = jobItems[0].props("job");
+    expect(displayedJob.id).toBe("existence_transcendent");
+  });
+
+  it("shows normal job filtering when pure existence is not active", () => {
+    // Mock pure existence as inactive
+    gameStateMock.isPureExistenceActive.mockReturnValue(false);
+
+    // Mock some jobs as unlocked
+    const unlockedJobIds = ["everyday_normal_guy", "computer_trainee"];
+    gameStateMock.isJobUnlocked.mockImplementation((jobId) =>
+      unlockedJobIds.includes(jobId)
+    );
+
+    const wrapper = mount(JobsView, {
+      propsData: { gameState: gameStateMock },
+    });
+
+    const jobItems = wrapper.findAllComponents(JobItem);
+
+    // Should show unlocked jobs (including starting job)
+    expect(jobItems.length).toBeGreaterThan(1);
+
+    // Should not show existence_transcendent job when pure existence is not active
+    const existenceTranscendentJob = jobItems.find(
+      (item) => item.props("job").id === "existence_transcendent"
+    );
+    expect(existenceTranscendentJob).toBeUndefined();
+  });
+
+  it("shows existence_transcendent job in correct category when pure existence is active", () => {
+    // Mock pure existence as active
+    gameStateMock.isPureExistenceActive.mockReturnValue(true);
+
+    // Mock all jobs as unlocked
+    gameStateMock.isJobUnlocked.mockReturnValue(true);
+
+    const wrapper = mount(JobsView, {
+      propsData: { gameState: gameStateMock },
+    });
+
+    const jobItems = wrapper.findAllComponents(JobItem);
+    const displayedJob = jobItems[0].props("job");
+
+    // Should show the existence_transcendent job
+    expect(displayedJob.id).toBe("existence_transcendent");
+
+    // Should be in the existence category
+    expect(displayedJob.category).toBe("existence");
+  });
+
+  it("updates job display when pure existence status changes", async () => {
+    // Initially pure existence is not active
+    gameStateMock.isPureExistenceActive.mockReturnValue(false);
+
+    // Mock some jobs as unlocked
+    const unlockedJobIds = ["everyday_normal_guy", "computer_trainee"];
+    gameStateMock.isJobUnlocked.mockImplementation((jobId) =>
+      unlockedJobIds.includes(jobId)
+    );
+
+    const wrapper = mount(JobsView, {
+      propsData: { gameState: gameStateMock },
+    });
+
+    // Should show normal jobs
+    let jobItems = wrapper.findAllComponents(JobItem);
+    expect(jobItems.length).toBe(2);
+
+    // Activate pure existence
+    gameStateMock.isPureExistenceActive.mockReturnValue(true);
+    await wrapper.setProps({
+      gameState: { ...gameStateMock },
+    });
+
+    // Should now only show existence_transcendent job
+    jobItems = wrapper.findAllComponents(JobItem);
+    expect(jobItems).toHaveLength(1);
+    expect(jobItems[0].props("job").id).toBe("existence_transcendent");
+
+    // Deactivate pure existence
+    gameStateMock.isPureExistenceActive.mockReturnValue(false);
+    await wrapper.setProps({
+      gameState: { ...gameStateMock },
+    });
+
+    // Should show normal jobs again
+    jobItems = wrapper.findAllComponents(JobItem);
+    expect(jobItems.length).toBe(2);
+  });
+});
