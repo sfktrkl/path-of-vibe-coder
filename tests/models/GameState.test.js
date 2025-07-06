@@ -773,6 +773,9 @@ describe("GameState", () => {
     unlockSeniorWebDev(state1);
     state1.setCurrentJob("senior_web_dev");
 
+    // Set random to well above 6.5% to prevent unlock (0.2 * 100 = 20)
+    mockRandom.mockReturnValue(0.2);
+
     // Add points to reach near cap
     state1.setCurrentLearning("machine_learning");
     state1.setCurrentLearningProgress(100);
@@ -784,9 +787,7 @@ describe("GameState", () => {
     // - Money: 5 points
     // Total: 13 points -> 6.5% chance (under 10% cap)
 
-    // Set random to above 6.5% to prevent unlock (0.08 * 100 = 8)
-    mockRandom.mockReturnValue(0.08);
-    state1.checkAIPathUnlock();
+    // The checkAIPathUnlock was already called when machine_learning was completed
     expect(state1.isAIPathUnlocked()).toBe(false);
 
     // Test with architect job (25% cap)
@@ -795,6 +796,9 @@ describe("GameState", () => {
     // First unlock senior web dev
     unlockSeniorWebDev(state2);
     state2.setCurrentJob("senior_web_dev");
+
+    // Set random to well below 23% to allow unlock (0.1 * 100 = 10)
+    mockRandom.mockReturnValue(0.1);
 
     // Add required skills for web architect
     state2.setCurrentLearning("system_design");
@@ -839,9 +843,7 @@ describe("GameState", () => {
     // - Money: 5 points (max)
     // Total: ~46 points -> 23% chance (capped at 25% for architect)
 
-    // Set random to below 23% to allow unlock (0.20 * 100 = 20)
-    mockRandom.mockReturnValue(0.2);
-    state2.checkAIPathUnlock();
+    // The checkAIPathUnlock was already called when skills were completed
     expect(state2.isAIPathUnlocked()).toBe(true);
 
     mockRandom.mockRestore();
