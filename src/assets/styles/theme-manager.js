@@ -42,6 +42,19 @@ class ThemeManager {
       },
       { immediate: true }
     );
+
+    // Watch for existence particles ability
+    watch(
+      () => this.gameState.isExistenceParticlesActive(),
+      (active) => {
+        if (active && this.gameState.getExistencePathUnlocked()) {
+          this.activateExistenceParticles();
+        } else {
+          this.deactivateExistenceParticles();
+        }
+      },
+      { immediate: true }
+    );
   }
 
   activateAITheme() {
@@ -101,6 +114,24 @@ class ThemeManager {
     }
   }
 
+  activateExistenceParticles() {
+    // Initialize and start particle system for existence theme
+    if (!this.particleSystem) {
+      this.particleSystem = new ParticleSystem();
+    }
+
+    // Wait for the container to be available
+    this.waitForContainer(() => {
+      this.particleSystem.start();
+    });
+  }
+
+  deactivateExistenceParticles() {
+    if (this.particleSystem) {
+      this.particleSystem.stop();
+    }
+  }
+
   deactivateTheme() {
     const currentTheme = this.currentTheme;
 
@@ -116,6 +147,9 @@ class ThemeManager {
       case "existence":
         document.body.classList.remove("theme-existence");
         this.removeExistenceBackground();
+        if (this.particleSystem) {
+          this.particleSystem.stop();
+        }
         break;
       // Add cases for other themes here if needed
     }

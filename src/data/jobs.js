@@ -551,7 +551,7 @@ export const jobs = {
   reality_stylist: {
     id: "reality_stylist",
     name: "Reality Stylist",
-    description: "Mastering the game's appearance",
+    description: "Mastering the visual essence of existence",
     category: "existence",
     salary: 200000,
     requiredSkills: ["reality_styling", "game_mechanics"],
@@ -561,7 +561,7 @@ export const jobs = {
     timeRequired: 1500, // 25 minutes
     influenceGain: 300,
     abilities: {
-      themeSwitcher: true,
+      existenceParticles: true,
     },
   },
   existence_master: {

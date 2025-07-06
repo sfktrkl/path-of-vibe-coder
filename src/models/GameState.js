@@ -178,9 +178,9 @@ export default class GameState {
     return currentJob?.abilities?.transcendenceFocus === true;
   }
 
-  isThemeSwitcherActive() {
+  isExistenceParticlesActive() {
     const currentJob = this.getCurrentJobInfo();
-    return currentJob?.abilities?.themeSwitcher === true;
+    return currentJob?.abilities?.existenceParticles === true;
   }
 
   isPureExistenceActive() {

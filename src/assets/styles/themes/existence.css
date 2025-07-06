@@ -470,6 +470,22 @@
     pointer-events: none;
     z-index: 0;
   }
+
+  /* Override particle colors for existence theme */
+  .theme-existence .particle {
+    background-color: var(--existence-secondary) !important;
+    box-shadow: 0 0 10px var(--existence-secondary) !important;
+  }
+
+  .theme-existence .particle:nth-child(3n) {
+    background-color: var(--existence-primary) !important;
+    box-shadow: 0 0 10px var(--existence-primary) !important;
+  }
+
+  .theme-existence .particle:nth-child(3n+1) {
+    background-color: var(--existence-accent) !important;
+    box-shadow: 0 0 10px var(--existence-accent) !important;
+  }
   
   @keyframes existence-pulse {
     0% {
