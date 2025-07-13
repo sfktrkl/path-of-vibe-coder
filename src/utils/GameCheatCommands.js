@@ -420,6 +420,115 @@ export default class GameCheatCommands {
     };
   }
 
+  listJobAbilities() {
+    return {
+      description:
+        "listJobAbilities() - List all job abilities with their descriptions",
+      execute: () => {
+        const abilities = new Map();
+
+        // Collect all abilities from jobs
+        Object.values(jobs).forEach((job) => {
+          if (job.abilities) {
+            Object.keys(job.abilities).forEach((abilityName) => {
+              if (!abilities.has(abilityName)) {
+                abilities.set(abilityName, {
+                  name: abilityName,
+                  jobs: [],
+                });
+              }
+              abilities.get(abilityName).jobs.push(job.name);
+            });
+          }
+        });
+
+        if (abilities.size === 0) {
+          console.log("No job abilities found!");
+          return;
+        }
+
+        // Format the output
+        let output = "Available Job Abilities:\n\n";
+        abilities.forEach((ability, abilityName) => {
+          output += `${abilityName}:\n`;
+          output += `  Jobs: ${ability.jobs.join(", ")}\n\n`;
+        });
+
+        console.log(output);
+      },
+    };
+  }
+
+  enableJobAbility() {
+    return {
+      description:
+        "enableJobAbility(abilityName: string) - Enable a job ability",
+      execute: (abilityName) => {
+        // Validate ability name by checking if it exists in any job
+        let abilityExists = false;
+        Object.values(jobs).forEach((job) => {
+          if (job.abilities && job.abilities[abilityName]) {
+            abilityExists = true;
+          }
+        });
+
+        if (!abilityExists) {
+          console.log(`Ability '${abilityName}' not found in any job!`);
+          console.log("Use listJobAbilities() to see available abilities.");
+          return;
+        }
+
+        this.gameState.setAbility(abilityName, true);
+        console.log(`Ability '${abilityName}' enabled!`);
+      },
+    };
+  }
+
+  disableJobAbility() {
+    return {
+      description:
+        "disableJobAbility(abilityName: string) - Disable a job ability",
+      execute: (abilityName) => {
+        // Validate ability name by checking if it exists in any job
+        let abilityExists = false;
+        Object.values(jobs).forEach((job) => {
+          if (job.abilities && job.abilities[abilityName]) {
+            abilityExists = true;
+          }
+        });
+
+        if (!abilityExists) {
+          console.log(`Ability '${abilityName}' not found in any job!`);
+          console.log("Use listJobAbilities() to see available abilities.");
+          return;
+        }
+
+        this.gameState.setAbility(abilityName, false);
+        console.log(`Ability '${abilityName}' disabled!`);
+      },
+    };
+  }
+
+  listCurrentAbilities() {
+    return {
+      description:
+        "listCurrentAbilities() - List all currently enabled abilities",
+      execute: () => {
+        const currentAbilities = this.gameState.getAllAbilities();
+
+        if (currentAbilities.length === 0) {
+          console.log("No abilities are currently enabled!");
+          return;
+        }
+
+        console.log("Currently Enabled Abilities:");
+        currentAbilities.forEach((ability) => {
+          console.log(`  - ${ability}`);
+        });
+      },
+    };
+  }
+
   help() {
     return {
       description: "help() - Show this help message",

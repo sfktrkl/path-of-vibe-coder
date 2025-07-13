@@ -437,4 +437,153 @@ describe("GameCheatCommands", () => {
       expect(console.log).toHaveBeenCalledWith("  - revealLocked");
     });
   });
+
+  describe("listAbilities", () => {
+    it("should list all job abilities with their descriptions", () => {
+      commands.listAbilities().execute();
+
+      expect(console.log).toHaveBeenCalled();
+      const output = console.log.mock.calls[0][0];
+      expect(output).toContain("Available Job Abilities:");
+
+      // Check if all abilities from jobs are listed
+      const expectedAbilities = [
+        "timeStop",
+        "existenceParticles",
+        "transcendenceFocus",
+        "pureExistence",
+      ];
+
+      expectedAbilities.forEach((ability) => {
+        expect(output).toContain(ability);
+      });
+    });
+
+    it("should show which jobs provide each ability", () => {
+      commands.listAbilities().execute();
+
+      const output = console.log.mock.calls[0][0];
+
+      // Check that abilities show their associated jobs
+      expect(output).toContain("timeStop:");
+      expect(output).toContain("Time Weaver");
+
+      expect(output).toContain("existenceParticles:");
+      expect(output).toContain("Reality Stylist");
+
+      expect(output).toContain("transcendenceFocus:");
+      expect(output).toContain("Existence Master");
+
+      expect(output).toContain("pureExistence:");
+      expect(output).toContain("Existence Transcendent");
+    });
+  });
+
+  describe("enableAbility", () => {
+    it("should enable a valid ability", () => {
+      commands.enableAbility().execute("timeStop");
+
+      expect(gameState.hasAbility("timeStop")).toBe(true);
+      expect(console.log).toHaveBeenCalledWith("Ability 'timeStop' enabled!");
+    });
+
+    it("should not enable invalid ability", () => {
+      commands.enableAbility().execute("invalidAbility");
+
+      expect(console.log).toHaveBeenCalledWith(
+        "Ability 'invalidAbility' not found in any job!"
+      );
+      expect(console.log).toHaveBeenCalledWith(
+        "Use listAbilities() to see available abilities."
+      );
+    });
+
+    it("should handle all valid abilities", () => {
+      const validAbilities = [
+        "timeStop",
+        "existenceParticles",
+        "transcendenceFocus",
+        "pureExistence",
+      ];
+
+      validAbilities.forEach((ability) => {
+        commands.enableAbility().execute(ability);
+        expect(gameState.hasAbility(ability)).toBe(true);
+      });
+    });
+  });
+
+  describe("disableAbility", () => {
+    it("should disable a valid ability", () => {
+      // First enable the ability
+      gameState.addAbility("timeStop");
+      expect(gameState.hasAbility("timeStop")).toBe(true);
+
+      // Then disable it
+      commands.disableAbility().execute("timeStop");
+
+      expect(gameState.hasAbility("timeStop")).toBe(false);
+      expect(console.log).toHaveBeenCalledWith("Ability 'timeStop' disabled!");
+    });
+
+    it("should not disable invalid ability", () => {
+      commands.disableAbility().execute("invalidAbility");
+
+      expect(console.log).toHaveBeenCalledWith(
+        "Ability 'invalidAbility' not found in any job!"
+      );
+      expect(console.log).toHaveBeenCalledWith(
+        "Use listAbilities() to see available abilities."
+      );
+    });
+
+    it("should handle disabling non-existent abilities gracefully", () => {
+      // Try to disable an ability that doesn't exist
+      commands.disableAbility().execute("nonExistentAbility");
+
+      expect(console.log).toHaveBeenCalledWith(
+        "Ability 'nonExistentAbility' not found in any job!"
+      );
+      expect(console.log).toHaveBeenCalledWith(
+        "Use listAbilities() to see available abilities."
+      );
+    });
+  });
+
+  describe("listCurrentAbilities", () => {
+    it("should list currently enabled abilities", () => {
+      // Enable some abilities
+      gameState.addAbility("timeStop");
+      gameState.addAbility("existenceParticles");
+
+      commands.listCurrentAbilities().execute();
+
+      expect(console.log).toHaveBeenCalledWith("Currently Enabled Abilities:");
+      expect(console.log).toHaveBeenCalledWith("  - timeStop");
+      expect(console.log).toHaveBeenCalledWith("  - existenceParticles");
+    });
+
+    it("should show message when no abilities are enabled", () => {
+      commands.listCurrentAbilities().execute();
+
+      expect(console.log).toHaveBeenCalledWith(
+        "No abilities are currently enabled!"
+      );
+    });
+
+    it("should list all enabled abilities in order", () => {
+      // Enable abilities in different order
+      gameState.addAbility("pureExistence");
+      gameState.addAbility("timeStop");
+      gameState.addAbility("existenceParticles");
+
+      commands.listCurrentAbilities().execute();
+
+      // Should list all abilities (order may vary due to Set iteration)
+      expect(console.log).toHaveBeenCalledWith("Currently Enabled Abilities:");
+      expect(console.log).toHaveBeenCalledWith("  - pureExistence");
+      expect(console.log).toHaveBeenCalledWith("  - timeStop");
+      expect(console.log).toHaveBeenCalledWith("  - existenceParticles");
+    });
+  });
 });
