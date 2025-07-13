@@ -1213,4 +1213,114 @@ describe("GameState", () => {
       expect(newState.isPureExistenceActive()).toBe(true);
     });
   });
+
+  describe("Feature Management", () => {
+    test("should initialize with no features", () => {
+      expect(gameState.getAllFeatures()).toEqual([]);
+    });
+
+    test("should add feature correctly", () => {
+      gameState.addFeature("testFeature");
+      expect(gameState.hasFeature("testFeature")).toBe(true);
+      expect(gameState.getAllFeatures()).toContain("testFeature");
+    });
+
+    test("should set feature to enabled", () => {
+      gameState.setFeature("testFeature", true);
+      expect(gameState.hasFeature("testFeature")).toBe(true);
+      expect(gameState.getAllFeatures()).toContain("testFeature");
+    });
+
+    test("should set feature to disabled", () => {
+      // First enable the feature
+      gameState.addFeature("testFeature");
+      expect(gameState.hasFeature("testFeature")).toBe(true);
+
+      // Then disable it
+      gameState.setFeature("testFeature", false);
+      expect(gameState.hasFeature("testFeature")).toBe(false);
+      expect(gameState.getAllFeatures()).not.toContain("testFeature");
+    });
+
+    test("should remove feature correctly", () => {
+      gameState.addFeature("testFeature");
+      expect(gameState.hasFeature("testFeature")).toBe(true);
+
+      gameState.removeFeature("testFeature");
+      expect(gameState.hasFeature("testFeature")).toBe(false);
+      expect(gameState.getAllFeatures()).not.toContain("testFeature");
+    });
+
+    test("should return all features in array", () => {
+      const features = ["feature1", "feature2", "feature3"];
+
+      features.forEach((feature) => {
+        gameState.addFeature(feature);
+      });
+
+      const allFeatures = gameState.getAllFeatures();
+      expect(Array.isArray(allFeatures)).toBe(true);
+      features.forEach((feature) => {
+        expect(allFeatures).toContain(feature);
+      });
+    });
+
+    test("should handle multiple features correctly", () => {
+      gameState.setFeature("feature1", true);
+      gameState.setFeature("feature2", true);
+      gameState.setFeature("feature3", false);
+
+      expect(gameState.hasFeature("feature1")).toBe(true);
+      expect(gameState.hasFeature("feature2")).toBe(true);
+      expect(gameState.hasFeature("feature3")).toBe(false);
+
+      const allFeatures = gameState.getAllFeatures();
+      expect(allFeatures).toContain("feature1");
+      expect(allFeatures).toContain("feature2");
+      expect(allFeatures).not.toContain("feature3");
+    });
+
+    test("should persist features in serialization", () => {
+      gameState.setFeature("instantLearning", true);
+      gameState.setFeature("revealLocked", true);
+
+      const json = gameState.toJSON();
+      const newState = GameState.fromJSON(json);
+
+      expect(newState.hasFeature("instantLearning")).toBe(true);
+      expect(newState.hasFeature("revealLocked")).toBe(true);
+      expect(newState.getAllFeatures()).toContain("instantLearning");
+      expect(newState.getAllFeatures()).toContain("revealLocked");
+    });
+
+    test("should not duplicate features when adding same feature multiple times", () => {
+      gameState.addFeature("testFeature");
+      gameState.addFeature("testFeature");
+      gameState.addFeature("testFeature");
+
+      const allFeatures = gameState.getAllFeatures();
+      const testFeatureCount = allFeatures.filter(
+        (f) => f === "testFeature"
+      ).length;
+      expect(testFeatureCount).toBe(1);
+    });
+
+    test("should handle removing non-existent feature gracefully", () => {
+      expect(gameState.hasFeature("nonExistentFeature")).toBe(false);
+
+      gameState.removeFeature("nonExistentFeature");
+
+      expect(gameState.hasFeature("nonExistentFeature")).toBe(false);
+      expect(gameState.getAllFeatures()).not.toContain("nonExistentFeature");
+    });
+
+    test("should handle setting non-existent feature to disabled gracefully", () => {
+      expect(gameState.hasFeature("nonExistentFeature")).toBe(false);
+
+      gameState.setFeature("nonExistentFeature", false);
+
+      expect(gameState.hasFeature("nonExistentFeature")).toBe(false);
+      expect(gameState.getAllFeatures()).not.toContain("nonExistentFeature");
+    });
+  });
 });

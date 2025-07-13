@@ -568,6 +568,22 @@ export default class GameState {
     this._acquiredFeatures.add(featureName);
   }
 
+  setFeature(featureName, enabled) {
+    if (enabled) {
+      this._acquiredFeatures.add(featureName);
+    } else {
+      this._acquiredFeatures.delete(featureName);
+    }
+  }
+
+  removeFeature(featureName) {
+    this._acquiredFeatures.delete(featureName);
+  }
+
+  getAllFeatures() {
+    return Array.from(this._acquiredFeatures);
+  }
+
   // Check and update features when skills are completed
   updateFeaturesFromSkills() {
     Object.entries(this._skillProgress).forEach(([skillId, progress]) => {

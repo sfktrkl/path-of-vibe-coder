@@ -279,4 +279,137 @@ describe("GameCheatCommands", () => {
       });
     });
   });
+
+  describe("listSkillFeatures", () => {
+    it("should list all skill features with their descriptions", () => {
+      commands.listSkillFeatures().execute();
+
+      expect(console.log).toHaveBeenCalled();
+      const output = console.log.mock.calls[0][0];
+      expect(output).toContain("Available Skill Features:");
+
+      // Check if all features from skills are listed
+      const expectedFeatures = [
+        "instantLearning",
+        "revealLocked",
+        "completeVision",
+        "instantJobMastery",
+        "transcendReset",
+      ];
+
+      expectedFeatures.forEach((feature) => {
+        expect(output).toContain(feature);
+      });
+    });
+
+    it("should show which skills provide each feature", () => {
+      commands.listSkillFeatures().execute();
+
+      const output = console.log.mock.calls[0][0];
+
+      // Check that features show their associated skills
+      expect(output).toContain("instantLearning:");
+      expect(output).toContain("Time Manipulation");
+
+      expect(output).toContain("revealLocked:");
+      expect(output).toContain("Reality Styling");
+
+      expect(output).toContain("completeVision:");
+      expect(output).toContain("Game Mechanics");
+
+      expect(output).toContain("instantJobMastery:");
+      expect(output).toContain("Existence Mastery");
+
+      expect(output).toContain("transcendReset:");
+      expect(output).toContain("Existence Transcendence");
+    });
+  });
+
+  describe("setFeature", () => {
+    it("should enable a valid feature", () => {
+      commands.setFeature().execute("instantLearning", true);
+
+      expect(gameState.hasFeature("instantLearning")).toBe(true);
+      expect(console.log).toHaveBeenCalledWith(
+        "Feature 'instantLearning' enabled!"
+      );
+    });
+
+    it("should disable a valid feature", () => {
+      // First enable the feature
+      gameState.addFeature("instantLearning");
+      expect(gameState.hasFeature("instantLearning")).toBe(true);
+
+      // Then disable it
+      commands.setFeature().execute("instantLearning", false);
+
+      expect(gameState.hasFeature("instantLearning")).toBe(false);
+      expect(console.log).toHaveBeenCalledWith(
+        "Feature 'instantLearning' disabled!"
+      );
+    });
+
+    it("should not set invalid feature", () => {
+      commands.setFeature().execute("invalidFeature", true);
+
+      expect(console.log).toHaveBeenCalledWith(
+        "Feature 'invalidFeature' not found in any skill!"
+      );
+      expect(console.log).toHaveBeenCalledWith(
+        "Use listSkillFeatures() to see available features."
+      );
+    });
+
+    it("should handle all valid features", () => {
+      const validFeatures = [
+        "instantLearning",
+        "revealLocked",
+        "completeVision",
+        "instantJobMastery",
+        "transcendReset",
+      ];
+
+      validFeatures.forEach((feature) => {
+        commands.setFeature().execute(feature, true);
+        expect(gameState.hasFeature(feature)).toBe(true);
+      });
+    });
+  });
+
+  describe("listCurrentFeatures", () => {
+    it("should list currently enabled features", () => {
+      // Enable some features
+      gameState.addFeature("instantLearning");
+      gameState.addFeature("revealLocked");
+
+      commands.listCurrentFeatures().execute();
+
+      expect(console.log).toHaveBeenCalledWith("Currently Enabled Features:");
+      expect(console.log).toHaveBeenCalledWith("  - instantLearning");
+      expect(console.log).toHaveBeenCalledWith("  - revealLocked");
+    });
+
+    it("should show message when no features are enabled", () => {
+      commands.listCurrentFeatures().execute();
+
+      expect(console.log).toHaveBeenCalledWith(
+        "No features are currently enabled!"
+      );
+    });
+
+    it("should list all enabled features in order", () => {
+      // Enable features in different order
+      gameState.addFeature("completeVision");
+      gameState.addFeature("instantLearning");
+      gameState.addFeature("revealLocked");
+
+      commands.listCurrentFeatures().execute();
+
+      // Should list all features (order may vary due to Set iteration)
+      expect(console.log).toHaveBeenCalledWith("Currently Enabled Features:");
+      expect(console.log).toHaveBeenCalledWith("  - completeVision");
+      expect(console.log).toHaveBeenCalledWith("  - instantLearning");
+      expect(console.log).toHaveBeenCalledWith("  - revealLocked");
+    });
+  });
 });

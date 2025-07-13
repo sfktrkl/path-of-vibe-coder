@@ -311,6 +311,91 @@ export default class GameCheatCommands {
     };
   }
 
+  listSkillFeatures() {
+    return {
+      description:
+        "listSkillFeatures() - List all skill features with their descriptions",
+      execute: () => {
+        const features = new Map();
+
+        // Collect all features from skills
+        Object.values(skills).forEach((skill) => {
+          if (skill.features) {
+            Object.keys(skill.features).forEach((featureName) => {
+              if (!features.has(featureName)) {
+                features.set(featureName, {
+                  name: featureName,
+                  skills: [],
+                });
+              }
+              features.get(featureName).skills.push(skill.name);
+            });
+          }
+        });
+
+        if (features.size === 0) {
+          console.log("No skill features found!");
+          return;
+        }
+
+        // Format the output
+        let output = "Available Skill Features:\n\n";
+        features.forEach((feature, featureName) => {
+          output += `${featureName}:\n`;
+          output += `  Skills: ${feature.skills.join(", ")}\n\n`;
+        });
+
+        console.log(output);
+      },
+    };
+  }
+
+  setFeature() {
+    return {
+      description:
+        "setFeature(featureName: string, enabled: boolean) - Enable or disable a feature",
+      execute: (featureName, enabled) => {
+        // Validate feature name by checking if it exists in any skill
+        let featureExists = false;
+        Object.values(skills).forEach((skill) => {
+          if (skill.features && skill.features[featureName]) {
+            featureExists = true;
+          }
+        });
+
+        if (!featureExists) {
+          console.log(`Feature '${featureName}' not found in any skill!`);
+          console.log("Use listSkillFeatures() to see available features.");
+          return;
+        }
+
+        this.gameState.setFeature(featureName, enabled);
+        const status = enabled ? "enabled" : "disabled";
+        console.log(`Feature '${featureName}' ${status}!`);
+      },
+    };
+  }
+
+  listCurrentFeatures() {
+    return {
+      description:
+        "listCurrentFeatures() - List all currently enabled features",
+      execute: () => {
+        const currentFeatures = this.gameState.getAllFeatures();
+
+        if (currentFeatures.length === 0) {
+          console.log("No features are currently enabled!");
+          return;
+        }
+
+        console.log("Currently Enabled Features:");
+        currentFeatures.forEach((feature) => {
+          console.log(`  - ${feature}`);
+        });
+      },
+    };
+  }
+
   help() {
     return {
       description: "help() - Show this help message",
