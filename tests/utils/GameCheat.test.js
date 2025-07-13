@@ -47,28 +47,39 @@ describe("GameCheat", () => {
     mockWindow[gameCheat.cheatCode];
 
     // Check if all commands are registered
-    expect(typeof mockWindow.addMoney).toBe("function");
+    expect(typeof mockWindow.setMoney).toBe("function");
+    expect(typeof mockWindow.setInfluence).toBe("function");
+    expect(typeof mockWindow.setCurrentJobProgress).toBe("function");
+    expect(typeof mockWindow.setCurrentLearningProgress).toBe("function");
     expect(typeof mockWindow.setCurrentJob).toBe("function");
-    expect(typeof mockWindow.listJobIds).toBe("function");
+    expect(typeof mockWindow.listJobs).toBe("function");
     expect(typeof mockWindow.completeSkill).toBe("function");
-    expect(typeof mockWindow.listSkillIds).toBe("function");
+    expect(typeof mockWindow.listSkills).toBe("function");
     expect(typeof mockWindow.getItem).toBe("function");
-    expect(typeof mockWindow.listItemIds).toBe("function");
+    expect(typeof mockWindow.listItems).toBe("function");
+    expect(typeof mockWindow.listFeatures).toBe("function");
+    expect(typeof mockWindow.enableFeature).toBe("function");
+    expect(typeof mockWindow.disableFeature).toBe("function");
+    expect(typeof mockWindow.listCurrentFeatures).toBe("function");
+    expect(typeof mockWindow.listAbilities).toBe("function");
+    expect(typeof mockWindow.enableAbility).toBe("function");
+    expect(typeof mockWindow.disableAbility).toBe("function");
+    expect(typeof mockWindow.listCurrentAbilities).toBe("function");
     expect(typeof mockWindow.help).toBe("function");
   });
 
   it("should not execute commands when cheats are disabled", () => {
     // Register commands but don't enable cheats
     const commands = new GameCheat(gameState).commands;
-    mockWindow.addMoney = (...args) => {
+    mockWindow.setMoney = (...args) => {
       if (!gameCheat.cheatsEnabled) {
         return "Cheats are not enabled!";
       }
-      return commands.addMoney().execute(...args);
+      return commands.setMoney().execute(...args);
     };
 
     // Try to execute a command without enabling cheats
-    const result = mockWindow.addMoney(1000);
+    const result = mockWindow.setMoney(1000);
     expect(result).toBe("Cheats are not enabled!");
     expect(gameState.getMoney()).toBe(0);
   });
@@ -78,7 +89,7 @@ describe("GameCheat", () => {
     mockWindow[gameCheat.cheatCode];
 
     // Execute a command
-    mockWindow.addMoney(1000);
+    mockWindow.setMoney(1000);
     expect(gameState.getMoney()).toBe(1000);
   });
 

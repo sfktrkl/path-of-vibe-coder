@@ -20,26 +20,6 @@ describe("GameCheatCommands", () => {
     console.log = originalConsoleLog;
   });
 
-  describe("addMoney", () => {
-    it("should add money to game state", () => {
-      commands.addMoney().execute(1000);
-      expect(gameState.getMoney()).toBe(1000);
-    });
-  });
-
-  describe("addInfluence", () => {
-    it("should add influence to game state", () => {
-      commands.addInfluence().execute(100);
-      expect(gameState.getInfluence()).toBe(100);
-    });
-
-    it("should accumulate influence when called multiple times", () => {
-      commands.addInfluence().execute(50);
-      commands.addInfluence().execute(75);
-      expect(gameState.getInfluence()).toBe(125);
-    });
-  });
-
   describe("setMoney", () => {
     it("should set money to specific amount", () => {
       commands.setMoney().execute(5000);
@@ -65,7 +45,7 @@ describe("GameCheatCommands", () => {
 
     it("should override existing influence", () => {
       // First add some influence
-      commands.addInfluence().execute(100);
+      gameState.addInfluence(100);
       // Then set to a different amount
       commands.setInfluence().execute(200);
       expect(gameState.getInfluence()).toBe(200);
@@ -226,9 +206,9 @@ describe("GameCheatCommands", () => {
     });
   });
 
-  describe("listJobIds", () => {
+  describe("listJobs", () => {
     it("should list all job IDs by category", () => {
-      commands.listJobIds().execute();
+      commands.listJobs().execute();
 
       expect(console.log).toHaveBeenCalled();
       const output = console.log.mock.calls[0][0];
@@ -244,9 +224,9 @@ describe("GameCheatCommands", () => {
     });
   });
 
-  describe("listSkillIds", () => {
+  describe("listSkills", () => {
     it("should list all skill IDs by category", () => {
-      commands.listSkillIds().execute();
+      commands.listSkills().execute();
 
       expect(console.log).toHaveBeenCalled();
       const output = console.log.mock.calls[0][0];
@@ -262,9 +242,9 @@ describe("GameCheatCommands", () => {
     });
   });
 
-  describe("listItemIds", () => {
+  describe("listItems", () => {
     it("should list all item IDs by category", () => {
-      commands.listItemIds().execute();
+      commands.listItems().execute();
 
       expect(console.log).toHaveBeenCalled();
       const output = console.log.mock.calls[0][0];
@@ -280,9 +260,9 @@ describe("GameCheatCommands", () => {
     });
   });
 
-  describe("listSkillFeatures", () => {
+  describe("listFeatures", () => {
     it("should list all skill features with their descriptions", () => {
-      commands.listSkillFeatures().execute();
+      commands.listFeatures().execute();
 
       expect(console.log).toHaveBeenCalled();
       const output = console.log.mock.calls[0][0];
@@ -303,7 +283,7 @@ describe("GameCheatCommands", () => {
     });
 
     it("should show which skills provide each feature", () => {
-      commands.listSkillFeatures().execute();
+      commands.listFeatures().execute();
 
       const output = console.log.mock.calls[0][0];
 
@@ -325,9 +305,9 @@ describe("GameCheatCommands", () => {
     });
   });
 
-  describe("enableSkillFeature", () => {
+  describe("enableFeature", () => {
     it("should enable a valid feature", () => {
-      commands.enableSkillFeature().execute("instantLearning");
+      commands.enableFeature().execute("instantLearning");
 
       expect(gameState.hasFeature("instantLearning")).toBe(true);
       expect(console.log).toHaveBeenCalledWith(
@@ -336,13 +316,13 @@ describe("GameCheatCommands", () => {
     });
 
     it("should not enable invalid feature", () => {
-      commands.enableSkillFeature().execute("invalidFeature");
+      commands.enableFeature().execute("invalidFeature");
 
       expect(console.log).toHaveBeenCalledWith(
         "Feature 'invalidFeature' not found in any skill!"
       );
       expect(console.log).toHaveBeenCalledWith(
-        "Use listSkillFeatures() to see available features."
+        "Use listFeatures() to see available features."
       );
     });
 
@@ -356,20 +336,20 @@ describe("GameCheatCommands", () => {
       ];
 
       validFeatures.forEach((feature) => {
-        commands.enableSkillFeature().execute(feature);
+        commands.enableFeature().execute(feature);
         expect(gameState.hasFeature(feature)).toBe(true);
       });
     });
   });
 
-  describe("disableSkillFeature", () => {
+  describe("disableFeature", () => {
     it("should disable a valid feature", () => {
       // First enable the feature
       gameState.addFeature("instantLearning");
       expect(gameState.hasFeature("instantLearning")).toBe(true);
 
       // Then disable it
-      commands.disableSkillFeature().execute("instantLearning");
+      commands.disableFeature().execute("instantLearning");
 
       expect(gameState.hasFeature("instantLearning")).toBe(false);
       expect(console.log).toHaveBeenCalledWith(
@@ -378,25 +358,25 @@ describe("GameCheatCommands", () => {
     });
 
     it("should not disable invalid feature", () => {
-      commands.disableSkillFeature().execute("invalidFeature");
+      commands.disableFeature().execute("invalidFeature");
 
       expect(console.log).toHaveBeenCalledWith(
         "Feature 'invalidFeature' not found in any skill!"
       );
       expect(console.log).toHaveBeenCalledWith(
-        "Use listSkillFeatures() to see available features."
+        "Use listFeatures() to see available features."
       );
     });
 
     it("should handle disabling non-existent features gracefully", () => {
       // Try to disable a feature that doesn't exist
-      commands.disableSkillFeature().execute("nonExistentFeature");
+      commands.disableFeature().execute("nonExistentFeature");
 
       expect(console.log).toHaveBeenCalledWith(
         "Feature 'nonExistentFeature' not found in any skill!"
       );
       expect(console.log).toHaveBeenCalledWith(
-        "Use listSkillFeatures() to see available features."
+        "Use listFeatures() to see available features."
       );
     });
   });

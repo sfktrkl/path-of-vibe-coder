@@ -7,27 +7,6 @@ export default class GameCheatCommands {
     this.gameState = gameState;
   }
 
-  addMoney() {
-    return {
-      description: "addMoney(amount: number) - Add money to your balance",
-      execute: (amount) => {
-        this.gameState.addMoney(amount);
-        console.log(`Added ${amount} money!`);
-      },
-    };
-  }
-
-  addInfluence() {
-    return {
-      description:
-        "addInfluence(amount: number) - Add influence to your balance",
-      execute: (amount) => {
-        this.gameState.addInfluence(amount);
-        console.log(`Added ${amount} influence!`);
-      },
-    };
-  }
-
   setMoney() {
     return {
       description:
@@ -158,9 +137,9 @@ export default class GameCheatCommands {
     };
   }
 
-  listJobIds() {
+  listJobs() {
     return {
-      description: "listJobIds() - List all job IDs with their categories",
+      description: "listJobs() - List all job IDs with their categories",
       execute: () => {
         // Group jobs by category
         const jobsByCategory = {};
@@ -209,9 +188,9 @@ export default class GameCheatCommands {
     };
   }
 
-  listSkillIds() {
+  listSkills() {
     return {
-      description: "listSkillIds() - List all skill IDs with their categories",
+      description: "listSkills() - List all skill IDs with their categories",
       execute: () => {
         // Group skills by category
         const skillsByCategory = {};
@@ -287,9 +266,9 @@ export default class GameCheatCommands {
     };
   }
 
-  listItemIds() {
+  listItems() {
     return {
-      description: "listItemIds() - List all item IDs with their categories",
+      description: "listItems() - List all item IDs with their categories",
       execute: () => {
         // Group items by category
         const itemsByCategory = {};
@@ -311,10 +290,10 @@ export default class GameCheatCommands {
     };
   }
 
-  listSkillFeatures() {
+  listFeatures() {
     return {
       description:
-        "listSkillFeatures() - List all skill features with their descriptions",
+        "listFeatures() - List all skill features with their descriptions",
       execute: () => {
         const features = new Map();
 
@@ -350,10 +329,10 @@ export default class GameCheatCommands {
     };
   }
 
-  enableSkillFeature() {
+  enableFeature() {
     return {
       description:
-        "enableSkillFeature(featureName: string) - Enable a skill feature",
+        "enableFeature(featureName: string) - Enable a skill feature",
       execute: (featureName) => {
         // Validate feature name by checking if it exists in any skill
         let featureExists = false;
@@ -365,7 +344,7 @@ export default class GameCheatCommands {
 
         if (!featureExists) {
           console.log(`Feature '${featureName}' not found in any skill!`);
-          console.log("Use listSkillFeatures() to see available features.");
+          console.log("Use listFeatures() to see available features.");
           return;
         }
 
@@ -375,10 +354,10 @@ export default class GameCheatCommands {
     };
   }
 
-  disableSkillFeature() {
+  disableFeature() {
     return {
       description:
-        "disableSkillFeature(featureName: string) - Disable a skill feature",
+        "disableFeature(featureName: string) - Disable a skill feature",
       execute: (featureName) => {
         // Validate feature name by checking if it exists in any skill
         let featureExists = false;
@@ -390,7 +369,7 @@ export default class GameCheatCommands {
 
         if (!featureExists) {
           console.log(`Feature '${featureName}' not found in any skill!`);
-          console.log("Use listSkillFeatures() to see available features.");
+          console.log("Use listFeatures() to see available features.");
           return;
         }
 
@@ -420,10 +399,10 @@ export default class GameCheatCommands {
     };
   }
 
-  listJobAbilities() {
+  listAbilities() {
     return {
       description:
-        "listJobAbilities() - List all job abilities with their descriptions",
+        "listAbilities() - List all job abilities with their descriptions",
       execute: () => {
         const abilities = new Map();
 
@@ -459,10 +438,9 @@ export default class GameCheatCommands {
     };
   }
 
-  enableJobAbility() {
+  enableAbility() {
     return {
-      description:
-        "enableJobAbility(abilityName: string) - Enable a job ability",
+      description: "enableAbility(abilityName: string) - Enable a job ability",
       execute: (abilityName) => {
         // Validate ability name by checking if it exists in any job
         let abilityExists = false;
@@ -474,7 +452,7 @@ export default class GameCheatCommands {
 
         if (!abilityExists) {
           console.log(`Ability '${abilityName}' not found in any job!`);
-          console.log("Use listJobAbilities() to see available abilities.");
+          console.log("Use listAbilities() to see available abilities.");
           return;
         }
 
@@ -484,10 +462,10 @@ export default class GameCheatCommands {
     };
   }
 
-  disableJobAbility() {
+  disableAbility() {
     return {
       description:
-        "disableJobAbility(abilityName: string) - Disable a job ability",
+        "disableAbility(abilityName: string) - Disable a job ability",
       execute: (abilityName) => {
         // Validate ability name by checking if it exists in any job
         let abilityExists = false;
@@ -499,7 +477,7 @@ export default class GameCheatCommands {
 
         if (!abilityExists) {
           console.log(`Ability '${abilityName}' not found in any job!`);
-          console.log("Use listJobAbilities() to see available abilities.");
+          console.log("Use listAbilities() to see available abilities.");
           return;
         }
 
