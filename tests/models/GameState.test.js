@@ -1020,45 +1020,24 @@ describe("GameState", () => {
     });
 
     test("should return false for time stop when in time_weaver but feature not enabled", () => {
-      // Mock the time_weaver job without the feature
-      jest.spyOn(gameState, "getCurrentJobInfo").mockReturnValue({
-        id: "time_weaver",
-        abilities: {},
-      });
+      // This case is now redundant, as time_weaver always has the ability if set
+      // We'll just check a job without the ability
+      gameState.setCurrentJob("existence_master");
       expect(gameState.isTimeStopActive()).toBe(false);
     });
 
     test("should return true for time stop when in time_weaver with feature enabled", () => {
-      // Mock the time_weaver job with the feature enabled
-      jest.spyOn(gameState, "getCurrentJobInfo").mockReturnValue({
-        id: "time_weaver",
-        abilities: {
-          timeStop: true,
-        },
-      });
+      // Directly add the ability to test the system
+      gameState.addAbility("timeStop");
       expect(gameState.isTimeStopActive()).toBe(true);
     });
 
     test("should persist time stop state in serialization", () => {
-      // Mock the time_weaver job with the feature enabled
-      jest.spyOn(gameState, "getCurrentJobInfo").mockReturnValue({
-        id: "time_weaver",
-        abilities: {
-          timeStop: true,
-        },
-      });
+      gameState.addAbility("timeStop");
+      expect(gameState.isTimeStopActive()).toBe(true);
 
       const json = gameState.toJSON();
       const newState = GameState.fromJSON(json);
-
-      // Mock the same job info for the new state
-      jest.spyOn(newState, "getCurrentJobInfo").mockReturnValue({
-        id: "time_weaver",
-        abilities: {
-          timeStop: true,
-        },
-      });
-
       expect(newState.isTimeStopActive()).toBe(true);
     });
   });
@@ -1150,6 +1129,22 @@ describe("GameState", () => {
       gameState._performTranscendReset();
       expect(gameState.hasTranscendReset()).toBe(true);
     });
+
+    test("should clear abilities during transcend reset", () => {
+      // Add some abilities
+      gameState.addAbility("timeStop");
+      gameState.addAbility("pureExistence");
+      expect(gameState.hasAbility("timeStop")).toBe(true);
+      expect(gameState.hasAbility("pureExistence")).toBe(true);
+
+      // Perform transcend reset
+      gameState._performTranscendReset();
+
+      // Abilities should be cleared since they're tied to jobs
+      expect(gameState.hasAbility("timeStop")).toBe(false);
+      expect(gameState.hasAbility("pureExistence")).toBe(false);
+      expect(gameState.getAllAbilities()).toEqual([]);
+    });
   });
 
   describe("Pure Existence Ability", () => {
@@ -1163,53 +1158,24 @@ describe("GameState", () => {
     });
 
     test("should return false for pure existence when in existence_transcendent but no transcend reset", () => {
-      // Mock the existence_transcendent job
-      jest.spyOn(gameState, "getCurrentJobInfo").mockReturnValue({
-        id: "existence_transcendent",
-        abilities: {
-          pureExistence: true,
-        },
-      });
+      gameState.addAbility("pureExistence");
       expect(gameState.isPureExistenceActive()).toBe(false);
     });
 
     test("should return true for pure existence when in existence_transcendent with transcend reset", () => {
       // Perform transcend reset first
       gameState._performTranscendReset();
-
-      // Mock the existence_transcendent job
-      jest.spyOn(gameState, "getCurrentJobInfo").mockReturnValue({
-        id: "existence_transcendent",
-        abilities: {
-          pureExistence: true,
-        },
-      });
+      gameState.addAbility("pureExistence");
       expect(gameState.isPureExistenceActive()).toBe(true);
     });
 
     test("should persist pure existence state in serialization", () => {
-      // Perform transcend reset
       gameState._performTranscendReset();
-
-      // Mock the existence_transcendent job
-      jest.spyOn(gameState, "getCurrentJobInfo").mockReturnValue({
-        id: "existence_transcendent",
-        abilities: {
-          pureExistence: true,
-        },
-      });
+      gameState.addAbility("pureExistence");
+      expect(gameState.isPureExistenceActive()).toBe(true);
 
       const json = gameState.toJSON();
       const newState = GameState.fromJSON(json);
-
-      // Mock the same job info for the new state
-      jest.spyOn(newState, "getCurrentJobInfo").mockReturnValue({
-        id: "existence_transcendent",
-        abilities: {
-          pureExistence: true,
-        },
-      });
-
       expect(newState.isPureExistenceActive()).toBe(true);
     });
   });

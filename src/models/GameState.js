@@ -29,6 +29,9 @@ export default class GameState {
     // Acquired features (persist through transcendReset)
     this._acquiredFeatures = new Set();
 
+    // Acquired abilities
+    this._acquiredAbilities = new Set();
+
     // Transcend reset tracking (persists through transcendReset)
     this._hasTranscendReset = false;
   }
@@ -82,6 +85,9 @@ export default class GameState {
       if (effects.jobInitialProgress > 0) {
         this._jobProgress = effects.jobInitialProgress;
       }
+
+      // Update abilities from the new job
+      this.updateAbilitiesFromJob(jobId);
 
       return true;
     }
@@ -169,26 +175,20 @@ export default class GameState {
 
   // Abilities
   isTimeStopActive() {
-    const currentJob = this.getCurrentJobInfo();
-    return currentJob?.abilities?.timeStop === true;
+    return this.hasAbility("timeStop");
   }
 
   isTranscendenceFocusActive() {
-    const currentJob = this.getCurrentJobInfo();
-    return currentJob?.abilities?.transcendenceFocus === true;
+    return this.hasAbility("transcendenceFocus");
   }
 
   isExistenceParticlesActive() {
-    const currentJob = this.getCurrentJobInfo();
-    return currentJob?.abilities?.existenceParticles === true;
+    return this.hasAbility("existenceParticles");
   }
 
   isPureExistenceActive() {
-    const currentJob = this.getCurrentJobInfo();
     // Pure existence requires both the job ability AND having performed a transcend reset
-    return (
-      currentJob?.abilities?.pureExistence === true && this._hasTranscendReset
-    );
+    return this.hasAbility("pureExistence") && this._hasTranscendReset;
   }
 
   getJobsByCategory() {
@@ -584,6 +584,44 @@ export default class GameState {
     return Array.from(this._acquiredFeatures);
   }
 
+  hasAbility(abilityName) {
+    return this._acquiredAbilities.has(abilityName);
+  }
+
+  addAbility(abilityName) {
+    this._acquiredAbilities.add(abilityName);
+  }
+
+  setAbility(abilityName, enabled) {
+    if (enabled) {
+      this._acquiredAbilities.add(abilityName);
+    } else {
+      this._acquiredAbilities.delete(abilityName);
+    }
+  }
+
+  removeAbility(abilityName) {
+    this._acquiredAbilities.delete(abilityName);
+  }
+
+  getAllAbilities() {
+    return Array.from(this._acquiredAbilities);
+  }
+
+  // Check and update abilities when jobs are set
+  updateAbilitiesFromJob(jobId) {
+    // Clear all abilities first
+    this._acquiredAbilities.clear();
+
+    // Add abilities from the current job
+    const job = jobs[jobId];
+    if (job && job.abilities) {
+      Object.keys(job.abilities).forEach((abilityName) => {
+        this.addAbility(abilityName);
+      });
+    }
+  }
+
   // Check and update features when skills are completed
   updateFeaturesFromSkills() {
     Object.entries(this._skillProgress).forEach(([skillId, progress]) => {
@@ -611,6 +649,7 @@ export default class GameState {
       aiPathUnlocked: this._aiPathUnlocked,
       existencePathUnlocked: this._existencePathUnlocked, // Add existence path state
       acquiredFeatures: Array.from(this._acquiredFeatures), // Add acquired features
+      acquiredAbilities: Array.from(this._acquiredAbilities), // Add acquired abilities
       hasTranscendReset: this._hasTranscendReset, // Add transcend reset tracking
     };
   }
@@ -628,6 +667,7 @@ export default class GameState {
     state._aiPathUnlocked = json.aiPathUnlocked || false;
     state._existencePathUnlocked = json.existencePathUnlocked || false; // Add existence path state
     state._acquiredFeatures = new Set(json.acquiredFeatures || []); // Add acquired features
+    state._acquiredAbilities = new Set(json.acquiredAbilities || []); // Add acquired abilities
     state._hasTranscendReset = json.hasTranscendReset || false; // Add transcend reset tracking
     return state;
   }
@@ -692,6 +732,7 @@ export default class GameState {
     this._ownedItems = new Set();
     this._aiPathUnlocked = false;
     this._existencePathUnlocked = false;
+    this._acquiredAbilities = new Set(); // Reset abilities since they're tied to jobs
   }
 
   // Transcend reset tracking
