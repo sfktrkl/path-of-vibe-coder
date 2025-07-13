@@ -325,9 +325,9 @@ describe("GameCheatCommands", () => {
     });
   });
 
-  describe("setFeature", () => {
+  describe("enableSkillFeature", () => {
     it("should enable a valid feature", () => {
-      commands.setFeature().execute("instantLearning", true);
+      commands.enableSkillFeature().execute("instantLearning");
 
       expect(gameState.hasFeature("instantLearning")).toBe(true);
       expect(console.log).toHaveBeenCalledWith(
@@ -335,22 +335,8 @@ describe("GameCheatCommands", () => {
       );
     });
 
-    it("should disable a valid feature", () => {
-      // First enable the feature
-      gameState.addFeature("instantLearning");
-      expect(gameState.hasFeature("instantLearning")).toBe(true);
-
-      // Then disable it
-      commands.setFeature().execute("instantLearning", false);
-
-      expect(gameState.hasFeature("instantLearning")).toBe(false);
-      expect(console.log).toHaveBeenCalledWith(
-        "Feature 'instantLearning' disabled!"
-      );
-    });
-
-    it("should not set invalid feature", () => {
-      commands.setFeature().execute("invalidFeature", true);
+    it("should not enable invalid feature", () => {
+      commands.enableSkillFeature().execute("invalidFeature");
 
       expect(console.log).toHaveBeenCalledWith(
         "Feature 'invalidFeature' not found in any skill!"
@@ -370,9 +356,48 @@ describe("GameCheatCommands", () => {
       ];
 
       validFeatures.forEach((feature) => {
-        commands.setFeature().execute(feature, true);
+        commands.enableSkillFeature().execute(feature);
         expect(gameState.hasFeature(feature)).toBe(true);
       });
+    });
+  });
+
+  describe("disableSkillFeature", () => {
+    it("should disable a valid feature", () => {
+      // First enable the feature
+      gameState.addFeature("instantLearning");
+      expect(gameState.hasFeature("instantLearning")).toBe(true);
+
+      // Then disable it
+      commands.disableSkillFeature().execute("instantLearning");
+
+      expect(gameState.hasFeature("instantLearning")).toBe(false);
+      expect(console.log).toHaveBeenCalledWith(
+        "Feature 'instantLearning' disabled!"
+      );
+    });
+
+    it("should not disable invalid feature", () => {
+      commands.disableSkillFeature().execute("invalidFeature");
+
+      expect(console.log).toHaveBeenCalledWith(
+        "Feature 'invalidFeature' not found in any skill!"
+      );
+      expect(console.log).toHaveBeenCalledWith(
+        "Use listSkillFeatures() to see available features."
+      );
+    });
+
+    it("should handle disabling non-existent features gracefully", () => {
+      // Try to disable a feature that doesn't exist
+      commands.disableSkillFeature().execute("nonExistentFeature");
+
+      expect(console.log).toHaveBeenCalledWith(
+        "Feature 'nonExistentFeature' not found in any skill!"
+      );
+      expect(console.log).toHaveBeenCalledWith(
+        "Use listSkillFeatures() to see available features."
+      );
     });
   });
 

@@ -350,11 +350,11 @@ export default class GameCheatCommands {
     };
   }
 
-  setFeature() {
+  enableSkillFeature() {
     return {
       description:
-        "setFeature(featureName: string, enabled: boolean) - Enable or disable a feature",
-      execute: (featureName, enabled) => {
+        "enableSkillFeature(featureName: string) - Enable a skill feature",
+      execute: (featureName) => {
         // Validate feature name by checking if it exists in any skill
         let featureExists = false;
         Object.values(skills).forEach((skill) => {
@@ -369,9 +369,33 @@ export default class GameCheatCommands {
           return;
         }
 
-        this.gameState.setFeature(featureName, enabled);
-        const status = enabled ? "enabled" : "disabled";
-        console.log(`Feature '${featureName}' ${status}!`);
+        this.gameState.setFeature(featureName, true);
+        console.log(`Feature '${featureName}' enabled!`);
+      },
+    };
+  }
+
+  disableSkillFeature() {
+    return {
+      description:
+        "disableSkillFeature(featureName: string) - Disable a skill feature",
+      execute: (featureName) => {
+        // Validate feature name by checking if it exists in any skill
+        let featureExists = false;
+        Object.values(skills).forEach((skill) => {
+          if (skill.features && skill.features[featureName]) {
+            featureExists = true;
+          }
+        });
+
+        if (!featureExists) {
+          console.log(`Feature '${featureName}' not found in any skill!`);
+          console.log("Use listSkillFeatures() to see available features.");
+          return;
+        }
+
+        this.gameState.setFeature(featureName, false);
+        console.log(`Feature '${featureName}' disabled!`);
       },
     };
   }
