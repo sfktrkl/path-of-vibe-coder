@@ -7,6 +7,10 @@ export default class GameCheatCommands {
     this.gameState = gameState;
   }
 
+  // =============================
+  // Player State Manipulation
+  // =============================
+
   setMoney() {
     return {
       description:
@@ -33,48 +37,9 @@ export default class GameCheatCommands {
     };
   }
 
-  setCurrentJobProgress() {
-    return {
-      description:
-        "setCurrentJobProgress(progress: number) - Set progress for current job (0-100)",
-      execute: (progress) => {
-        const currentJobInfo = this.gameState.getCurrentJobInfo();
-        if (!currentJobInfo) {
-          console.log("No job is currently selected!");
-          return;
-        }
-
-        if (progress < 0 || progress > 100) {
-          console.log("Progress must be between 0 and 100!");
-          return;
-        }
-
-        this.gameState.setCurrentJobProgress(progress);
-        console.log(`Set progress for current job to ${progress}%!`);
-      },
-    };
-  }
-
-  setCurrentLearningProgress() {
-    return {
-      description:
-        "setCurrentLearningProgress(progress: number) - Set progress for current skill (0-100)",
-      execute: (progress) => {
-        if (!this.gameState.getCurrentLearning()) {
-          console.log("No skill is currently being learned!");
-          return;
-        }
-
-        if (progress < 0 || progress > 100) {
-          console.log("Progress must be between 0 and 100!");
-          return;
-        }
-
-        this.gameState.setCurrentLearningProgress(progress);
-        console.log(`Set progress for current skill to ${progress}%!`);
-      },
-    };
-  }
+  // =============================
+  // Job Management
+  // =============================
 
   setCurrentJob() {
     return {
@@ -137,6 +102,28 @@ export default class GameCheatCommands {
     };
   }
 
+  setCurrentJobProgress() {
+    return {
+      description:
+        "setCurrentJobProgress(progress: number) - Set progress for current job (0-100)",
+      execute: (progress) => {
+        const currentJobInfo = this.gameState.getCurrentJobInfo();
+        if (!currentJobInfo) {
+          console.log("No job is currently selected!");
+          return;
+        }
+
+        if (progress < 0 || progress > 100) {
+          console.log("Progress must be between 0 and 100!");
+          return;
+        }
+
+        this.gameState.setCurrentJobProgress(progress);
+        console.log(`Set progress for current job to ${progress}%!`);
+      },
+    };
+  }
+
   listJobs() {
     return {
       description: "listJobs() - List all job IDs with their categories",
@@ -160,6 +147,10 @@ export default class GameCheatCommands {
       },
     };
   }
+
+  // =============================
+  // Skill Management
+  // =============================
 
   completeSkill() {
     return {
@@ -188,6 +179,27 @@ export default class GameCheatCommands {
     };
   }
 
+  setCurrentLearningProgress() {
+    return {
+      description:
+        "setCurrentLearningProgress(progress: number) - Set progress for current skill (0-100)",
+      execute: (progress) => {
+        if (!this.gameState.getCurrentLearning()) {
+          console.log("No skill is currently being learned!");
+          return;
+        }
+
+        if (progress < 0 || progress > 100) {
+          console.log("Progress must be between 0 and 100!");
+          return;
+        }
+
+        this.gameState.setCurrentLearningProgress(progress);
+        console.log(`Set progress for current skill to ${progress}%!`);
+      },
+    };
+  }
+
   listSkills() {
     return {
       description: "listSkills() - List all skill IDs with their categories",
@@ -211,6 +223,10 @@ export default class GameCheatCommands {
       },
     };
   }
+
+  // =============================
+  // Item Management
+  // =============================
 
   getItem() {
     return {
@@ -289,6 +305,10 @@ export default class GameCheatCommands {
       },
     };
   }
+
+  // =============================
+  // Feature Management
+  // =============================
 
   listFeatures() {
     return {
@@ -399,6 +419,10 @@ export default class GameCheatCommands {
     };
   }
 
+  // =============================
+  // Ability Management
+  // =============================
+
   listAbilities() {
     return {
       description:
@@ -506,6 +530,10 @@ export default class GameCheatCommands {
       },
     };
   }
+
+  // =============================
+  // Help
+  // =============================
 
   help() {
     return {
