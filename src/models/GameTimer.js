@@ -5,6 +5,7 @@ export default class GameTimer {
     this.lastUpdate = null;
     this.isRunning = false;
     this.instantCompletion = true;
+    this.timeMultiplier = 1;
   }
 
   // Start the timer
@@ -30,7 +31,8 @@ export default class GameTimer {
   // Update progress for both learning and job
   update() {
     const now = Date.now();
-    const deltaTime = (now - this.lastUpdate) / 1000; // Convert to seconds
+    let deltaTime = (now - this.lastUpdate) / 1000; // Convert to seconds
+    deltaTime *= this.timeMultiplier;
     this.lastUpdate = now;
 
     // Check if time stop is active - if so, don't process any updates
@@ -124,5 +126,19 @@ export default class GameTimer {
       jobProgress: this.gameState.getCurrentJobProgress(),
       instantCompletion: this.instantCompletion,
     };
+  }
+
+  setTimeMultiplier(value) {
+    if (typeof value === "number" && value > 0) {
+      this.timeMultiplier = value;
+    }
+  }
+
+  getTimeMultiplier() {
+    return this.timeMultiplier;
+  }
+
+  resetTimeMultiplier() {
+    this.timeMultiplier = 1;
   }
 }

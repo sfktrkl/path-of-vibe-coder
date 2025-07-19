@@ -833,4 +833,68 @@ describe("GameTimer", () => {
       expect(timer.instantCompletion).toBe(true);
     });
   });
+
+  describe("timeMultiplier", () => {
+    beforeEach(() => {
+      mockGameState.getCurrentLearning.mockReturnValue("test_skill");
+      mockGameState.getCurrentSkillInfo.mockReturnValue({
+        id: "test_skill",
+        timeRequired: 10,
+      });
+      mockGameState.getCurrentJob.mockReturnValue("test_job");
+      mockGameState.getCurrentJobInfo.mockReturnValue({
+        id: "test_job",
+        timeRequired: 10,
+        salary: 100,
+      });
+    });
+
+    test("should use default multiplier (1x)", () => {
+      timer.setTimeMultiplier(1);
+      timer.start();
+      jest.advanceTimersByTime(1000);
+      expect(mockGameState.setCurrentLearningProgress).toHaveBeenCalledWith(10);
+      expect(mockGameState.setCurrentJobProgress).toHaveBeenCalledWith(10);
+    });
+
+    test("should speed up progress with multiplier > 1", () => {
+      timer.setTimeMultiplier(2);
+      timer.start();
+      jest.advanceTimersByTime(1000);
+      expect(mockGameState.setCurrentLearningProgress).toHaveBeenCalledWith(20);
+      expect(mockGameState.setCurrentJobProgress).toHaveBeenCalledWith(20);
+    });
+
+    test("should slow down progress with multiplier < 1", () => {
+      timer.setTimeMultiplier(0.5);
+      timer.start();
+      jest.advanceTimersByTime(1000);
+      expect(mockGameState.setCurrentLearningProgress).toHaveBeenCalledWith(5);
+      expect(mockGameState.setCurrentJobProgress).toHaveBeenCalledWith(5);
+    });
+
+    test("should not set multiplier to zero or negative", () => {
+      timer.setTimeMultiplier(2);
+      timer.setTimeMultiplier(0);
+      expect(timer.getTimeMultiplier()).toBe(2);
+      timer.setTimeMultiplier(-3);
+      expect(timer.getTimeMultiplier()).toBe(2);
+    });
+
+    test("should reset multiplier to 1", () => {
+      timer.setTimeMultiplier(5);
+      expect(timer.getTimeMultiplier()).toBe(5);
+      timer.resetTimeMultiplier();
+      expect(timer.getTimeMultiplier()).toBe(1);
+    });
+
+    test("should handle rapid changes to multiplier", () => {
+      timer.setTimeMultiplier(3);
+      expect(timer.getTimeMultiplier()).toBe(3);
+      timer.setTimeMultiplier(0.25);
+      expect(timer.getTimeMultiplier()).toBe(0.25);
+      timer.setTimeMultiplier(1);
+      expect(timer.getTimeMultiplier()).toBe(1);
+    });
+  });
 });
