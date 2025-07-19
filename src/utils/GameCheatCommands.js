@@ -355,6 +355,43 @@ export default class GameCheatCommands {
     };
   }
 
+  setItemEffect() {
+    return {
+      description:
+        "setItemEffect(effectName: string, value: number|null) - Set a custom value for an item effect. Set to null to clear the override.",
+      execute: (effectName, value) => {
+        const validEffects = [
+          "salaryBoost",
+          "learningSpeed",
+          "workSpeed",
+          "skillTimeReduction",
+          "jobInitialProgress",
+          "influenceBoost",
+        ];
+        if (!validEffects.includes(effectName)) {
+          console.log(
+            `Invalid effect name '${effectName}'. Use listItemEffects() to see valid effect names.`
+          );
+          return;
+        }
+        if (value === null || value === undefined) {
+          // Remove the override
+          delete this.gameState._customItemEffects[effectName];
+          console.log(
+            `Custom item effect override for '${effectName}' has been cleared.`
+          );
+          return;
+        }
+        if (typeof value !== "number" || isNaN(value)) {
+          console.log(`Value must be a number.`);
+          return;
+        }
+        this.gameState.setCustomItemEffect(effectName, value);
+        console.log(`Set custom item effect '${effectName}' to ${value}.`);
+      },
+    };
+  }
+
   // =============================
   // Feature Management
   // =============================

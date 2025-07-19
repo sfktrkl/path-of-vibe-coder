@@ -587,4 +587,39 @@ describe("GameCheatCommands", () => {
       expect(output).toContain("Reduces time required to learn skills");
     });
   });
+
+  describe("setItemEffect", () => {
+    it("should set a valid custom item effect", () => {
+      commands.setItemEffect().execute("salaryBoost", 2.5);
+      expect(gameState.getItemEffects().salaryBoost).toBe(2.5);
+      expect(console.log).toHaveBeenCalledWith(
+        "Set custom item effect 'salaryBoost' to 2.5."
+      );
+    });
+
+    it("should not set an invalid effect name", () => {
+      commands.setItemEffect().execute("invalidEffect", 1.5);
+      expect(console.log).toHaveBeenCalledWith(
+        "Invalid effect name 'invalidEffect'. Use listItemEffects() to see valid effect names."
+      );
+    });
+
+    it("should not set a non-number value", () => {
+      commands.setItemEffect().execute("salaryBoost", "notANumber");
+      expect(console.log).toHaveBeenCalledWith("Value must be a number.");
+    });
+
+    it("should clear a custom item effect override when value is null", () => {
+      // Set a custom effect first
+      commands.setItemEffect().execute("salaryBoost", 2.5);
+      expect(gameState.getItemEffects().salaryBoost).toBe(2.5);
+      // Clear the override
+      commands.setItemEffect().execute("salaryBoost", null);
+      expect(console.log).toHaveBeenCalledWith(
+        "Custom item effect override for 'salaryBoost' has been cleared."
+      );
+      // Should revert to default (no items owned, so 1)
+      expect(gameState.getItemEffects().salaryBoost).toBe(1);
+    });
+  });
 });
