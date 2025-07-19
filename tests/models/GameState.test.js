@@ -1289,4 +1289,40 @@ describe("GameState", () => {
       expect(gameState.getAllFeatures()).not.toContain("nonExistentFeature");
     });
   });
+
+  describe("Custom Item Effects", () => {
+    beforeEach(() => {
+      gameState.addMoney(100000);
+      gameState.purchaseItem("basic_salary_boost"); // salaryBoost: 1.05
+      gameState.purchaseItem("basic_learning_boost"); // learningSpeed: 1.05
+    });
+
+    test("should override a single item effect with custom value", () => {
+      expect(gameState.getItemEffects().salaryBoost).toBe(1.05);
+      gameState.setCustomItemEffect("salaryBoost", 2.5);
+      expect(gameState.getItemEffects().salaryBoost).toBe(2.5);
+    });
+
+    test("should override multiple item effects with custom values", () => {
+      gameState.setCustomItemEffect("salaryBoost", 2.5);
+      gameState.setCustomItemEffect("learningSpeed", 3.0);
+      const effects = gameState.getItemEffects();
+      expect(effects.salaryBoost).toBe(2.5);
+      expect(effects.learningSpeed).toBe(3.0);
+    });
+
+    test("should clear custom item effects and revert to calculated values", () => {
+      gameState.setCustomItemEffect("salaryBoost", 2.5);
+      expect(gameState.getItemEffects().salaryBoost).toBe(2.5);
+      gameState.clearCustomItemEffects();
+      expect(gameState.getItemEffects().salaryBoost).toBe(1.05);
+    });
+
+    test("should get all custom item effect overrides", () => {
+      gameState.setCustomItemEffect("salaryBoost", 2.5);
+      gameState.setCustomItemEffect("learningSpeed", 3.0);
+      const custom = gameState.getCustomItemEffects();
+      expect(custom).toEqual({ salaryBoost: 2.5, learningSpeed: 3.0 });
+    });
+  });
 });

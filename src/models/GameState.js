@@ -34,6 +34,9 @@ export default class GameState {
 
     // Transcend reset tracking (persists through transcendReset)
     this._hasTranscendReset = false;
+
+    // Custom item effects for cheats/debugging
+    this._customItemEffects = {};
   }
 
   // Money management
@@ -383,7 +386,27 @@ export default class GameState {
       });
     });
 
+    // Apply custom overrides if present
+    for (const [key, value] of Object.entries(this._customItemEffects)) {
+      effects[key] = value;
+    }
+
     return effects;
+  }
+
+  // Cheat/debug: Set a custom item effect override
+  setCustomItemEffect(effectName, value) {
+    this._customItemEffects[effectName] = value;
+  }
+
+  // Cheat/debug: Clear all custom item effect overrides
+  clearCustomItemEffects() {
+    this._customItemEffects = {};
+  }
+
+  // Cheat/debug: Get all custom item effect overrides
+  getCustomItemEffects() {
+    return { ...this._customItemEffects };
   }
 
   // AI Path management
