@@ -566,4 +566,25 @@ describe("GameCheatCommands", () => {
       expect(console.log).toHaveBeenCalledWith("  - existenceParticles");
     });
   });
+
+  describe("listItemEffects", () => {
+    it("should list all item effect keys with their types and descriptions", () => {
+      commands.listItemEffects().execute();
+      expect(console.log).toHaveBeenCalled();
+      const output = console.log.mock.calls[0][0];
+      // Check for all effect keys
+      expect(output).toContain("salaryBoost");
+      expect(output).toContain("learningSpeed");
+      expect(output).toContain("workSpeed");
+      expect(output).toContain("skillTimeReduction");
+      expect(output).toContain("jobInitialProgress");
+      expect(output).toContain("influenceBoost");
+      // Check for types
+      expect(output).toContain("increase");
+      expect(output).toContain("reduction");
+      // Check for descriptions
+      expect(output).toContain("Increases salary earned from jobs");
+      expect(output).toContain("Reduces time required to learn skills");
+    });
+  });
 });

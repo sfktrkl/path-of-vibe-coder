@@ -306,6 +306,55 @@ export default class GameCheatCommands {
     };
   }
 
+  listItemEffects() {
+    return {
+      description:
+        "listItemEffects() - List all possible item effect keys, their type (increase/reduction), and a short description",
+      execute: () => {
+        const effectsInfo = [
+          {
+            key: "salaryBoost",
+            type: "increase",
+            description: "Increases salary earned from jobs (higher is better)",
+          },
+          {
+            key: "learningSpeed",
+            type: "increase",
+            description: "Increases skill learning speed (higher is better)",
+          },
+          {
+            key: "workSpeed",
+            type: "increase",
+            description: "Increases job progress speed (higher is better)",
+          },
+          {
+            key: "skillTimeReduction",
+            type: "reduction",
+            description:
+              "Reduces time required to learn skills (lower is better)",
+          },
+          {
+            key: "jobInitialProgress",
+            type: "increase",
+            description:
+              "Sets initial progress when starting a new job (higher is better)",
+          },
+          {
+            key: "influenceBoost",
+            type: "increase",
+            description: "Increases influence gained (higher is better)",
+          },
+        ];
+
+        let output = "Available Item Effects:\n\n";
+        effectsInfo.forEach((effect) => {
+          output += `- ${effect.key} (${effect.type}): ${effect.description}\n`;
+        });
+        console.log(output);
+      },
+    };
+  }
+
   // =============================
   // Feature Management
   // =============================
