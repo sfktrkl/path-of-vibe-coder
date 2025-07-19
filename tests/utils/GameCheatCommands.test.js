@@ -622,4 +622,41 @@ describe("GameCheatCommands", () => {
       expect(gameState.getItemEffects().salaryBoost).toBe(1);
     });
   });
+
+  describe("setTimeMultiplier", () => {
+    let mockTimer;
+    beforeEach(() => {
+      mockTimer = {
+        setTimeMultiplier: jest.fn(),
+        getTimeMultiplier: jest.fn(() => 1),
+      };
+    });
+
+    it("should set a valid time multiplier", () => {
+      commands.setTimeMultiplier(mockTimer).execute(2);
+      expect(mockTimer.setTimeMultiplier).toHaveBeenCalledWith(2);
+      expect(console.log).toHaveBeenCalledWith("Time multiplier set to 2x.");
+    });
+
+    it("should not set a zero or negative multiplier", () => {
+      commands.setTimeMultiplier(mockTimer).execute(0);
+      expect(mockTimer.setTimeMultiplier).not.toHaveBeenCalled();
+      expect(console.log).toHaveBeenCalledWith(
+        "Multiplier must be a positive number."
+      );
+      commands.setTimeMultiplier(mockTimer).execute(-3);
+      expect(mockTimer.setTimeMultiplier).not.toHaveBeenCalled();
+      expect(console.log).toHaveBeenCalledWith(
+        "Multiplier must be a positive number."
+      );
+    });
+
+    it("should not set a NaN multiplier", () => {
+      commands.setTimeMultiplier(mockTimer).execute(NaN);
+      expect(mockTimer.setTimeMultiplier).not.toHaveBeenCalled();
+      expect(console.log).toHaveBeenCalledWith(
+        "Multiplier must be a positive number."
+      );
+    });
+  });
 });

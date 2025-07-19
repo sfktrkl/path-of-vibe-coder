@@ -393,6 +393,29 @@ export default class GameCheatCommands {
   }
 
   // =============================
+  // Timer Management
+  // =============================
+
+  setTimeMultiplier(timerInstance) {
+    return {
+      description:
+        "setTimeMultiplier(multiplier: number) - Set the game time speed multiplier",
+      execute: (multiplier) => {
+        if (
+          typeof multiplier !== "number" ||
+          isNaN(multiplier) ||
+          multiplier <= 0
+        ) {
+          console.log("Multiplier must be a positive number.");
+          return;
+        }
+        timerInstance.setTimeMultiplier(multiplier);
+        console.log(`Time multiplier set to ${multiplier}x.`);
+      },
+    };
+  }
+
+  // =============================
   // Feature Management
   // =============================
 
